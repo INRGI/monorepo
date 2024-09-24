@@ -1,7 +1,7 @@
 {
-  "name": "monorepo",
+  "name": "fastify-api",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/monorepo/src",
+  "sourceRoot": "apps/backend/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -11,12 +11,12 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/apps/monorepo",
+        "outputPath": "dist/apps/backend",
         "format": ["cjs"],
         "bundle": false,
-        "main": "apps/monorepo/src/main.ts",
-        "tsConfig": "apps/monorepo/tsconfig.app.json",
-        "assets": ["apps/monorepo/src/assets"],
+        "main": "apps/backend/src/main.ts",
+        "tsConfig": "apps/backend/tsconfig.app.json",
+        "assets": ["apps/backend/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -42,15 +42,15 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "monorepo:build",
+        "buildTarget": "fastify-api:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "monorepo:build:development"
+          "buildTarget": "fastify-api:build:development"
         },
         "production": {
-          "buildTarget": "monorepo:build:production"
+          "buildTarget": "fastify-api:build:production"
         }
       }
     }

@@ -14,7 +14,7 @@
     ],
     "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
-  "nxCloudId": "66f2c97020fc841423ed504d",
+  "nxCloudId": "66f2d37920fc841423ee08e3",
   "targetDefaults": {
     "@nx/esbuild:esbuild": {
       "cache": true,
@@ -34,7 +34,48 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/monorepo-e2e/**/*"]
+      "exclude": [
+        "apps/monorepo-e2e/**/*",
+        "apps/backend-e2e/**/*",
+        "apps/backend-e2e/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "testTargetName": "test",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "serveStaticTargetName": "serve-static",
+        "typecheckTargetName": "typecheck"
+      }
+    },
+    {
+      "plugin": "@nx/webpack/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview"
+      }
     }
-  ]
+  ],
+  "defaultBase": "main",
+  "generators": {
+    "@nx/react": {
+      "application": {
+        "babel": true,
+        "style": "@emotion/styled",
+        "linter": "eslint",
+        "bundler": "vite"
+      },
+      "component": {
+        "style": "@emotion/styled"
+      },
+      "library": {
+        "style": "@emotion/styled",
+        "linter": "eslint"
+      }
+    }
+  }
 }

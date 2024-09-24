@@ -1,17 +1,17 @@
 {
-  "name": "monorepo-e2e",
+  "name": "fastify-api-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "implicitDependencies": ["monorepo"],
+  "implicitDependencies": ["fastify-api"],
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
-        "jestConfig": "apps/monorepo-e2e/jest.config.ts",
+        "jestConfig": "apps/backend-e2e/jest.config.ts",
         "passWithNoTests": true
       },
-      "dependsOn": ["monorepo:build"]
+      "dependsOn": ["fastify-api:build"]
     }
   }
 }

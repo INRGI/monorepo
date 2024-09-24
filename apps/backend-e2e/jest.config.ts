@@ -1,5 +1,5 @@
 export default {
-  displayName: 'monorepo-e2e',
+  displayName: 'fastify-api-e2e',
   preset: '../../jest.preset.js',
   globalSetup: '<rootDir>/src/support/global-setup.ts',
   globalTeardown: '<rootDir>/src/support/global-teardown.ts',
@@ -14,5 +14,5 @@ export default {
     ],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/monorepo-e2e',
+  coverageDirectory: '../../coverage/fastify-api-e2e',
 };
