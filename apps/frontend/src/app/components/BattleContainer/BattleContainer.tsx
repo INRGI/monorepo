@@ -15,7 +15,7 @@ const BattleContainer: React.FC = () => {
   const [isMonsterDefeated, setIsMonsterDefeated] = useState(false);
 
   useEffect(() => {
-    axios.get('/battle/monsters').then((response) => {
+    axios.get('http://localhost:3000/battle/monsters').then((response) => {
       setMonsters(response.data);
       setCurrentMonsterIndex(0);
     });
@@ -24,7 +24,7 @@ const BattleContainer: React.FC = () => {
   const handleAttack = () => {
     const monster = monsters[currentMonsterIndex];
     axios
-      .post('/battle/attack', {
+      .post('http://localhost:3000/battle/attack', {
         character: { attack: char.attack },
         monster,
       })
