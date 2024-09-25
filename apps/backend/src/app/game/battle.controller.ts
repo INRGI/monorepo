@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
-import { BattleService } from './battle.service';
+import { BattleService, Monster } from './battle.service';
 
 @Controller('battle')
 export class BattleController {
@@ -11,7 +11,9 @@ export class BattleController {
   }
 
   @Post('attack')
-  attack(@Body() attackData: { character: { attack: number }; monster: any }) {
+  attack(
+    @Body() attackData: { character: { attack: number }; monster: Monster }
+  ) {
     return this.battleService.attack(attackData.character, attackData.monster);
   }
 }

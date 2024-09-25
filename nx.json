@@ -12,17 +12,18 @@
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/test-setup.[jt]s"
     ],
-    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
+    "sharedGlobals": []
   },
-  "nxCloudId": "66f2d37920fc841423ee08e3",
-  "targetDefaults": {
-    "@nx/esbuild:esbuild": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
-    }
-  },
+  "nxCloudId": "66f3eebbb88a4333f7a46ff2",
   "plugins": [
+    {
+      "plugin": "@nx/webpack/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview"
+      }
+    },
     {
       "plugin": "@nx/eslint/plugin",
       "options": {
@@ -34,11 +35,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": [
-        "apps/monorepo-e2e/**/*",
-        "apps/backend-e2e/**/*",
-        "apps/backend-e2e/**/*"
-      ]
+      "exclude": ["apps/backend-e2e/**/*", "apps/frontend-e2e/**/*"]
     },
     {
       "plugin": "@nx/vite/plugin",
@@ -50,17 +47,8 @@
         "serveStaticTargetName": "serve-static",
         "typecheckTargetName": "typecheck"
       }
-    },
-    {
-      "plugin": "@nx/webpack/plugin",
-      "options": {
-        "buildTargetName": "build",
-        "serveTargetName": "serve",
-        "previewTargetName": "preview"
-      }
     }
   ],
-  "defaultBase": "main",
   "generators": {
     "@nx/react": {
       "application": {

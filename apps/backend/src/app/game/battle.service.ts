@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-type Monster = {
+export type Monster = {
     id: number;
     name: string;
     health: number;
@@ -20,7 +20,7 @@ export class BattleService {
     ]
   }
 
-  attack(character: { attack: number }, monster: any) {
+  attack(character: { attack: number }, monster: Monster) {
     monster.health -= character.attack;
     if (monster.health <= 0) {
       monster.health = 0;
