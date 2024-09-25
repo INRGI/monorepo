@@ -1,18 +1,23 @@
 import { Injectable } from "@nestjs/common";
 
+type Monster = {
+    id: number;
+    name: string;
+    health: number;
+}
+
 @Injectable()
 export class BattleService {
-  private readonly monsters = [
-    { id: 1, name: 'Goblin', health: 50 },
-    { id: 2, name: 'Troll', health: 100 },
-    { id: 3, name: 'Berserk', health: 200 },
-    { id: 4, name: 'Demon', health: 300 },
-    { id: 5, name: 'Vampire', health: 400 },
-    { id: 6, name: 'Dragon', health: 500 },
-  ];
 
-  getMonsters() {
-    return this.monsters;
+  getMonsters() : Monster[]{
+    return [
+      { id: 1, name: 'Goblin', health: 50 },
+      { id: 2, name: 'Troll', health: 100 },
+      { id: 3, name: 'Berserk', health: 200 },
+      { id: 4, name: 'Demon', health: 300 },
+      { id: 5, name: 'Vampire', health: 400 },
+      { id: 6, name: 'Dragon', health: 500 },
+    ]
   }
 
   attack(character: { attack: number }, monster: any) {
