@@ -1,12 +1,24 @@
-import React from "react";
+import React from 'react';
+import { Card, InfoTitle, InfoText, Image } from './Character.styled';
 
-const Character: React.FC = ({ character }) => (
-  <div>
-    <h2>{character.name}</h2>
-    <p>Level: {character.level}</p>
-    <p>Health: {character.health}</p>
-    <p>Attack: {character.attack}</p>
-  </div>
+interface CharacterProps {
+  character: {
+    name: string;
+    level: number;
+    health: number;
+    attack: number;
+    imageUrl: string;
+  };
+}
+
+const Character: React.FC<CharacterProps> = ({ character }) => (
+  <Card>
+    <Image src={character.imageUrl} alt={character.name} />
+    <InfoTitle>{character.name}</InfoTitle>
+    <InfoText>Level: {character.level}</InfoText>
+    <InfoText>Health: {character.health}</InfoText>
+    <InfoText>Attack: {character.attack}</InfoText>
+  </Card>
 );
 
 export default Character;

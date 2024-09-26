@@ -1,10 +1,22 @@
 import React from "react";
+import { Card, Image, InfoTitle, InfoText } from "./Monster.styled";
 
-const Monster: React.FC = ({ monster }) => (
-  <div>
-    <h2>{monster.name}</h2>
-    <p>Health: {monster.health}</p>
-  </div>
+interface MonsterProps {
+  monster: {
+    name: string;
+    health: number;
+    attack: number;
+    imageUrl: string;
+  };
+}
+
+const Monster: React.FC<MonsterProps> = ({ monster }) => (
+  <Card>
+    <Image src={monster.imageUrl} alt={monster.name} />
+    <InfoTitle>{monster.name}</InfoTitle>
+    <InfoText>Health: {monster.health}</InfoText>
+    <InfoText>Attack: {monster.attack}</InfoText>
+  </Card>
 );
 
 export default Monster;
