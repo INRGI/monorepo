@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '@org/users';
+import { CreateUserDto, UsersService } from '@org/users';
+import { LoginDto } from './dto/login-auth.dto';
+
 
 @Injectable()
 export class AuthService {
@@ -19,14 +20,31 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
+  async login(loginDto: LoginDto) {
+    const user = await this.validateUser(loginDto.email, loginDto.password);
+    if (!user) {
+      throw new NotFoundException('Invalid credentials');
+    }
+
     const payload = { email: user.email, sub: user._id };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
 
-  async register(email: string, password: string) {
-    return this.usersService.create(email, password);
+  async register(createUserDto: CreateUserDto) {
+    try {
+      return await this.usersService.create(createUserDto);
+    } catch (error) {
+      throw new ConflictException('User already exists');
+    }
+  }
+
+  async profile(email: string) {
+    const user = await this.usersService.findOneByEmail(email);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 }
