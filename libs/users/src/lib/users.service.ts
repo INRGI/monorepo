@@ -28,14 +28,12 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
-    const user = await this.userModel.findOne({ email }).exec();
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    const user = await this.userModel.findOne({ email });
+    
     return user;
   }
 
   async validatePassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
-    return bcrypt.compare(plainPassword, hashedPassword);
+    return await bcrypt.compare(plainPassword, hashedPassword);
   }
 }
