@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app/app.module';
 
 async function bootstrap() {
@@ -7,9 +8,10 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
-
-  const host = process.env.HOST ?? 'localhost';
-  const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+  
+  const configService = app.get(ConfigService);
+  const host = configService.get<string>('HOST') ?? 'localhost';
+  const port = configService.get<number>('PORT') ?? 3000;
   
   app.enableCors();
   
