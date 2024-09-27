@@ -3,6 +3,8 @@ import {
   Post,
   Body,
   UseGuards,
+  Get,
+  Req,
   NotFoundException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -10,6 +12,7 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { LoginDto } from './dto/login-auth.dto';
 import { CreateUserDto } from '@org/users';
 import { UserResponseDto } from 'libs/users/src/lib/dto/response-user.dto';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -39,12 +42,12 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('profile')
-  async getProfile(@Body() body: { email: string }): Promise<UserResponseDto> {
-    const user = await this.authService.profile(body.email);
+  @Get('me')
+  async getProfile(@Req() req: Request): Promise<UserResponseDto> {
+    const user = await this.authService.profile(req.user['email']);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    return { email: user.email };
+    return user;
   }
 }

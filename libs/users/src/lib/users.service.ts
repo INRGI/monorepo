@@ -5,10 +5,11 @@ import * as bcrypt from 'bcryptjs';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { User, UserDocument } from './shemas/user.schema';
+import { Hero, HeroDocument } from './shemas/hero.schema';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>, @InjectModel(Hero.name) private heroModel: Model<HeroDocument>) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { email, password } = createUserDto;
@@ -18,13 +19,20 @@ export class UsersService {
       throw new ConflictException('User already exists');
     }
 
+    const hero = new this.heroModel({
+      name: email,
+    });
+
+    const createdHero = await hero.save();
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new this.userModel({
       email,
       password: hashedPassword,
+      hero: createdHero._id, 
     });
 
-    return newUser.save();
+    return await newUser.save();
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
