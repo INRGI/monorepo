@@ -6,7 +6,8 @@ const LoginForm: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
     axios
       .post('http://localhost:3000/auth/login', { email, password })
       .then((response) => {
