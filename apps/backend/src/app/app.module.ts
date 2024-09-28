@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GameModule } from './game/game.module';
 import { AuthModule } from '@org/auth';
+import { GoogleDriveModule, GoogleDriveService } from '@org/google-drive';
 
 @Module({
   imports: [
@@ -19,9 +20,14 @@ import { AuthModule } from '@org/auth';
       inject: [ConfigService],
     }),
     GameModule,
-    AuthModule
+    AuthModule,
+    GoogleDriveModule.register({
+      client_email: process.env.GOOGLE_CLIENT_EMAIL!,
+      private_key: process.env.GOOGLE_PRIVATE_KEY!
+    }
+    ),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, GoogleDriveService],
 })
 export class AppModule {}

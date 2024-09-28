@@ -12,7 +12,6 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { LoginDto } from './dto/login-auth.dto';
 import { CreateUserDto } from '@org/users';
 import { UserResponseDto } from 'libs/users/src/lib/dto/response-user.dto';
-import { Request } from 'express';
 import { RequestWithUser } from './interfaces/requestWithUser.interface';
 
 @Controller('auth')

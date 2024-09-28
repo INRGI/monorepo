@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@org/auth": ["libs/auth/src/index.ts"],
+      "@org/google-drive": ["libs/google-drive/src/index.ts"],
       "@org/users": ["libs/users/src/index.ts"]
     }
   },
