@@ -24,10 +24,9 @@ import { GoogleDriveModule, GoogleDriveService } from '@org/google-drive';
     GoogleDriveModule.register({
       client_email: process.env.GOOGLE_CLIENT_EMAIL!,
       private_key: process.env.GOOGLE_PRIVATE_KEY!
-    }
-    ),
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService, GoogleDriveService],
+  providers: [AppService],
 })
 export class AppModule {}
