@@ -6,4 +6,3 @@ export const { ConfigurableModuleClass } =
   new ConfigurableModuleBuilder<GoogleDriveOptions>({
     optionsInjectionToken: GoogleDriveTokens.GoogleDriveModuleOptions,
   }).build();
-  // .setClassMethodName('forRoot')
