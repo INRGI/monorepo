@@ -4,17 +4,28 @@ import styled from '@emotion/styled';
 import BattleContainer from './components/BattleContainer/BattleContainer';
 import RegistrationForm from './components/RegistrationForm/RegistrationForm';
 import LoginForm from './components/LoginForm/LoginForm';
+import { Character } from './types/types';
 
 const StyledApp = styled.div``;
 
+const defaultHero: Character = {
+  name: '',
+  imageUrl: '',
+  level: 1,
+  attack: 10,
+  health: 100,
+  experience: 0,
+  coins: 0,
+  user: null,
+};
+
 export function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [hero, setHero] = useState(null);
+  const [hero, setHero] = useState<Character>(defaultHero);
 
-  useEffect(() => {
-    console.log('Authenticated:', isAuthenticated);
-    console.log('Hero:', hero);
-  }, [isAuthenticated, hero]);
+  const updateHero = (updatedHero: Character) => {
+    setHero(updatedHero);
+};
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -56,7 +67,7 @@ export function App() {
   return (
     <StyledApp>
       {isAuthenticated && hero ? (
-        <BattleContainer hero={hero} />
+        <BattleContainer hero={hero} updateHero={updateHero} />
       ) : (
         <>
         <RegistrationForm onLogin={handleLogin} />

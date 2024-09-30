@@ -6,9 +6,10 @@ import { Container, Message } from './BattleContainer.styled';
 
 interface BattleContainerProps {
   hero: Character;
+  updateHero: (hero: Character) => void;
 }
 
-const BattleContainer: React.FC<BattleContainerProps> = ({ hero }) => {
+const BattleContainer: React.FC<BattleContainerProps> = ({ hero, updateHero }) => {
   const [monsters, setMonsters] = useState<Monster[]>([]);
   const [currentMonsterIndex, setCurrentMonsterIndex] = useState(0);
   const [isMonsterDefeated, setIsMonsterDefeated] = useState(false);
@@ -29,11 +30,13 @@ const BattleContainer: React.FC<BattleContainerProps> = ({ hero }) => {
     const monster = monsters[currentMonsterIndex];
     axios
       .post('http://localhost:3000/battle/attack', {
-        character: { attack: hero.attack },
-        monster,
+        character: hero,
+        monsterId: monster.id,
       })
       .then((response) => {
         const updatedMonster = response.data.monster;
+        const updatedHero = response.data.hero;
+
         if (updatedMonster.health <= 0) {
           setIsMonsterDefeated(true);
           setTimeout(() => {
@@ -45,6 +48,8 @@ const BattleContainer: React.FC<BattleContainerProps> = ({ hero }) => {
           updatedMonsters[currentMonsterIndex] = updatedMonster;
           setMonsters(updatedMonsters);
         }
+
+        updateHero(updatedHero);
       })
       .catch((error) => {
         console.error('Error processing attack:', error);
