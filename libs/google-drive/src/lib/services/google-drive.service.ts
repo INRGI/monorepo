@@ -1,19 +1,19 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { google, drive_v3 } from 'googleapis';
 import { GoogleDriveTokens } from '../google-drive.tokens';
 import { GoogleDriveOptions } from '../interfaces';
 import { GoogleDriveServicePort } from './google-drive.service.port';
 
 @Injectable()
-export class GoogleDriveService implements GoogleDriveServicePort {
+export class GoogleDriveService
+  implements GoogleDriveServicePort
+{
   private drive!: drive_v3.Drive;
 
   constructor(
     @Inject(GoogleDriveTokens.GoogleDriveModuleOptions)
     private readonly options: GoogleDriveOptions
-  ) {
-    this.initializeClient();
-  }
+  ) {}
 
   private async initializeClient() {
     const auth = await google.auth.getClient({
@@ -23,11 +23,12 @@ export class GoogleDriveService implements GoogleDriveServicePort {
       },
       scopes: ['https://www.googleapis.com/auth/drive'],
     });
-    
+
     this.drive = google.drive({ version: 'v3', auth });
   }
 
   async getFiles(): Promise<drive_v3.Schema$File[]> {
+    await this.initializeClient();
     const res = await this.drive.files.list({
       pageSize: 10,
       fields: 'files(id, name)',
@@ -36,6 +37,7 @@ export class GoogleDriveService implements GoogleDriveServicePort {
   }
 
   async getFile(fileId: string): Promise<drive_v3.Schema$File> {
+    await this.initializeClient();
     const res = await this.drive.files.get({
       fileId: fileId,
       alt: 'media',
@@ -44,6 +46,7 @@ export class GoogleDriveService implements GoogleDriveServicePort {
   }
 
   async getFolderContents(folderId: string): Promise<drive_v3.Schema$File[]> {
+    await this.initializeClient();
     const res = await this.drive.files.list({
       q: `'${folderId}' in parents`,
       fields: 'files(id, name)',
@@ -52,6 +55,7 @@ export class GoogleDriveService implements GoogleDriveServicePort {
   }
 
   async createTestFile(fileName: string, mimeType: string): Promise<string> {
+    await this.initializeClient();
     const fileMetadata = {
       name: fileName,
       mimeType: mimeType,

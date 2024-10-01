@@ -5,7 +5,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GameModule } from './game/game.module';
 import { AuthModule } from '@org/auth';
-import { GoogleDriveModule, GoogleDriveService } from '@org/google-drive';
+import { GoogleDriveModule } from '@org/google-drive';
+import { TelegramModule } from '@org/telegram';
 
 @Module({
   imports: [
@@ -25,6 +26,10 @@ import { GoogleDriveModule, GoogleDriveService } from '@org/google-drive';
       client_email: process.env.GOOGLE_CLIENT_EMAIL!,
       private_key: process.env.GOOGLE_PRIVATE_KEY!
     }),
+    TelegramModule.register({
+      token: process.env.TELEGRAM_BOT_KEY,
+      openAI: process.env.OPENAI_KEY
+    })
   ],
   controllers: [AppController],
   providers: [AppService],
