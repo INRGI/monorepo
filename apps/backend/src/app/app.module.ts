@@ -7,6 +7,7 @@ import { GameModule } from './game/game.module';
 import { AuthModule } from '@org/auth';
 import { GoogleDriveModule } from '@org/google-drive';
 import { TelegramModule } from '@org/telegram';
+import { GeminiModule } from '@org/gemini';
 
 @Module({
   imports: [
@@ -26,10 +27,14 @@ import { TelegramModule } from '@org/telegram';
       client_email: process.env.GOOGLE_CLIENT_EMAIL!,
       private_key: process.env.GOOGLE_PRIVATE_KEY!
     }),
-    TelegramModule.register({
+    // TelegramModule.register({
+    //   token: process.env.TELEGRAM_BOT_KEY,
+    //   openAI: process.env.OPENAI_KEY
+    // }),
+    GeminiModule.register({
       token: process.env.TELEGRAM_BOT_KEY,
-      openAI: process.env.OPENAI_KEY
-    })
+      geminiKey : process.env.GEMINI_KEY
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
