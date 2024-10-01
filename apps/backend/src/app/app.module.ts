@@ -8,6 +8,7 @@ import { AuthModule } from '@org/auth';
 import { GoogleDriveModule } from '@org/google-drive';
 import { TelegramModule } from '@org/telegram';
 import { GeminiModule } from '@org/gemini';
+import { UnsplashModule } from '@org/unsplash';
 
 @Module({
   imports: [
@@ -27,14 +28,17 @@ import { GeminiModule } from '@org/gemini';
       client_email: process.env.GOOGLE_CLIENT_EMAIL!,
       private_key: process.env.GOOGLE_PRIVATE_KEY!
     }),
+    UnsplashModule.register({
+      accessKey: process.env.UNSPLASH_ACCESS_KEY
+    }),
     // TelegramModule.register({
     //   token: process.env.TELEGRAM_BOT_KEY,
     //   openAI: process.env.OPENAI_KEY
     // }),
-    GeminiModule.register({
-      token: process.env.TELEGRAM_BOT_KEY,
-      geminiKey : process.env.GEMINI_KEY
-    }),
+    // GeminiModule.register({
+    //   token: process.env.TELEGRAM_BOT_KEY,
+    //   geminiKey : process.env.GEMINI_KEY
+    // }),
   ],
   controllers: [AppController],
   providers: [AppService],

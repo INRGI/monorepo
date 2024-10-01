@@ -19,6 +19,7 @@
       "@org/gemini": ["libs/gemini/src/index.ts"],
       "@org/google-drive": ["libs/google-drive/src/index.ts"],
       "@org/telegram": ["libs/telegram/src/index.ts"],
+      "@org/unsplash": ["libs/unsplash/src/index.ts"],
       "@org/users": ["libs/users/src/index.ts"]
     }
   },
