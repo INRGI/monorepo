@@ -1,4 +1,4 @@
-import { Inject, Logger } from '@nestjs/common';
+import { Inject, Logger, OnModuleInit } from '@nestjs/common';
 
 import { Telegraf } from 'telegraf';
 import { GeminiServicePort } from './gemini.service.port';
@@ -6,7 +6,7 @@ import { GeminiTokens } from '../gemini.tokens';
 import { GeminiOptions } from '../interfaces';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-export class GeminiService implements GeminiServicePort {
+export class GeminiService implements GeminiServicePort, OnModuleInit {
   private readonly logger = new Logger(GeminiService.name);
   private bot: Telegraf;
   private gemini: GoogleGenerativeAI;
@@ -18,11 +18,13 @@ export class GeminiService implements GeminiServicePort {
     this.bot = new Telegraf(this.options.token);
 
     this.gemini = new GoogleGenerativeAI(this.options.geminiKey);
-
-    this.initializeBot();
   }
 
-  private initializeBot() {
+  async onModuleInit() {
+    await this.initializeBot();
+  }
+
+  private async initializeBot() {
     this.bot.on('message', async (ctx) => {
       if (ctx.message && 'text' in ctx.message) {
         const userMessage = ctx.message.text;
@@ -38,7 +40,7 @@ export class GeminiService implements GeminiServicePort {
 
   private async getAIResponse(prompt: string): Promise<string> {
     try {
-      const model = this.gemini.getGenerativeModel({
+      const model = await this.gemini.getGenerativeModel({
         model: 'gemini-1.5-flash',
       });
       const result = await model.generateContent(prompt);
