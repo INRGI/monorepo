@@ -9,6 +9,7 @@ import { GoogleDriveModule } from '@org/google-drive';
 import { TelegramModule } from '@org/telegram';
 import { GeminiModule } from '@org/gemini';
 import { UnsplashModule } from '@org/unsplash';
+import { SlackBotModule } from '@org/slack-bot';
 
 @Module({
   imports: [
@@ -39,6 +40,11 @@ import { UnsplashModule } from '@org/unsplash';
     //   token: process.env.TELEGRAM_BOT_KEY,
     //   geminiKey : process.env.GEMINI_KEY
     // }),
+    SlackBotModule.register({
+      token: process.env.SLACK_BOT_OAUTH_TOKEN,
+      signingSecret : process.env.SLACK_SIGNING_SECRET,
+      appToken: process.env.SLACK_BOT_APP_TOKEN
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

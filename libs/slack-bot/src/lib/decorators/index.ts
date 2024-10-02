@@ -1,0 +1,1 @@
+export * from './slack-bot.decorator';
