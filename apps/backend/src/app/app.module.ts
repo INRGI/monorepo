@@ -43,7 +43,8 @@ import { SlackBotModule } from '@org/slack-bot';
     SlackBotModule.register({
       token: process.env.SLACK_BOT_OAUTH_TOKEN,
       signingSecret : process.env.SLACK_SIGNING_SECRET,
-      appToken: process.env.SLACK_BOT_APP_TOKEN
+      appToken: process.env.SLACK_BOT_APP_TOKEN,
+      appUserId: process.env.SLACK_USER_ID,
     }),
   ],
   controllers: [AppController],
