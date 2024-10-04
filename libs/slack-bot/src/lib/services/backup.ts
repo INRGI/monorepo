@@ -11,7 +11,6 @@ import {
   SlackEventMiddlewareArgs,
 } from '@slack/bolt';
 import * as fs from 'fs/promises';
-import{ createReadStream } from 'fs'
 import axios from 'axios';
 import { SlackBotOptions } from '../interfaces';
 
@@ -33,6 +32,7 @@ export class SlackBotService implements SlackBotServicePort, OnModuleInit {
   private async botInitialize() {
     try {
       await this.slackBotApp.start();
+
       this.registerEventHandlers();
     } catch (error) {
       this.logger.error('Failed to start Slack Bot', error);
@@ -40,18 +40,79 @@ export class SlackBotService implements SlackBotServicePort, OnModuleInit {
   }
 
   private registerEventHandlers(): void {
+    this.slackBotApp.event('file_shared', this.handleCSVSharedEvent);
+    this.slackBotApp.command('/time', this.handleTimeCommand);
     this.slackBotApp.command('/validate', this.handleOpenValidationView);
-
+    this.slackBotApp.action(
+      'validation_type_internal_contacts',
+      this.handleValidationSelection
+    );
     this.slackBotApp.action(
       'validation_type_internal',
       this.handleValidationSelection
     );
-
+    this.slackBotApp.action(
+      'validation_type_partner_contacts',
+      this.handleValidationSelection
+    );
     this.slackBotApp.action(
       'validation_type_partner',
       this.handleValidationSelection
     );
+
+    // this.slackBotApp.message(this.handleMessageEvent.bind(this));
   }
+
+  private handleMessageEvent: Middleware<SlackEventMiddlewareArgs<'message'>> =
+    async ({ message, say }) => {
+      if (message && 'text' in message) {
+        const text = message.text;
+        await say(`You mean: ${text}?`);
+      }
+    };
+
+  private handleCSVSharedEvent: Middleware<
+    SlackEventMiddlewareArgs<'file_shared'>
+  > = async ({ event, client }) => {
+    try {
+      if (event.user_id === this.options.appUserId) return;
+
+      const { file, channel_id } = event as FileSharedEvent;
+
+      const fileInfo = await client.files.info({
+        file: file.id,
+      });
+
+      if (!fileInfo.file || !fileInfo.file.url_private) {
+        this.logger.error(`File info has a wrong value: ${file.id}`);
+        return;
+      }
+
+      const fileType = fileInfo.file.filetype;
+
+      if (fileType === 'csv') {
+        const fileUrl = fileInfo.file.url_private;
+
+        const response = await axios.get(fileUrl, {
+          headers: {
+            Authorization: `Bearer ${this.options.token}`,
+          },
+          responseType: 'arraybuffer',
+        });
+
+        const newFileName = `validated.csv`;
+        await fs.writeFile(`/tmp/${newFileName}`, response.data);
+        await client.files.uploadV2({
+          channel_id,
+          title: newFileName,
+          filename: newFileName,
+          file: `/tmp/${newFileName}`,
+        });
+      }
+    } catch (error) {
+      this.logger.error(error);
+    }
+  };
 
   private handleOpenValidationView: Middleware<SlackCommandMiddlewareArgs> =
     async ({ ack, client, body }) => {
@@ -76,10 +137,28 @@ export class SlackBotService implements SlackBotServicePort, OnModuleInit {
                 type: 'button',
                 text: {
                   type: 'plain_text',
+                  text: 'INTERNAL_VALIDATION_CONTACTS',
+                },
+                value: 'INTERNAL_VALIDATION_CONTACTS',
+                action_id: 'validation_type_internal_contacts',
+              },
+              {
+                type: 'button',
+                text: {
+                  type: 'plain_text',
                   text: 'INTERNAL_VALIDATION',
                 },
                 value: 'INTERNAL_VALIDATION',
                 action_id: 'validation_type_internal',
+              },
+              {
+                type: 'button',
+                text: {
+                  type: 'plain_text',
+                  text: 'PARTNER_VALIDATION_CONTACTS',
+                },
+                value: 'PARTNER_VALIDATION_CONTACTS',
+                action_id: 'validation_type_partner_contacts',
               },
               {
                 type: 'button',
@@ -99,82 +178,20 @@ export class SlackBotService implements SlackBotServicePort, OnModuleInit {
   private handleValidationSelection: Middleware<SlackActionMiddlewareArgs> =
     async ({ ack, body, client, action }) => {
       await ack();
+
       const selectedValidationType = (action as any).value;
       if (!body.channel?.id) return;
-
       await client.chat.postMessage({
         channel: body.channel.id,
         text: `You selected *${selectedValidationType}*. Please upload a CSV file for validation.`,
       });
-
-      this.handleCSVUpload(selectedValidationType, body.channel.id);
-      await client.chat.delete({channel: body.channel.id, ts: action.type})
     };
 
-  private handleCSVUpload = async (
-    validationType: string,
-    channelId: string
-  ) => {
-    this.slackBotApp.event('file_shared', async ({ event, client }) => {
-      try {
-        if (event.user_id === this.options.appUserId) return;
-        const { file, event_ts } = event as FileSharedEvent;
-
-        const fileInfo = await client.files.info({
-          file: file.id,
-        });
-
-        if (!fileInfo.file || !fileInfo.file.url_private) {
-          this.logger.error(`File info has a wrong value: ${file.id}`);
-          return;
-        }
-
-        const fileType = fileInfo.file.filetype;
-
-        if (fileType === 'csv') {
-          const fileUrl = fileInfo.file.url_private;
-
-          const response = await axios.get(fileUrl, {
-            headers: {
-              Authorization: `Bearer ${this.options.token}`,
-            },
-            responseType: 'arraybuffer',
-          });
-
-          const newFileName = `validated.csv`;
-          await fs.writeFile(`/tmp/${newFileName}`, response.data);
-          const fileStats = await fs.stat(`/tmp/${newFileName}`)
-
-          const uploadURLResponse = await client.files.getUploadURLExternal({
-            filename: newFileName,
-            length: fileStats.size,
-          });
-
-          const uploadURL = uploadURLResponse.upload_url;
-          if(!uploadURL) return;
-          const fileId = uploadURLResponse.file_id;
-          if(!fileId) return;
-          
-          await axios.post(uploadURL, createReadStream(`/tmp/${newFileName}`), {
-            headers: {
-              'Content-Type': 'application/octet-stream',
-            },
-            maxContentLength: Infinity,
-            maxBodyLength: Infinity,
-          });
-
-          await client.files.completeUploadExternal({
-            files: [{
-                id: fileId,
-                title: `${newFileName} (${validationType})`
-            }],
-            channel_id: channelId,
-            thread_ts: event_ts
-        });
-        }
-      } catch (error) {
-        this.logger.error(error);
-      }
-    });
+  private handleTimeCommand: Middleware<SlackCommandMiddlewareArgs> = async ({
+    ack,
+    respond,
+  }) => {
+    await ack();
+    await respond(`Time now is ${Date.now()}`);
   };
 }
