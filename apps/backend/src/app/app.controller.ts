@@ -8,15 +8,15 @@ export class AppController {
   constructor(
     // @InjectGoogleDrive() 
     // private readonly googleDriveService: GoogleDriveService
-    @InjectUnsplash()
-    private readonly unsplashService: UnsplashService
+    // @InjectUnsplash()
+    // private readonly unsplashService: UnsplashService
   ) {}
 
-  @Get('randomPhoto')
-  async randomPhoto() {
-    const photo = await this.unsplashService.getRandomPhoto();
-    return photo;
-  }
+  // @Get('randomPhoto')
+  // async randomPhoto() {
+  //   const photo = await this.unsplashService.getRandomPhoto();
+  //   return photo;
+  // }
 
   // @Get('files')
   // async getFiles() {

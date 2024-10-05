@@ -25,13 +25,13 @@ import { SlackBotModule } from '@org/slack-bot';
     }),
     GameModule,
     AuthModule,
-    GoogleDriveModule.register({
-      client_email: process.env.GOOGLE_CLIENT_EMAIL!,
-      private_key: process.env.GOOGLE_PRIVATE_KEY!
-    }),
-    UnsplashModule.register({
-      accessKey: process.env.UNSPLASH_ACCESS_KEY
-    }),
+    // GoogleDriveModule.register({
+    //   client_email: process.env.GOOGLE_CLIENT_EMAIL!,
+    //   private_key: process.env.GOOGLE_PRIVATE_KEY!
+    // }),
+    // UnsplashModule.register({
+    //   accessKey: process.env.UNSPLASH_ACCESS_KEY
+    // }),
     // TelegramModule.register({
     //   token: process.env.TELEGRAM_BOT_KEY,
     //   openAI: process.env.OPENAI_KEY

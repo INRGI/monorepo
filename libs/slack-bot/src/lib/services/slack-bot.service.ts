@@ -8,7 +8,6 @@ import {
   Middleware,
   SlackActionMiddlewareArgs,
   SlackCommandMiddlewareArgs,
-  SlackEventMiddlewareArgs,
 } from '@slack/bolt';
 import * as fs from 'fs/promises';
 import{ createReadStream } from 'fs'
@@ -108,7 +107,6 @@ export class SlackBotService implements SlackBotServicePort, OnModuleInit {
       });
 
       this.handleCSVUpload(selectedValidationType, body.channel.id);
-      await client.chat.delete({channel: body.channel.id, ts: action.type})
     };
 
   private handleCSVUpload = async (
@@ -119,7 +117,7 @@ export class SlackBotService implements SlackBotServicePort, OnModuleInit {
       try {
         if (event.user_id === this.options.appUserId) return;
         const { file, event_ts } = event as FileSharedEvent;
-
+        
         const fileInfo = await client.files.info({
           file: file.id,
         });
@@ -154,7 +152,7 @@ export class SlackBotService implements SlackBotServicePort, OnModuleInit {
           if(!uploadURL) return;
           const fileId = uploadURLResponse.file_id;
           if(!fileId) return;
-          
+
           await axios.post(uploadURL, createReadStream(`/tmp/${newFileName}`), {
             headers: {
               'Content-Type': 'application/octet-stream',
