@@ -16,7 +16,7 @@ export class User {
   createdAt: Date;
 
   @Prop({ type: Types.ObjectId, ref: 'Hero' })
-  hero: Types.ObjectId;;
+  hero: Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

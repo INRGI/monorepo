@@ -1,26 +1,35 @@
-import { Controller, Get } from '@nestjs/common';
-// import { InjectGoogleDrive } from '@org/google-drive';
-// import { GoogleDriveService } from '@org/google-drive';
-import {InjectUnsplash, UnsplashService} from '@org/unsplash';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { ItemService } from './loot/services/item.service';
+import { Item } from './loot/entities/item.entity';
+import { ItemBoxService } from './loot/services/itemBox.service';
+import { ItemBox } from './loot/entities/itemBox.entity';
+import { InsertResult } from 'typeorm';
+import { CreateItemDto } from './loot/dtos/CreateItem.dto';
+import { CreateItemBoxDto } from './loot/dtos/CreateItemBox.dto';
 
 @Controller()
 export class AppController {
   constructor(
-    // @InjectGoogleDrive() 
-    // private readonly googleDriveService: GoogleDriveService
-    // @InjectUnsplash()
-    // private readonly unsplashService: UnsplashService
+    private readonly itemService: ItemService,
+    private readonly itemBoxService: ItemBoxService
   ) {}
+    @Get('item')
+    async getItem(){
+      return await this.itemService.findAll();
+    }
 
-  // @Get('randomPhoto')
-  // async randomPhoto() {
-  //   const photo = await this.unsplashService.getRandomPhoto();
-  //   return photo;
-  // }
+    @Post('item')
+    create(@Body() item: CreateItemDto): Promise<Partial<Item>> {
+      return this.itemService.create(item);
+    }
 
-  // @Get('files')
-  // async getFiles() {
-  //   const files = await this.googleDriveService.getFiles();
-  //   return files;
-  // }
+    @Get('itemBox')
+    async getItemBox(){
+      return await this.itemBoxService.findAll();
+    }
+
+    @Post('itemBox')
+    createBox(@Body() itemBox:  CreateItemBoxDto): Promise<ItemBox> {
+      return this.itemBoxService.create(itemBox);
+    }
 }

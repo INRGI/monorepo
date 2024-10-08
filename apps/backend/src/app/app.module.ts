@@ -10,6 +10,7 @@ import { TelegramModule } from '@org/telegram';
 import { GeminiModule } from '@org/gemini';
 import { UnsplashModule } from '@org/unsplash';
 import { SlackBotModule } from '@org/slack-bot';
+import { ItemModule } from './loot/loot.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { SlackBotModule } from '@org/slack-bot';
     }),
     GameModule,
     AuthModule,
+    ItemModule,
     // GoogleDriveModule.register({
     //   client_email: process.env.GOOGLE_CLIENT_EMAIL!,
     //   private_key: process.env.GOOGLE_PRIVATE_KEY!
