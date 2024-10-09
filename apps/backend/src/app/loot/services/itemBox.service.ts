@@ -1,15 +1,18 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { ItemBox } from '../entities/itemBox.entity';
+import { Chances, ItemBox } from '../entities/itemBox.entity';
 import { CreateItemBoxDto } from '../dtos/CreateItemBox.dto';
 import { UpdateItemBoxDto } from '../dtos/UpdateItemBox.dto';
 import { DeleteItemBoxDto } from '../dtos/DeleteItemBox.dto';
+import { Item } from '../entities/item.entity';
 
 @Injectable()
 export class ItemBoxService {
   constructor(
     @Inject('ITEM_BOX_REPOSITORY')
-    private itemBoxRepository: Repository<ItemBox>
+    private itemBoxRepository: Repository<ItemBox>,
+    @Inject('ITEM_REPOSITORY')
+    private itemRepository: Repository<Item>
   ) {}
 
   async findAll(): Promise<ItemBox[]> {
@@ -50,12 +53,55 @@ export class ItemBoxService {
 
   async delete(itemBoxId: DeleteItemBoxDto) {
     await this.itemBoxRepository
-    .createQueryBuilder()
-    .delete()
-    .from(ItemBox)
-    .where("id = :id", {id: itemBoxId.id})
-    .execute()
+      .createQueryBuilder()
+      .delete()
+      .from(ItemBox)
+      .where('id = :id', { id: itemBoxId.id })
+      .execute();
 
-    return "Deleted!"
+    return 'Deleted!';
+  }
+
+  async getOne(itemBoxId: DeleteItemBoxDto): Promise<ItemBox> {
+    const result = await this.itemBoxRepository
+      .createQueryBuilder('ItemBox')
+      .leftJoinAndSelect("ItemBox.items", "item")
+      .where('ItemBox.id = :id', { id: itemBoxId.id })
+      .getOne();
+    return result;
+  }
+
+  async randomItemInABox(itemBoxId: DeleteItemBoxDto): Promise<Item> {
+    const box = await this.getOne(itemBoxId);
+
+    if (!box || !box.items.length) {
+      throw new Error('ItemBox not found');
+    }
+
+    const rarity = this.getRandomRarity(box.chances);
+
+    const itemsByRarity = await this.itemRepository
+      .createQueryBuilder('item')
+      .where('item.itemBoxId = :id', { id: itemBoxId.id })
+      .andWhere('item.rarity = :rarity', { rarity })
+      .getMany();
+
+    if (!itemsByRarity.length) {
+      throw new Error(`No items of this rarity found`);
+    }
+
+    const randomIndex = Math.floor(Math.random() * itemsByRarity.length);
+    return itemsByRarity[randomIndex];
+  }
+
+  private getRandomRarity(
+    chances: Chances
+  ): 'common' | 'rare' | 'epic' | 'legendary' {
+    const random = Math.random() * 100;
+
+    if (random < chances.common) return 'common';
+    if (random < chances.common + chances.rare) return 'rare';
+    if (random < chances.common + chances.rare + chances.epic) return 'epic';
+    return 'legendary';
   }
 }

@@ -5,6 +5,10 @@ import BattleContainer from './components/BattleContainer/BattleContainer';
 import RegistrationForm from './components/RegistrationForm/RegistrationForm';
 import LoginForm from './components/LoginForm/LoginForm';
 import { Character } from './types/types';
+import BoxContainer from './components/BoxContainer/BoxContainer';
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root');
 
 const StyledApp = styled.div``;
 
@@ -75,7 +79,7 @@ export function App() {
       </>
       )}
 
-      
+      <BoxContainer />
     </StyledApp>
   );
 }

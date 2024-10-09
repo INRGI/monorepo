@@ -23,6 +23,9 @@ export class Item {
   @Column()
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
 
+  @Column()
+  image: string;
+
   @Column(() => Stats)
   stats: Stats;
 

@@ -3,6 +3,7 @@ export class UpdateItemDto {
   name?: string;
   type?: 'weapon' | 'armor';
   rarity?: 'common' | 'rare' | 'epic' | 'legendary';
+  image?: string;
   stats?: {
     attack?: number;
 

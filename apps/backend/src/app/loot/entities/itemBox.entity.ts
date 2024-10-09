@@ -2,16 +2,16 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn } from 't
 import { Item } from './item.entity';
 
 export class Chances {
-  @Column({ default: 0 })
+  @Column({ default: 80 })
   common: number;
 
-  @Column({ default: 0 })
+  @Column({ default: 14 })
   rare: number;
 
-  @Column({ default: 0 })
+  @Column({ default: 5 })
   epic: number;
 
-  @Column({ default: 0 })
+  @Column({ default: 1 })
   legendary: number;
 }
 
@@ -22,6 +22,9 @@ export class ItemBox {
 
   @Column({ length: 500 })
   name: string;
+
+  @Column()
+  image: string;
 
   @Column()
   cost: number;
