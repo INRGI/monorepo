@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn } from 'typeorm';
 import { Item } from './item.entity';
 
 export class Chances {
@@ -29,6 +29,7 @@ export class ItemBox {
   @Column(() => Chances)
   chances: Chances;
 
-  @OneToMany(() => Item, (item) => item.itemBox)
+  @OneToMany(() => Item, (item) => item.itemBox, {cascade: true})
+  @JoinColumn()
   items: Item[];
 }

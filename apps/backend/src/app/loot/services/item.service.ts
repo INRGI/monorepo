@@ -3,6 +3,8 @@ import { Repository } from 'typeorm';
 import { Item } from '../entities/item.entity';
 import { ItemBox } from '../entities/itemBox.entity';
 import { CreateItemDto } from '../dtos/CreateItem.dto';
+import { UpdateItemDto } from '../dtos/UpdateItem.dto';
+import { DeleteItemDto } from '../dtos/DeleteItem.dto';
 
 @Injectable()
 export class ItemService {
@@ -37,5 +39,31 @@ export class ItemService {
     });
 
     return await this.itemRepository.save(newItem);
+  }
+
+  async update(itemData: UpdateItemDto): Promise<Partial<Item>> {
+    await this.itemRepository
+      .createQueryBuilder()
+      .update(Item)
+      .set(itemData)
+      .where('id = :id', { id: itemData.id })
+      .execute();
+
+    const item = await this.itemRepository.findOne({
+      where: { id: itemData.id },
+    });
+
+    return item;
+  }
+
+  async delete(itemBoxId: DeleteItemDto) {
+    await this.itemRepository
+    .createQueryBuilder()
+    .delete()
+    .from(Item)
+    .where("id = :id", {id: itemBoxId.id})
+    .execute()
+
+    return "Deleted!"
   }
 }
