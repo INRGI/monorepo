@@ -14,7 +14,7 @@ export class ItemBoxService {
     private itemBoxRepository: Repository<ItemBox>,
     @Inject('ITEM_REPOSITORY')
     private itemRepository: Repository<Item>,
-    private enchantService: EnchantService,
+    private enchantService: EnchantService
   ) {}
 
   async findAll(): Promise<ItemBox[]> {
@@ -87,6 +87,27 @@ export class ItemBoxService {
     return result;
   }
 
+  async randomItemByRarity(
+    rarity: 'common' | 'rare' | 'epic' | 'legendary'
+  ): Promise<Item> {
+    const itemsByRarity = await this.itemRepository
+      .createQueryBuilder('item')
+      .where('item.rarity = :rarity', { rarity })
+      .getMany();
+
+    if (itemsByRarity.length === 0) {
+      throw new Error(`No items found for rarity: ${rarity}`);
+    }
+
+    const randomIndex = Math.floor(Math.random() * itemsByRarity.length);
+
+    let selectedItem = itemsByRarity[randomIndex];
+
+    selectedItem = await this.enchantService.applyEnchantment(selectedItem);
+
+    return selectedItem;
+  }
+
   async randomItemInABox(itemBoxId: DeleteItemBoxDto): Promise<Item> {
     const box = await this.getOne(itemBoxId);
     if (!box || !box.items.length) {
@@ -106,11 +127,11 @@ export class ItemBoxService {
     }
 
     const randomIndex = Math.floor(Math.random() * itemsByRarity.length);
-  let selectedItem = itemsByRarity[randomIndex];
+    let selectedItem = itemsByRarity[randomIndex];
 
-  selectedItem = await this.enchantService.applyEnchantment(selectedItem);
+    selectedItem = await this.enchantService.applyEnchantment(selectedItem);
 
-  return selectedItem;
+    return selectedItem;
   }
 
   private getRandomRarity(

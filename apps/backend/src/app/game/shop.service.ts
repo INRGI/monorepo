@@ -28,5 +28,22 @@ export class ShopService {
   
     return await this.itemBoxService.randomItemInABox(itemBoxId);
   }
+
+  async buyRandomItemByRarity(hero: HeroDocument, price: number, rarity: 'common' | 'rare' | 'epic' | 'legendary'){
+    if (!hero._id) {
+      throw new HttpException('Hero not Found', 303);
+    }
+  
+    const heroId: Types.ObjectId = hero._id as Types.ObjectId;
+    
+
+    const result = await this.heroService.spendCoins(heroId, price);
+  
+    if (!result) {
+      throw new HttpException('Something went wrong', 303);
+    }
+
+    return await this.itemBoxService.randomItemByRarity(rarity);
+  }
   
 }

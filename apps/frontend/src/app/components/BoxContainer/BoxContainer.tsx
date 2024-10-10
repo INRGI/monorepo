@@ -1,27 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Container, BoxCard, ModalContainer, BoxesContainer } from './BoxContainer.styled';
-import { Character } from '../../types/types';
-
-interface Box {
-  id: number;
-  name: string;
-  image: string;
-  cost: number;
-}
-
-interface Item {
-  id: number;
-  name: string;
-  image: string;
-  type: 'weapon' | 'armor';
-  rarity: 'common' | 'rare' | 'epic' | 'legendary';
-  enchanted: string;
-  stats: {
-    attack?: number;
-    health?: number;
-  };
-}
+import { Box, Character, Item } from '../../types/types';
 
 interface BoxContainerProps {
   hero: Character;

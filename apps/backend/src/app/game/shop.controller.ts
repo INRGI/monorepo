@@ -13,10 +13,19 @@ export class ShopController {
 
   @Post('buy/:itemBoxId')
   async buyItemBox(
-    @Param('itemBoxId') itemBoxId: DeleteItemDto, 
-    @Body('hero') hero: HeroDocument, 
+    @Param('itemBoxId') itemBoxId: DeleteItemDto,
+    @Body('hero') hero: HeroDocument,
     @Body('price') price: number
   ) {
     return await this.shopService.buyCase(hero, price, itemBoxId);
+  }
+
+  @Post('buyByRarity/:rarity')
+  async getBoxByRarity(
+    @Param('rarity') rarity: 'common' | 'rare' | 'epic' | 'legendary',
+    @Body('hero') hero: HeroDocument,
+    @Body('price') price: number
+  ) {
+    return await this.shopService.buyRandomItemByRarity(hero, price, rarity);
   }
 }

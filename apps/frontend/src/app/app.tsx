@@ -7,6 +7,7 @@ import LoginForm from './components/LoginForm/LoginForm';
 import { Character } from './types/types';
 import BoxContainer from './components/BoxContainer/BoxContainer';
 import Modal from 'react-modal';
+import ItemByRarity from './components/ItemByRarity/ItemByRarity';
 
 Modal.setAppElement('#root');
 
@@ -73,6 +74,7 @@ export function App() {
         <>
           <BattleContainer hero={hero} updateHero={updateHero} />
           <BoxContainer hero={hero}  updateHero={updateHero}/>
+          <ItemByRarity hero={hero}  updateHero={updateHero}/>
         </>
       ) : (
         <>

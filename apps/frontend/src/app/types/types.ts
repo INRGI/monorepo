@@ -19,3 +19,24 @@ export interface Monster {
   imageUrl: string;
   xp: number;
 }
+
+
+export interface Box {
+  id: number;
+  name: string;
+  image: string;
+  cost: number;
+}
+
+export interface Item {
+  id: number;
+  name: string;
+  image: string;
+  type: 'weapon' | 'armor';
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  enchanted: string;
+  stats: {
+    attack?: number;
+    health?: number;
+  };
+}
