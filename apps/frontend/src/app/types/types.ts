@@ -17,4 +17,5 @@ export interface Monster {
   health: number;
   attack: number;
   imageUrl: string;
+  xp: number;
 }

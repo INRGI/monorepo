@@ -9,12 +9,16 @@ interface BattleProps {
     level: number;
     health: number;
     attack: number;
+    imageUrl: string;
+    coins: number;
+    experience: number;
   };
   monster: {
     name: string;
     health: number;
     attack: number;
     imageUrl: string;
+    xp: number;
   };
   onAttack: (newMonsterHealth: number) => void;
 }

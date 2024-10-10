@@ -8,6 +8,8 @@ interface CharacterProps {
     health: number;
     attack: number;
     imageUrl: string;
+    coins: number;
+    experience: number;
   };
 }
 
@@ -18,6 +20,8 @@ const Character: React.FC<CharacterProps> = ({ character }) => (
     <InfoText>Level: {character.level}</InfoText>
     <InfoText>Health: {character.health}</InfoText>
     <InfoText>Attack: {character.attack}</InfoText>
+    <InfoText>Coins: {character.coins}</InfoText>
+    <InfoText>Xp: {character.experience}</InfoText>
   </Card>
 );
 

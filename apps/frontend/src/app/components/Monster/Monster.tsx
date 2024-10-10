@@ -7,6 +7,7 @@ interface MonsterProps {
     health: number;
     attack: number;
     imageUrl: string;
+    xp: number;
   };
 }
 

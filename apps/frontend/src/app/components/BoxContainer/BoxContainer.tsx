@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, BoxCard, ModalContainer } from './BoxContainer.styled';
+import { Container, BoxCard, ModalContainer, BoxesContainer } from './BoxContainer.styled';
+import { Character } from '../../types/types';
 
 interface Box {
   id: number;
@@ -15,32 +16,48 @@ interface Item {
   image: string;
   type: 'weapon' | 'armor';
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  enchanted: string;
   stats: {
     attack?: number;
     health?: number;
   };
 }
 
-const BoxContainer: React.FC = () => {
+interface BoxContainerProps {
+  hero: Character;
+  updateHero: (hero: Character) => void;
+}
+
+const BoxContainer: React.FC<BoxContainerProps> = ({ hero, updateHero }) => {
   const [boxes, setBoxes] = useState<Box[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [openedItem, setOpenedItem] = useState<Item | null>(null);
 
-  const handleOpenBox = async (boxId: number) => {
+  const handleBuyBox = async (boxId: number, price: number) => {
     try {
-      const response = await axios.get(`http://localhost:3000/itemBox/${boxId}`);
+      const response = await axios.post(`http://localhost:3000/shop/buy/${boxId}`, {
+        hero: hero,
+        price
+      });
+
+      if(!response){
+        throw new Error('Not enough coins');
+      }
+
       setOpenedItem(response.data);
       setModalIsOpen(true);
+      const updatedHero ={...hero, 'coins': hero.coins - price};
+      updateHero(updatedHero);
     } catch (error) {
-      console.error('Error opening box:', error);
+      console.error('Error buying box:', error);
     }
   };
 
   useEffect(() => {
     const fetchBoxes = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/itemBox');
+        const response = await axios.get('http://localhost:3000/itemBox/top');
         setBoxes(response.data);
       } catch (error) {
         console.error('Failed to fetch boxes:', error);
@@ -61,28 +78,28 @@ const BoxContainer: React.FC = () => {
 
   return (
     <Container>
-      <h3>Boxes</h3>
-      <div>
+      <h3>TOP Boxes</h3>
+      <BoxesContainer>
         {boxes.map((box) => (
           <BoxCard key={box.id}>
             <img src={box.image} alt={box.name} />
             <h4>{box.name}</h4>
             <p>Cost: {box.cost} coins</p>
-            <button onClick={() => handleOpenBox(box.id)}>Open Box</button>
+            <button onClick={() => handleBuyBox(box.id, box.cost)}>Buy Box</button>
           </BoxCard>
         ))}
-      </div>
+      </BoxesContainer>
 
       <ModalContainer isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Opened Item">
-        <h2>You've recieved a new item!</h2>
+        <h2>You've received a new item!</h2>
         {openedItem && (
           <div>
             <img width={300} src={openedItem.image} alt={openedItem.name} />
             <h4>{openedItem.name}</h4>
             <p>Type: {openedItem.type}</p>
             <p>Rarity: {openedItem.rarity}</p>
-            {openedItem.stats.attack && <p>Attack: {openedItem.stats.attack}</p>}
-            {openedItem.stats.health && <p>Health: {openedItem.stats.health}</p>}
+            <p>Enchanted: {openedItem.enchanted}</p>
+            {openedItem.stats.attack && <p>Attack: {openedItem.stats.attack}</p> || openedItem.stats.health && <p>Health: {openedItem.stats.health}</p>}
           </div>
         )}
         <button onClick={closeModal}>Close</button>
@@ -90,5 +107,6 @@ const BoxContainer: React.FC = () => {
     </Container>
   );
 };
+
 
 export default BoxContainer;

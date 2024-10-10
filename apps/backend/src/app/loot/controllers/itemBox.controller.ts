@@ -22,6 +22,11 @@ export class ItemBoxController {
     return await this.itemBoxService.findAll();
   }
 
+  @Get('top')
+  async getTopBoxes(){
+    return await this.itemBoxService.findTheMostExpensive();
+  }
+
   @Get('one/:id')
   async getOneItemBox(@Param() itemBoxId: DeleteItemBoxDto) {
     return await this.itemBoxService.getOne(itemBoxId);

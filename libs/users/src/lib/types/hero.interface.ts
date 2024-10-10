@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-export interface Hero{
+export interface HeroInterface{
     _id: Types.ObjectId;
     name: string;
     imageUrl: string;

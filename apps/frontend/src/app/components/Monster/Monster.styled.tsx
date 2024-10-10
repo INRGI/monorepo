@@ -21,6 +21,9 @@ export const Image = styled.img`
   max-width: 200px;
   overflow: hidden;
   border-radius: 10px;
+  float: left;
+  height: 200px;
+  object-fit: cover;
 `;
 
 export const InfoTitle = styled.h2`

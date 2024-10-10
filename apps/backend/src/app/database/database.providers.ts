@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import { Item } from '../loot/entities/item.entity';
 import { ItemBox } from '../loot/entities/itemBox.entity';
+import { Enchant } from '../loot/entities/enchant.entity';
 
 export const databaseProviders = [
   {
@@ -13,7 +14,7 @@ export const databaseProviders = [
             username: 'root',
             password: 'root',
             database: 'loot',
-            entities: [Item, ItemBox],
+            entities: [Item, ItemBox, Enchant],
             synchronize: true,
           });
           

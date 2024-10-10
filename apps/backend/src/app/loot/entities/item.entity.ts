@@ -1,5 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { ItemBox } from './itemBox.entity';
+import { Enchant } from './enchant.entity';
 
 export class Stats {
   @Column({ nullable: true })
@@ -29,6 +37,13 @@ export class Item {
   @Column(() => Stats)
   stats: Stats;
 
+  @Column({ nullable: true })
+  enchanted: string;
+
   @ManyToOne(() => ItemBox, (itemBox) => itemBox.items)
   itemBox: ItemBox;
+
+  @OneToMany(() => Enchant, (enchant) => enchant.item, { cascade: true })
+  @JoinColumn()
+  enchants: Enchant[];
 }

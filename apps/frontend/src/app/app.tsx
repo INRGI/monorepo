@@ -29,7 +29,7 @@ export function App() {
 
   const updateHero = (updatedHero: Character) => {
     setHero(updatedHero);
-};
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -50,7 +50,7 @@ export function App() {
 
   const handleLogin = () => {
     setIsAuthenticated(true);
-    
+
     const token = localStorage.getItem('token');
     if (token) {
       axios
@@ -66,23 +66,23 @@ export function App() {
         });
     }
   };
-  
 
   return (
     <StyledApp>
       {isAuthenticated && hero ? (
-        <BattleContainer hero={hero} updateHero={updateHero} />
+        <>
+          <BattleContainer hero={hero} updateHero={updateHero} />
+          <BoxContainer hero={hero}  updateHero={updateHero}/>
+        </>
       ) : (
         <>
-        <RegistrationForm onLogin={handleLogin} />
-        <LoginForm onLogin={handleLogin} />
-      </>
+          <RegistrationForm onLogin={handleLogin} />
+          <LoginForm onLogin={handleLogin} />
+        </>
       )}
-
-      <BoxContainer />
     </StyledApp>
   );
 }
 
 export default App;
-// test0@t.com
+// test8@t.com
