@@ -23,7 +23,7 @@ const ItemByRarity: React.FC<ItemByRarityProps> = ({ hero, updateHero }) => {
         throw new Error('Not enough coins');
       }
 
-      setOpenedItem(response.data);
+      setOpenedItem(response.data.item);
       setModalIsOpen(true);
       const updatedHero ={...hero, 'coins': hero.coins - price};
       updateHero(updatedHero);

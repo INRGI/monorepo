@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm';
 import { Item } from '../entities/item.entity';
 import { ItemBox } from '../entities/itemBox.entity';
 import { Enchant } from '../entities/enchant.entity';
+import { Inventory } from '../entities/inventory.entity';
 
 export const lootProviders = [
   {
@@ -17,6 +18,11 @@ export const lootProviders = [
   {
     provide: 'ENCHANT_REPOSITORY',
     useFactory: (dataSource: DataSource) => dataSource.getRepository(Enchant),
+    inject: ['DATA_SOURCE'],
+  },
+  {
+    provide: 'INVENTORY_REPOSITORY',
+    useFactory: (dataSource: DataSource) => dataSource.getRepository(Inventory),
     inject: ['DATA_SOURCE'],
   },
 ];

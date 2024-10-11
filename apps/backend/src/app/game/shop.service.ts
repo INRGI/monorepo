@@ -4,12 +4,14 @@ import { ItemBoxService } from '../loot/services/itemBox.service';
 import { DeleteItemBoxDto } from '../loot/dtos/DeleteItemBox.dto';
 import { HeroDocument } from 'libs/users/src/lib/shemas/hero.schema';
 import { Types } from 'mongoose';
+import { InventoryService } from '../loot/services/inventory.service';
 
 @Injectable()
 export class ShopService {
   constructor(
     private readonly heroService: HeroService,
-    private readonly itemBoxService: ItemBoxService
+    private readonly itemBoxService: ItemBoxService,
+    private readonly inventoryService: InventoryService,
   ) {}
 
   async buyCase(hero: HeroDocument, price: number, itemBoxId: DeleteItemBoxDto) {
@@ -43,7 +45,10 @@ export class ShopService {
       throw new HttpException('Something went wrong', 303);
     }
 
-    return await this.itemBoxService.randomItemByRarity(rarity);
+    const item = await this.itemBoxService.randomItemByRarity(rarity);
+    const inventory = await this.inventoryService.addToInventory(`${heroId}`, item)
+
+    return {item, inventory}
   }
   
 }
