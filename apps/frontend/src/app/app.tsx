@@ -8,12 +8,14 @@ import { Character } from './types/types';
 import BoxContainer from './components/BoxContainer/BoxContainer';
 import Modal from 'react-modal';
 import ItemByRarity from './components/ItemByRarity/ItemByRarity';
+import Inventory from './components/Inventory/Inventory';
 
 Modal.setAppElement('#root');
 
 const StyledApp = styled.div``;
 
 const defaultHero: Character = {
+  _id: 'test',
   name: '',
   imageUrl: '',
   level: 1,
@@ -75,6 +77,7 @@ export function App() {
           <BattleContainer hero={hero} updateHero={updateHero} />
           <BoxContainer hero={hero}  updateHero={updateHero}/>
           <ItemByRarity hero={hero}  updateHero={updateHero}/>
+          <Inventory hero={hero}  updateHero={updateHero}/>
         </>
       ) : (
         <>

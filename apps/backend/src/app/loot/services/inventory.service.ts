@@ -28,7 +28,19 @@ export class InventoryService {
     return await this.inventoryRepository.save(inventory);
   }
 
-  async deleteFromInvenory() {}
+  async deleteFromInventory(heroId: string, itemId: number) {
+    const inventory = await this.getInventory(heroId);
+    const updatedInventory = inventory.inventory.filter(
+      (item) => item.id !== itemId
+    );
+
+    await this.inventoryRepository.update(
+      { heroId },
+      { inventory: updatedInventory }
+    );
+
+    return updatedInventory;
+  }
 
   async getByRarity(
     heroId: string,
@@ -41,5 +53,4 @@ export class InventoryService {
 
     return filteredItems;
   }
-  
 }

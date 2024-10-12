@@ -1,6 +1,5 @@
-import { Controller, Post, Param, Body, Get } from '@nestjs/common';
+import { Controller, Post, Param, Body, Get, Delete } from '@nestjs/common';
 
-import { HeroDocument, HeroService } from '@org/users';
 import { InventoryService } from '../services/inventory.service';
 import { Item } from '../entities/item.entity';
 
@@ -9,7 +8,7 @@ export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
   @Get(':heroId')
-  async buyItemBox(
+  async getInventory(
     @Param('heroId') heroId: string,
   ) {
     return await this.inventoryService.getInventory(heroId)
@@ -29,5 +28,13 @@ export class InventoryController {
     @Body('item') item: Item
   ) {
     return await this.inventoryService.addToInventory(heroId, item);
+  }
+
+  @Delete(':heroId/:itemId')
+  async deleteItem (
+    @Param('heroId') heroId: string,
+    @Param('itemId') itemId: number,
+  ){
+    return await this.inventoryService.deleteFromInventory(heroId, itemId);
   }
 }

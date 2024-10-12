@@ -1,6 +1,7 @@
 import { User } from "@org/users";
 
 export interface Character {
+  _id: string;
   name: string;
   level: number;
   health: number;
