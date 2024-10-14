@@ -41,6 +41,7 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
     } finally {
       setLoading(false);
       fetchInventory();
+      updateHero(hero);
     }
   }
 
