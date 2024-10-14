@@ -27,13 +27,8 @@ export class ItemBoxController {
     return await this.itemBoxService.findTheMostExpensive();
   }
 
-  @Get('one/:id')
-  async getOneItemBox(@Param() itemBoxId: DeleteItemBoxDto) {
-    return await this.itemBoxService.getOne(itemBoxId);
-  }
-
   @Get(':id')
-  async getRandomItemInABox(@Param() itemBoxId: DeleteItemBoxDto){
+  async getRandomItemInABox(@Param('id') itemBoxId: DeleteItemBoxDto){
     return await this.itemBoxService.randomItemInABox(itemBoxId);
   }
 

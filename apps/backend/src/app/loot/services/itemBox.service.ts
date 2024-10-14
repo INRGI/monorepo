@@ -21,7 +21,7 @@ export class ItemBoxService {
   async findAll(): Promise<ItemBox[]> {
     const itemboxes = await this.itemBoxRepository
       .createQueryBuilder('itemBox')
-      .leftJoinAndSelect('itemBox.items', 'item')
+      .leftJoin('itemBox.items', 'item')
       .groupBy('itemBox.id')
       .having('COUNT(DISTINCT item.rarity) = 4')
       .getMany();
@@ -79,7 +79,7 @@ export class ItemBoxService {
     return 'Deleted!';
   }
 
-  async getOne(itemBoxId: DeleteItemBoxDto): Promise<ItemBox> {
+  private async getOneBox(itemBoxId: DeleteItemBoxDto): Promise<ItemBox> {
     const result = await this.itemBoxRepository
       .createQueryBuilder('ItemBox')
       .leftJoinAndSelect('ItemBox.items', 'item')
@@ -111,7 +111,7 @@ export class ItemBoxService {
   }
 
   async randomItemInABox(itemBoxId: DeleteItemBoxDto): Promise<Item> {
-    const box = await this.getOne(itemBoxId);
+    const box = await this.getOneBox(itemBoxId);
     if (!box || !box.items.length) {
       throw new Error('ItemBox not found');
     }
