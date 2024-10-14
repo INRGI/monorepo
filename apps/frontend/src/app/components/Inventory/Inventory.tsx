@@ -16,20 +16,33 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [openedItem, setOpenedItem] = useState<Item | null>(null);
 
-  useEffect(() => {
-    const fetchInventory = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3000/inventory/${hero._id}`);
-        setInventoryItems(response.data.inventory);
-      } catch (error) {
-        console.error('Failed to fetch inventory:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchInventory = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/inventory/${hero._id}`);
+      setInventoryItems(response.data.inventory || []);
+    } catch (error) {
+      console.error('Failed to fetch inventory:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchInventory();
   }, [hero._id]);
+
+  const handleItemDelete = async (itemId: string) => {
+    try {
+      setLoading(true)
+      const response = await axios.delete(`http://localhost:3000/inventory/${hero._id}/${itemId}`);
+      setInventoryItems(response.data || []);
+    } catch (error) {
+      console.error('Failed to delete item:', error);
+    } finally {
+      setLoading(false);
+      fetchInventory();
+    }
+  }
 
   const handleItemClick = (item: Item) => {
     setOpenedItem(item);
@@ -47,13 +60,14 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
     <Container>
       <h3>Your Inventory</h3>
       <InventoryContainer>
-        {inventoryItems.map((item) => (
-          <InventoryCard key={item.id} onClick={() => handleItemClick(item)}>
+        {inventoryItems.map((item, key) => (
+          <InventoryCard key={key} onClick={() => handleItemClick(item)}>
             <img src={item.image} alt={item.name} />
             <h4>{item.name}</h4>
             <p>Type: {item.type}</p>
             <p>Rarity: {item.rarity}</p>
             <p>Enchanted: {item.enchanted}</p>
+            <button onClick={() => handleItemDelete(item.uniqueId)}>Delete Item</button>
           </InventoryCard>
         ))}
       </InventoryContainer>

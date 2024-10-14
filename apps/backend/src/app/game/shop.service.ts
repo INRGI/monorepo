@@ -27,8 +27,10 @@ export class ShopService {
     if (!result) {
       throw new HttpException('Something went wrong', 303);
     }
-  
-    return await this.itemBoxService.randomItemInABox(itemBoxId);
+    
+    const item = await this.itemBoxService.randomItemInABox(itemBoxId);
+    const inventory = await this.inventoryService.addToInventory(`${heroId}`, item)
+    return item;
   }
 
   async buyRandomItemByRarity(hero: HeroDocument, price: number, rarity: 'common' | 'rare' | 'epic' | 'legendary'){

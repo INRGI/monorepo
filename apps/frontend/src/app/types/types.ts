@@ -31,6 +31,7 @@ export interface Box {
 
 export interface Item {
   id: number;
+  uniqueId: string;
   name: string;
   image: string;
   type: 'weapon' | 'armor';

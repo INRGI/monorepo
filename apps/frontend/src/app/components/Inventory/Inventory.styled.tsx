@@ -24,7 +24,7 @@ export const InventoryCard = styled.div`
   padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0px;
   width: 200px;
   height: 320px;
   text-align: center;
@@ -39,7 +39,7 @@ export const InventoryCard = styled.div`
   }
 
   h4 {
-    margin: 10px 0;
+    margin: 0px 0;
   }
 
   button {
@@ -49,7 +49,7 @@ export const InventoryCard = styled.div`
     padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
-
+    z-index: 2;
     &:hover {
       background-color: #2cac25;
     }

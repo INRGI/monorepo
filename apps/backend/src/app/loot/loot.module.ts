@@ -10,9 +10,10 @@ import { EnchantService } from './services/enchant.service';
 import { EnchantController } from './controllers/enchant.controller';
 import { InventoryService } from './services/inventory.service';
 import { InventoryController } from './controllers/inventory.controller';
+import { UsersModule } from '@org/users';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, UsersModule],
   providers: [...lootProviders, ItemService, ItemBoxService, EnchantService, InventoryService],
   controllers: [ItemController, ItemBoxController, EnchantController, InventoryController],
   exports: [...lootProviders, ItemService, ItemBoxService, EnchantService, InventoryService],

@@ -30,11 +30,11 @@ export class InventoryController {
     return await this.inventoryService.addToInventory(heroId, item);
   }
 
-  @Delete(':heroId/:itemId')
-  async deleteItem (
+  @Delete(':heroId/:uniqueId')
+  async sellItem (
     @Param('heroId') heroId: string,
-    @Param('itemId') itemId: number,
+    @Param('uniqueId') uniqueId: string
   ){
-    return await this.inventoryService.deleteFromInventory(heroId, itemId);
+    return await this.inventoryService.sellFromInventory(heroId, uniqueId);
   }
 }

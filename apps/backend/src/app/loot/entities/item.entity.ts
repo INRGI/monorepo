@@ -22,6 +22,9 @@ export class Item {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  uniqueId: string;
+
   @Column({ length: 500 })
   name: string;
 

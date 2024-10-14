@@ -6,6 +6,7 @@ import { UpdateItemBoxDto } from '../dtos/UpdateItemBox.dto';
 import { DeleteItemBoxDto } from '../dtos/DeleteItemBox.dto';
 import { Item } from '../entities/item.entity';
 import { EnchantService } from './enchant.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ItemBoxService {
@@ -104,6 +105,7 @@ export class ItemBoxService {
     let selectedItem = itemsByRarity[randomIndex];
 
     selectedItem = await this.enchantService.applyEnchantment(selectedItem);
+    selectedItem.uniqueId = uuidv4();
 
     return selectedItem;
   }
@@ -130,6 +132,7 @@ export class ItemBoxService {
     let selectedItem = itemsByRarity[randomIndex];
 
     selectedItem = await this.enchantService.applyEnchantment(selectedItem);
+    selectedItem.uniqueId = uuidv4();
 
     return selectedItem;
   }
