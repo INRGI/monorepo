@@ -17,6 +17,7 @@ import { SlackBotOptions } from '../interfaces';
 @Injectable()
 export class SlackBotService implements SlackBotServicePort, OnModuleInit {
   private readonly logger = new Logger(SlackBotService.name);
+  private lastStatus: string = 'No info yet';
 
   constructor(
     @Inject(SlackBotTokens.SlackBotApp)
@@ -50,7 +51,47 @@ export class SlackBotService implements SlackBotServicePort, OnModuleInit {
       'validation_type_partner',
       this.handleValidationSelection
     );
+
+    this.slackBotApp.command('/copy-maker', this.handleStatusCommand);
+    this.slackBotApp.command('/set-status', this.handleSetStatusCommand);
   }
+
+  private handleStatusCommand: Middleware<SlackCommandMiddlewareArgs> = async ({ack, client, body}) => {
+    await ack();
+
+    await client.chat.postMessage({
+      channel: body.channel_id,
+      text: `The last update of CopyMaker was: ${this.lastStatus}`
+    })
+  };
+
+  private handleSetStatusCommand: Middleware<SlackCommandMiddlewareArgs> = async ({ack, client, body}) => {
+    await ack();
+
+    if(body.user_id !== 'U07PV0F8UKU'){
+      await client.chat.postMessage({
+        channel: body.channel_id,
+        text: 'Sorry, you do not have permissions'
+      });
+      return;
+    };
+
+    const newStatus = body.text.trim();
+    if(!newStatus) {
+      await client.chat.postMessage({
+        channel: body.channel_id,
+        text: 'Please provide correct status'
+      });
+      return;
+    }
+
+    this.lastStatus = newStatus;
+
+    await client.chat.postMessage({
+      channel: body.channel_id,
+      text: `Status updated to: ${newStatus}`
+    });
+  };
 
   private handleOpenValidationView: Middleware<SlackCommandMiddlewareArgs> =
     async ({ ack, client, body }) => {

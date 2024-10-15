@@ -42,12 +42,12 @@ import { ItemModule } from './loot/loot.module';
     //   token: process.env.TELEGRAM_BOT_KEY,
     //   geminiKey : process.env.GEMINI_KEY
     // }),
-    // SlackBotModule.register({
-    //   token: process.env.SLACK_BOT_OAUTH_TOKEN,
-    //   signingSecret : process.env.SLACK_SIGNING_SECRET,
-    //   appToken: process.env.SLACK_BOT_APP_TOKEN,
-    //   appUserId: process.env.SLACK_USER_ID,
-    // }),
+    SlackBotModule.register({
+      token: process.env.SLACK_BOT_OAUTH_TOKEN,
+      signingSecret : process.env.SLACK_SIGNING_SECRET,
+      appToken: process.env.SLACK_BOT_APP_TOKEN,
+      appUserId: process.env.SLACK_USER_ID,
+    }),
   ],
   controllers: [AppController,],
   providers: [AppService],
