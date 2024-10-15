@@ -265,5 +265,29 @@ describe('App (e2e)', () => {
           expect(res.body).toBeInstanceOf(Object);
         });
     });
+
+    it('/POST /shop/buy/:itemBoxId', async () => {
+      const body = {
+        hero: mockedHero,
+        price: 500
+      };
+
+      return await request(app.getHttpServer())
+      .post('/shop/buy/2')
+        .send(body)
+        .expect(201);
+    });
+
+    it('/POST /buyByRarity/:rarity', async () => {
+      const body = {
+        hero: mockedHero,
+        price: 10
+      };
+
+      return await request(app.getHttpServer())
+      .post('/shop/buyByRarity/common')
+        .send(body)
+        .expect(201);
+    });
   });
 });
