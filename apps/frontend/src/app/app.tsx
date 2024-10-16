@@ -9,6 +9,7 @@ import BoxContainer from './components/BoxContainer/BoxContainer';
 import Modal from 'react-modal';
 import ItemByRarity from './components/ItemByRarity/ItemByRarity';
 import Inventory from './components/Inventory/Inventory';
+import Chat from './components/Chat/Chat';
 
 Modal.setAppElement('#root');
 
@@ -69,11 +70,13 @@ export function App() {
         });
     }
   };
+  
 
   return (
     <StyledApp>
       {isAuthenticated && hero ? (
         <>
+        <Chat roomId='1'/>
           <BattleContainer hero={hero} updateHero={updateHero} />
           <BoxContainer hero={hero}  updateHero={updateHero}/>
           <ItemByRarity hero={hero}  updateHero={updateHero}/>

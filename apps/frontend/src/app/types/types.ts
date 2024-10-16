@@ -42,3 +42,13 @@ export interface Item {
     health?: number;
   };
 }
+
+export interface Message {
+  roomId: string;
+  senderId: string;
+  message: string;
+}
+
+export interface ChatProps {
+  roomId: string;
+}

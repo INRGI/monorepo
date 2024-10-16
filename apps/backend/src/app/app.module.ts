@@ -11,6 +11,7 @@ import { GeminiModule } from '@org/gemini';
 import { UnsplashModule } from '@org/unsplash';
 import { SlackBotModule } from '@org/slack-bot';
 import { ItemModule } from './loot/loot.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -42,12 +43,13 @@ import { ItemModule } from './loot/loot.module';
     //   token: process.env.TELEGRAM_BOT_KEY,
     //   geminiKey : process.env.GEMINI_KEY
     // }),
-    SlackBotModule.register({
-      token: process.env.SLACK_BOT_OAUTH_TOKEN,
-      signingSecret : process.env.SLACK_SIGNING_SECRET,
-      appToken: process.env.SLACK_BOT_APP_TOKEN,
-      appUserId: process.env.SLACK_USER_ID,
-    }),
+    // SlackBotModule.register({
+    //   token: process.env.SLACK_BOT_OAUTH_TOKEN,
+    //   signingSecret : process.env.SLACK_SIGNING_SECRET,
+    //   appToken: process.env.SLACK_BOT_APP_TOKEN,
+    //   appUserId: process.env.SLACK_USER_ID,
+    // }),
+    ChatModule
   ],
   controllers: [AppController,],
   providers: [AppService],
