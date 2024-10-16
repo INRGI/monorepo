@@ -11,7 +11,7 @@ export class ChatProcessor extends WorkerHost {
 
   async process(job: Job<any>): Promise<void> {
     const { roomId, senderId, message } = job.data;
-    const client = this.redisService.getClient();
+    const client = await this.redisService.getClient();
     await client.rpush(`chat:${roomId}`, `${senderId}: ${message}`);
   }
 }

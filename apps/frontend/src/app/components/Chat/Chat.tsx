@@ -10,35 +10,19 @@ const Chat: React.FC<ChatProps> = ({ roomId }) => {
   const [message, setMessage] = useState<string>('');
 
   useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Socket connected');
-      socket.emit('joinRoom', { roomId });
-      console.log(`Joined room ${roomId}`);
-      socket.emit('getMessage', { roomId });
-    });
-  
+    socket.emit('joinRoom', { roomId });
+
     socket.on('messages', (receivedMessages: Message[]) => {
-      console.log('Messages event triggered');
-      console.log('Received messages:', receivedMessages);
-      if (receivedMessages.length === 0) {
-        console.log('No messages in the room');
-      }
       setMessages(receivedMessages);
     });
-  
-    socket.on('error', (error) => {
-      console.error('Socket error:', error);
+
+    socket.on('newMessage', (newMessage: Message) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
-  
-    socket.on('disconnect', () => {
-      console.log('Socket disconnected');
-    });
-  
+
     return () => {
-      socket.off('message');
+      socket.off('newMessage');
       socket.off('messages');
-      socket.off('error');
-      socket.off('disconnect');
     };
   }, [roomId]);
 

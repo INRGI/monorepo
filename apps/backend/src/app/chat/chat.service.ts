@@ -11,14 +11,17 @@ export class ChatService {
   ) {}
 
   async sendMessage(roomId: string, senderId: string, message: string) {
-    await this.chatQueue.add('send-message', { roomId, senderId, message });
-    const client = this.redisService.getClient();
+    const client = await this.redisService.getClient();
     await client.rpush(`chat:${roomId}`, `${senderId}: ${message}`);
   }
 
   async getMessages(roomId: string) {
-    const client = this.redisService.getClient();
+    const client = await this.redisService.getClient();
     const messages = await client.lrange(`chat:${roomId}`, 0, -1);
-    return messages;
+    return messages.map((msg: string) => {
+      const [senderId, message] = msg.split(': ');
+      return { senderId, message };
+    });
   }
 }
+

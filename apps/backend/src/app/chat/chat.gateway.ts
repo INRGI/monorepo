@@ -3,8 +3,9 @@ import {
   WebSocketServer,
   SubscribeMessage,
   MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 
 @WebSocketGateway({
@@ -19,8 +20,12 @@ export class ChatGateway {
   constructor(private readonly chatService: ChatService) {}
 
   @SubscribeMessage('joinRoom')
-  handleJoinRoom(@MessageBody() payload: { roomId: string }): void {
-    this.server
+  handleJoinRoom(
+    @MessageBody() payload: { roomId: string },
+    @ConnectedSocket() client: Socket
+  ): void {
+    client.join(payload.roomId);
+    client
       .to(payload.roomId)
       .emit('joined', `User has joined room: ${payload.roomId}`);
   }
@@ -28,27 +33,21 @@ export class ChatGateway {
   @SubscribeMessage('sendMessage')
   async handleMessage(
     @MessageBody()
-    payload: {
-      roomId: string;
-      senderId: string;
-      message: string;
-    }
+    payload: { roomId: string; senderId: string; message: string },
+    @ConnectedSocket() client: Socket
   ): Promise<void> {
+  
     await this.chatService.sendMessage(
       payload.roomId,
       payload.senderId,
       payload.message
     );
-    this.server.to(payload.roomId).emit('message', payload);
+    this.server.to(payload.roomId).emit('newMessage', payload);
   }
 
   @SubscribeMessage('getMessage')
   async handleGetMessage(@MessageBody() payload: { roomId: string }) {
     const result = await this.chatService.getMessages(payload.roomId);
-    const messages = result.map((msg: string) => {
-      const [senderId, message] = msg.split(': ');
-      return { senderId, message };
-    });
-    this.server.to(payload.roomId).emit('messages', messages);
+    this.server.to(payload.roomId).emit('messages', result);
   }
 }
