@@ -51,4 +51,5 @@ export interface Message {
 
 export interface ChatProps {
   roomId: string;
+  senderId: string;
 }

@@ -76,7 +76,7 @@ export function App() {
     <StyledApp>
       {isAuthenticated && hero ? (
         <>
-        <Chat roomId='1'/>
+        <Chat roomId='1' senderId={hero.name}/>
           <BattleContainer hero={hero} updateHero={updateHero} />
           <BoxContainer hero={hero}  updateHero={updateHero}/>
           <ItemByRarity hero={hero}  updateHero={updateHero}/>

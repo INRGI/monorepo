@@ -4,9 +4,8 @@ import { ChatProps, Message } from '../../types/types';
 
 const socket = io('http://localhost:3000');
 
-const Chat: React.FC<ChatProps> = ({ roomId }) => {
+const Chat: React.FC<ChatProps> = ({ roomId, senderId }) => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [senderId, setSenderId] = useState<string>('');
   const [message, setMessage] = useState<string>('');
 
   useEffect(() => {
@@ -27,7 +26,7 @@ const Chat: React.FC<ChatProps> = ({ roomId }) => {
   }, [roomId]);
 
   const handleSendMessage = () => {
-    if (!senderId || !message) return;
+    if (!message) return;
 
     const payload: Message = { roomId, senderId, message };
     socket.emit('sendMessage', payload);
@@ -38,12 +37,6 @@ const Chat: React.FC<ChatProps> = ({ roomId }) => {
     <div>
       <h2>Chat Room: {roomId}</h2>
       <div>
-        <input
-          type="text"
-          placeholder="Sender ID"
-          value={senderId}
-          onChange={(e) => setSenderId(e.target.value)}
-        />
         <input
           type="text"
           placeholder="Message"
