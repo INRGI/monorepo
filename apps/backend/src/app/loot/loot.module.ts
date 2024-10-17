@@ -11,11 +11,56 @@ import { EnchantController } from './controllers/enchant.controller';
 import { InventoryService } from './services/inventory.service';
 import { InventoryController } from './controllers/inventory.controller';
 import { UsersModule } from '@org/users';
+import { BullModule } from '@nestjs/bullmq';
+import { EnchantProcessor } from './processors/enchant.processor';
+import { InventoryProcessor } from './processors/inventory.processor';
 
 @Module({
-  imports: [DatabaseModule, UsersModule],
-  providers: [...lootProviders, ItemService, ItemBoxService, EnchantService, InventoryService],
-  controllers: [ItemController, ItemBoxController, EnchantController, InventoryController],
-  exports: [...lootProviders, ItemService, ItemBoxService, EnchantService, InventoryService],
+  imports: [
+    DatabaseModule,
+    UsersModule,
+    BullModule.forRoot({
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
+    BullModule.registerQueue({
+      name: 'enchant',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
+    BullModule.registerQueue({
+      name: 'inventory',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
+  ],
+  providers: [
+    ...lootProviders,
+    ItemService,
+    ItemBoxService,
+    EnchantService,
+    InventoryService,
+    EnchantProcessor,
+    InventoryProcessor
+  ],
+  controllers: [
+    ItemController,
+    ItemBoxController,
+    EnchantController,
+    InventoryController,
+  ],
+  exports: [
+    ...lootProviders,
+    ItemService,
+    ItemBoxService,
+    EnchantService,
+    InventoryService,
+  ],
 })
 export class ItemModule {}

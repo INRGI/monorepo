@@ -4,49 +4,51 @@ import { Enchant } from '../entities/enchant.entity';
 import { Item } from '../entities/item.entity';
 import { CreateEnchantDto } from '../dtos/CreateEnchant.dto';
 import { UpdateEnchantDto } from '../dtos/UpdateEnchan.dto';
+import { Queue, QueueEvents } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 
 @Injectable()
 export class EnchantService {
+  private queueEvents: QueueEvents
   constructor(
-    @Inject('ENCHANT_REPOSITORY')
-    private enchantRepository: Repository<Enchant>,
-  ) {}
+    @InjectQueue('enchant') private readonly enchantQueue: Queue
+  ) {
+    this.queueEvents = new QueueEvents('enchant')
+  }
 
   async applyEnchantment(item: Item): Promise<Item> {
-    const enchantments = await this.enchantRepository
-      .createQueryBuilder('enchant')
-      .where('enchant.typeFor = :typeFor', { typeFor: item.type })
-      .getMany();
-
-    if (enchantments.length) {
-      const randomEnchant = enchantments[Math.floor(Math.random() * enchantments.length)];
-      item.enchanted = randomEnchant.name;
-      item.stats.attack = Math.floor(item.stats.attack * (1 + randomEnchant.chances / 100));
-    }
-
-    return item;
+   const job = await this.enchantQueue.add('apply-enchantment', {item})
+   const result = await job.waitUntilFinished(this.queueEvents);
+   return result;
   }
 
   async createEnchant(createEnchantDto: CreateEnchantDto): Promise<Enchant> {
-    const enchant = this.enchantRepository.create(createEnchantDto);
-    return await this.enchantRepository.save(enchant);
+    const job = await this.enchantQueue.add('create-enchant', {createEnchantDto})
+   const result = await job.waitUntilFinished(this.queueEvents);
+   return result;
   }
 
   async updateEnchant(id: number, updateEnchantDto: UpdateEnchantDto): Promise<Enchant> {
-    await this.enchantRepository.update(id, updateEnchantDto);
-    return await this.enchantRepository.findOne({ where: { id } });
+    const job = await this.enchantQueue.add('update-enchant', {id, updateEnchantDto})
+   const result = await job.waitUntilFinished(this.queueEvents);
+   return result;
   }
 
   async deleteEnchant(id: number): Promise<string> {
-    await this.enchantRepository.delete(id);
-    return 'Enchant deleted successfully';
+    const job = await this.enchantQueue.add('delete-enchant', {id})
+   const result = await job.waitUntilFinished(this.queueEvents);
+   return result;
   }
 
   async getEnchantById(id: number): Promise<Enchant> {
-    return await this.enchantRepository.findOne({ where: { id } });
+    const job = await this.enchantQueue.add('get-enchant', {id})
+   const result = await job.waitUntilFinished(this.queueEvents);
+   return result;
   }
 
   async findAllEnchants(): Promise<Enchant[]> {
-    return await this.enchantRepository.find();
+    const job = await this.enchantQueue.add('find-all-enchants', {})
+   const result = await job.waitUntilFinished(this.queueEvents);
+   return result;
   }
 }
