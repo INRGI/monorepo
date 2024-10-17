@@ -1,12 +1,11 @@
-import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { MonstersService } from '../monster/monster.service';
+import { MonstersService } from '../../monster/monster.service';
 import { HeroService } from '@org/users';
 import { NotFoundException } from '@nestjs/common';
-import { join } from 'path';
 
-@Processor('game')
-export class GameProcessor extends WorkerHost {
+@Processor('battle')
+export class BattleProcessor extends WorkerHost {
   constructor(
     private readonly monstersService: MonstersService,
     private readonly heroService: HeroService

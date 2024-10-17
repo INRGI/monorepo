@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
-import { BattleService } from './battle.service';
+import { BattleService } from '../services/battle.service';
 import { HeroInterface } from '@org/users';
 
 @Controller('battle')

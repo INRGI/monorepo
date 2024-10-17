@@ -1,8 +1,8 @@
 import { Controller, Post, Param, Body } from '@nestjs/common';
-import { ShopService } from './shop.service';
+import { ShopService } from '../services/shop.service';
 import { HeroDocument, HeroService } from '@org/users';
 import { Types } from 'mongoose';
-import { DeleteItemDto } from '../loot/dtos/DeleteItem.dto';
+import { DeleteItemDto } from '../../loot/dtos/DeleteItem.dto';
 
 @Controller('shop')
 export class ShopController {

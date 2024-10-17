@@ -1,10 +1,10 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { HeroInterface, HeroService } from '@org/users';
-import { ItemBoxService } from '../loot/services/itemBox.service';
-import { DeleteItemBoxDto } from '../loot/dtos/DeleteItemBox.dto';
+import { ItemBoxService } from '../../loot/services/itemBox.service';
+import { DeleteItemBoxDto } from '../../loot/dtos/DeleteItemBox.dto';
 import { HeroDocument } from 'libs/users/src/lib/shemas/hero.schema';
 import { Types } from 'mongoose';
-import { InventoryService } from '../loot/services/inventory.service';
+import { InventoryService } from '../../loot/services/inventory.service';
 
 @Injectable()
 export class ShopService {

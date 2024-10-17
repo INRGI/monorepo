@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
-import { BattleController } from './battle.controller';
-import { BattleService } from './battle.service';
+import { BattleController } from './controllers/battle.controller';
+import { BattleService } from './services/battle.service';
 import { MonstersModule } from '../monster/monster.module';
 import { HeroService, UsersModule } from '@org/users';
-import { ShopController } from './shop.controller';
-import { ShopService } from './shop.service';
+import { ShopController } from './controllers/shop.controller';
+import { ShopService } from './services/shop.service';
 import { ItemBoxService } from '../loot/services/itemBox.service';
 import { ItemModule } from '../loot/loot.module';
 import { BullModule } from '@nestjs/bullmq';
-import { GameProcessor } from './game.processor';
+import { BattleProcessor } from './processors/battle.processor';
 
 @Module({
   controllers: [BattleController, ShopController],
-  providers: [BattleService, ShopService, ItemBoxService, GameProcessor],
+  providers: [BattleService, ShopService, ItemBoxService, BattleProcessor],
   imports: [
     MonstersModule,
     UsersModule,
@@ -24,7 +24,7 @@ import { GameProcessor } from './game.processor';
       },
     }),
     BullModule.registerQueue({
-      name: 'game',
+      name: 'battle',
       connection: {
         host: 'localhost',
         port: 6379,

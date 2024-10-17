@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Monster } from '../monster/monster.service';
+import { Monster } from '../../monster/monster.service';
 import { HeroDocument, HeroInterface } from '@org/users';
 import { Queue, QueueEvents } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
@@ -8,8 +8,8 @@ import { InjectQueue } from '@nestjs/bullmq';
 export class BattleService {
   private queueEvents: QueueEvents
   constructor(
-    @InjectQueue('game') private readonly gameQueue: Queue
-  ) {this.queueEvents = new QueueEvents('game');}
+    @InjectQueue('battle') private readonly gameQueue: Queue
+  ) {this.queueEvents = new QueueEvents('battle');}
 
   async getMonsters(): Promise<Monster[]> {
     const job = await this.gameQueue.add('get-monsters', {});
