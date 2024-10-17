@@ -44,10 +44,4 @@ export class ChatGateway {
     );
     this.server.to(payload.roomId).emit('newMessage', payload);
   }
-
-  @SubscribeMessage('getMessage')
-  async handleGetMessage(@MessageBody() payload: { roomId: string }) {
-    const result = await this.chatService.getMessages(payload.roomId);
-    this.server.to(payload.roomId).emit('messages', result);
-  }
 }

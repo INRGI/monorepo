@@ -11,17 +11,7 @@ export class ChatService {
   ) {}
 
   async sendMessage(roomId: string, senderId: string, message: string) {
-    const client = await this.redisService.getClient();
-    await client.rpush(`chat:${roomId}`, `${senderId}: ${message}`);
-  }
-
-  async getMessages(roomId: string) {
-    const client = await this.redisService.getClient();
-    const messages = await client.lrange(`chat:${roomId}`, 0, -1);
-    return messages.map((msg: string) => {
-      const [senderId, message] = msg.split(': ');
-      return { senderId, message };
-    });
+    this.chatQueue.add('send-message', {roomId, senderId, message});
   }
 }
 

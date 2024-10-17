@@ -12,6 +12,10 @@ export class RedisService implements OnModuleInit {
     });
   }
 
+  async saveMessage(roomId: string, senderId: string, message: string) {
+    await this.client.rpush(`chat:${roomId}`, `${senderId}: ${message}`);
+  }
+
   getClient(): Redis {
     return this.client;
   }
