@@ -9,10 +9,11 @@ import { ItemBoxService } from '../loot/services/itemBox.service';
 import { ItemModule } from '../loot/loot.module';
 import { BullModule } from '@nestjs/bullmq';
 import { BattleProcessor } from './processors/battle.processor';
+import { ShopProcessor } from './processors/shop.processor';
 
 @Module({
   controllers: [BattleController, ShopController],
-  providers: [BattleService, ShopService, ItemBoxService, BattleProcessor],
+  providers: [BattleService, ShopService, ItemBoxService, BattleProcessor, ShopProcessor],
   imports: [
     MonstersModule,
     UsersModule,
@@ -25,6 +26,13 @@ import { BattleProcessor } from './processors/battle.processor';
     }),
     BullModule.registerQueue({
       name: 'battle',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
+    BullModule.registerQueue({
+      name: 'shop',
       connection: {
         host: 'localhost',
         port: 6379,

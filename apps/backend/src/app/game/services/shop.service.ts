@@ -1,56 +1,26 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
-import { HeroInterface, HeroService } from '@org/users';
-import { ItemBoxService } from '../../loot/services/itemBox.service';
+import { Injectable } from '@nestjs/common';
 import { DeleteItemBoxDto } from '../../loot/dtos/DeleteItemBox.dto';
 import { HeroDocument } from 'libs/users/src/lib/shemas/hero.schema';
-import { Types } from 'mongoose';
-import { InventoryService } from '../../loot/services/inventory.service';
+import { Queue, QueueEvents } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 
 @Injectable()
 export class ShopService {
+  private queueEvents: QueueEvents;
   constructor(
-    private readonly heroService: HeroService,
-    private readonly itemBoxService: ItemBoxService,
-    private readonly inventoryService: InventoryService,
-  ) {}
+    @InjectQueue('shop') private readonly shopQueue: Queue
+  ) { this.queueEvents = new QueueEvents('shop')}
 
   async buyCase(hero: HeroDocument, price: number, itemBoxId: DeleteItemBoxDto) {
-    if (!hero._id) {
-      throw new HttpException('Hero not Found', 303);
-    }
-  
-    const heroId: Types.ObjectId = hero._id as Types.ObjectId;
-    
-
-    const result = await this.heroService.spendCoins(heroId, price);
-  
-    if (!result) {
-      throw new HttpException('Something went wrong', 303);
-    }
-    
-    const item = await this.itemBoxService.randomItemInABox(itemBoxId);
-    const inventory = await this.inventoryService.addToInventory(`${heroId}`, item)
-    return item;
+    const job = await this.shopQueue.add('buy-case', {hero, price, itemBoxId});
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result;
   }
 
   async buyRandomItemByRarity(hero: HeroDocument, price: number, rarity: 'common' | 'rare' | 'epic' | 'legendary'){
-    if (!hero._id) {
-      throw new HttpException('Hero not Found', 303);
-    }
-  
-    const heroId: Types.ObjectId = hero._id as Types.ObjectId;
-    
-
-    const result = await this.heroService.spendCoins(heroId, price);
-  
-    if (!result) {
-      throw new HttpException('Something went wrong', 303);
-    }
-
-    const item = await this.itemBoxService.randomItemByRarity(rarity);
-    const inventory = await this.inventoryService.addToInventory(`${heroId}`, item)
-
-    return {item, inventory}
+    const job = await this.shopQueue.add('buy-random-item', {hero, price, rarity});
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result;
   }
   
 }
