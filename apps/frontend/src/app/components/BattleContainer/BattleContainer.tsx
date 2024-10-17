@@ -56,7 +56,7 @@ const BattleContainer: React.FC<BattleContainerProps> = ({ hero, updateHero }) =
       });
   };
 
-  const monster = monsters[currentMonsterIndex];
+  const monster = monsters && monsters.length > 0 ? monsters[currentMonsterIndex] : null;
 
   return (
     <Container>

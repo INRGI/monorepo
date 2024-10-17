@@ -1,34 +1,29 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { Monster, MonstersService } from "../monster/monster.service";
-import { Hero, HeroDocument, HeroInterface, HeroService } from "@org/users";
+import { Injectable } from '@nestjs/common';
+import { Monster } from '../monster/monster.service';
+import { HeroDocument, HeroInterface } from '@org/users';
+import { Queue, QueueEvents } from 'bullmq';
+import { InjectQueue } from '@nestjs/bullmq';
 
 @Injectable()
 export class BattleService {
+  private queueEvents: QueueEvents
   constructor(
-    private readonly monstersService: MonstersService,
-    private readonly heroService: HeroService
-  ) {}
+    @InjectQueue('game') private readonly gameQueue: Queue
+  ) {this.queueEvents = new QueueEvents('game');}
 
-  getMonsters(): Monster[] {
-    return this.monstersService.getMonsters();
+  async getMonsters(): Promise<Monster[]> {
+    const job = await this.gameQueue.add('get-monsters', {});
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result;
   }
 
-  async attack(character: HeroInterface, monsterId: number): Promise<{ monster: Monster; hero: HeroDocument }> {
-    const monster = await this.monstersService.getMonsterById(monsterId);
-    if (!monster) {
-      throw new NotFoundException('Monster not found');
-    }
-
-    monster.health -= character.attack;
-
-    if (monster.health <= 0) {
-      monster.health = 0;
-      await this.heroService.addXp(character._id, monster.xp);
-      await this.heroService.earnCoins(character._id, monster.xp)
-    }
-
-    const hero = await this.heroService.findByUserId(character._id);
-
-    return { monster, hero};
+  async attack(
+    character: HeroInterface,
+    monsterId: number
+  ): Promise<{ monster: Monster; hero: HeroDocument }> {
+    const job = await this.gameQueue.add('attack', { character, monsterId });
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result;
   }
+  
 }

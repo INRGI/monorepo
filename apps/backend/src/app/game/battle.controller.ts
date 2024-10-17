@@ -7,14 +7,14 @@ export class BattleController {
   constructor(private readonly battleService: BattleService) {}
 
   @Get('monsters')
-  getMonsters() {
-    return this.battleService.getMonsters();
+  async getMonsters() {
+    return await this.battleService.getMonsters();
   }
 
   @Post('attack')
-  attack(
+  async attack(
     @Body() attackData: { character: HeroInterface; monsterId: number }
   ) {
-    return this.battleService.attack(attackData.character, attackData.monsterId);
+    return await this.battleService.attack(attackData.character, attackData.monsterId);
   }
 }
