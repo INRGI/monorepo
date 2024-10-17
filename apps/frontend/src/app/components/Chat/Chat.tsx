@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { ChatProps, Message } from '../../types/types';
+import { Card, InfoText, InfoTitle } from './Chat.styled';
 
 const socket = io('http://localhost:3000');
 
@@ -34,8 +35,8 @@ const Chat: React.FC<ChatProps> = ({ roomId, senderId }) => {
   };
 
   return (
-    <div>
-      <h2>Chat Room: {roomId}</h2>
+    <Card>
+      <InfoTitle>Chat Room: {roomId}</InfoTitle>
       <div>
         <input
           type="text"
@@ -46,20 +47,20 @@ const Chat: React.FC<ChatProps> = ({ roomId, senderId }) => {
         <button onClick={handleSendMessage}>Send</button>
       </div>
       <div>
-        <h3>Messages:</h3>
+        <InfoText>Messages:</InfoText>
         <ul>
           {messages.length === 0 ? (
             <li>No messages yet</li>
           ) : (
             messages.map((msg, index) => (
               <li key={index}>
-                {msg.senderId}: {msg.message}
+                <InfoText>{msg.senderId}: {msg.message}</InfoText>
               </li>
             ))
           )}
         </ul>
       </div>
-    </div>
+    </Card>
   );
 };
 

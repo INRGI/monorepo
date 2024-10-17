@@ -13,7 +13,9 @@ import Chat from './components/Chat/Chat';
 
 Modal.setAppElement('#root');
 
-const StyledApp = styled.div``;
+const StyledApp = styled.div`
+  background-color: #2e2e2e;
+`;
 
 const defaultHero: Character = {
   _id: 'test',
@@ -70,17 +72,16 @@ export function App() {
         });
     }
   };
-  
 
   return (
     <StyledApp>
       {isAuthenticated && hero ? (
         <>
-        <Chat roomId='1' senderId={hero.name}/>
+          <Chat roomId="1" senderId={hero.name} />
           <BattleContainer hero={hero} updateHero={updateHero} />
-          <BoxContainer hero={hero}  updateHero={updateHero}/>
-          <ItemByRarity hero={hero}  updateHero={updateHero}/>
-          <Inventory hero={hero}  updateHero={updateHero}/>
+          <BoxContainer hero={hero} updateHero={updateHero} />
+          <ItemByRarity hero={hero} updateHero={updateHero} />
+          <Inventory hero={hero} updateHero={updateHero} />
         </>
       ) : (
         <>
