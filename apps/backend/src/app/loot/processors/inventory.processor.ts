@@ -46,12 +46,12 @@ export class InventoryProcessor extends WorkerHost {
           const updatedInventory = inventory.inventory.filter(
             (item) => item.uniqueId !== uniqueId
           );
-
           if (updatedInventory.length === inventory.inventory.length) {
             throw new Error('Item not found in inventory');
           }
 
-          const heroIdMongo: Types.ObjectId = heroId as unknown as Types.ObjectId;
+          const heroIdMongo: Types.ObjectId =
+            heroId as unknown as Types.ObjectId;
           const itemToSell = inventory.inventory.find(
             (item) => item.uniqueId === uniqueId
           );
@@ -77,9 +77,10 @@ export class InventoryProcessor extends WorkerHost {
           }
 
           const filteredItems =
-            inventory.inventory?.filter((item: Item) => item.rarity === rarity) ||
-            [];
-
+            inventory.inventory?.filter(
+              (item: Item) => item.rarity === rarity
+            ) || [];
+              console.log('filtered:',filteredItems)
           return filteredItems;
         }
       }

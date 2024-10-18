@@ -22,7 +22,7 @@ async function bootstrap() {
 
   app.register(FastifyCors, {
     origin: '*',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'DELETE', 'PUT'],
   });
 
   app.useWebSocketAdapter(new IoAdapter(app));

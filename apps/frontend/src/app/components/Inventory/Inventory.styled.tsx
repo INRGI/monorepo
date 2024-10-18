@@ -49,7 +49,6 @@ export const InventoryCard = styled.div`
     padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
-    z-index: 2;
     &:hover {
       background-color: #2cac25;
     }

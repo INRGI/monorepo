@@ -1,4 +1,4 @@
-import { Controller, Post, Param, Body, Get, Delete } from '@nestjs/common';
+import { Controller, Post, Param, Body, Get, Delete, Header, Put } from '@nestjs/common';
 
 import { InventoryService } from '../services/inventory.service';
 import { Item } from '../entities/item.entity';
@@ -30,7 +30,7 @@ export class InventoryController {
     return await this.inventoryService.addToInventory(heroId, item);
   }
 
-  @Delete(':heroId/:uniqueId')
+  @Delete('sell/:heroId/:uniqueId')
   async sellItem (
     @Param('heroId') heroId: string,
     @Param('uniqueId') uniqueId: string

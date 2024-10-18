@@ -31,10 +31,10 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
     fetchInventory();
   }, [hero._id]);
 
-  const handleItemDelete = async (itemId: string) => {
+  const handleItemSell = async (uniqueId: string) => {
     try {
       setLoading(true)
-      const response = await axios.delete(`http://localhost:3000/inventory/${hero._id}/${itemId}`);
+      const response = await axios.delete(`http://localhost:3000/inventory/sell/${hero._id}/${uniqueId}`);
       setInventoryItems(response.data || []);
     } catch (error) {
       console.error('Failed to delete item:', error);
@@ -68,7 +68,7 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
             <p>Type: {item.type}</p>
             <p>Rarity: {item.rarity}</p>
             <p>Enchanted: {item.enchanted}</p>
-            <button onClick={() => handleItemDelete(item.uniqueId)}>Delete Item</button>
+            <button onClick={() => handleItemSell(item.uniqueId)}>Sell Item</button>
           </InventoryCard>
         ))}
       </InventoryContainer>
