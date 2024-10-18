@@ -14,6 +14,8 @@ import { UsersModule } from '@org/users';
 import { BullModule } from '@nestjs/bullmq';
 import { EnchantProcessor } from './processors/enchant.processor';
 import { InventoryProcessor } from './processors/inventory.processor';
+import { ItemProcessor } from './processors/item.processor';
+import { ItemBoxProcessor } from './processors/itemBox.processor';
 
 @Module({
   imports: [
@@ -39,6 +41,20 @@ import { InventoryProcessor } from './processors/inventory.processor';
         port: 6379,
       },
     }),
+    BullModule.registerQueue({
+      name: 'item',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
+    BullModule.registerQueue({
+      name: 'itemBox',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
   ],
   providers: [
     ...lootProviders,
@@ -47,7 +63,9 @@ import { InventoryProcessor } from './processors/inventory.processor';
     EnchantService,
     InventoryService,
     EnchantProcessor,
-    InventoryProcessor
+    InventoryProcessor,
+    ItemProcessor,
+    ItemBoxProcessor,
   ],
   controllers: [
     ItemController,
