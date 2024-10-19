@@ -8,6 +8,13 @@ import { InventoryService } from '../../loot/services/inventory.service';
 
 @Processor('shop')
 export class ShopProcessor extends WorkerHost {
+/**
+ * Initializes a new instance of the ShopProcessor class.
+ * 
+ * @param {HeroService} heroService - Service to handle operations related to heroes.
+ * @param {ItemBoxService} itemBoxService - Service to manage item box operations.
+ * @param {InventoryService} inventoryService - Service for handling inventory operations.
+ */
   constructor(
     private readonly heroService: HeroService,
     private readonly itemBoxService: ItemBoxService,
@@ -16,6 +23,21 @@ export class ShopProcessor extends WorkerHost {
     super();
   }
 
+
+  /**
+   * Handles jobs related to shopping.
+   *
+   * @param {Job<any, any, string>} job - The job to process.
+   * @returns {Promise<any>} The result of the job.
+   *
+   * @remarks
+   * This method is used to handle jobs related to shopping. The jobs are
+   * processed according to their name. If the job name is 'buy-case', the
+   * method will buy a case and add the items to the hero's inventory. If the
+   * job name is 'buy-random-item', the method will buy a random item of a
+   * given rarity and add it to the hero's inventory. If the job name is not
+   * recognized, the method will throw an exception.
+   */
   async process(job: Job<any, any, string>): Promise<any> {
     switch (job.name) {
       case 'buy-case': {
