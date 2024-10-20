@@ -6,12 +6,23 @@ import { NotFoundException } from '@nestjs/common';
 
 @Processor('battle')
 export class BattleProcessor extends WorkerHost {
+  /**
+   * @constructor
+   * @param {MonstersService} monstersService - service to handle operations with monsters
+   * @param {HeroService} heroService - service to handle operations with heroes
+   */
   constructor(
     private readonly monstersService: MonstersService,
     private readonly heroService: HeroService
   ) {
     super();
   }
+  /**
+   * Processes a job. Depending on the job name, it either returns all monsters, or
+   * simulates a battle between a hero and a monster.
+   * @param {Job<any, any, string>} job - the job to be processed
+   * @returns {Promise<any>} - the result of the job processing
+   */
   async process(job: Job<any, any, string>): Promise<any> {
     switch (job.name) {
       case 'get-monsters': {
