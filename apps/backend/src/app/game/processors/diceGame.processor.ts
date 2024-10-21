@@ -1,6 +1,6 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { NotFoundException } from '@nestjs/common';
-import { HeroService } from '@org/users';
+import { HeroInterface, HeroService } from '@org/users';
 import { Job } from 'bullmq';
 
 @Processor('dice')
@@ -12,7 +12,15 @@ export class DiceGameProcessor extends WorkerHost {
   async process(job: Job<any, any, string>): Promise<any> {
     switch (job.name) {
       case 'play': {
-        const { character, betAmount } = job.data;
+        return await this.handlePlayJob(job.data);
+      }
+      default:
+        throw new NotFoundException('Job name not recognized');
+    }
+  }
+
+  private async handlePlayJob(data: { character: HeroInterface; betAmount: number }): Promise<any>{
+    const { character, betAmount } = data;
 
         const heroRoll = Math.floor(Math.random() * 6) + 1;
         const botRoll = Math.floor(Math.random() * 6) + 1;
@@ -36,9 +44,5 @@ export class DiceGameProcessor extends WorkerHost {
         const hero = await this.heroService.findByUserId(character._id);
 
         return { hero, heroRoll, botRoll, winnings };
-      }
-      default:
-        throw new NotFoundException('Job name not recognized');
-    }
   }
 }

@@ -25,67 +25,16 @@ export class InventoryProcessor extends WorkerHost {
           return await this.getInventory(heroId);
         }
         case 'add': {
-          const { heroId, item } = job.data;
-          if (!item) return;
-          let inventory = await this.getInventory(heroId);
-
-          if (!inventory.inventory) {
-            throw new Error('Inventory not found');
-          }
-
-          inventory.inventory.push(item);
-          return await this.inventoryRepository.save(inventory);
+          return await this.handleAddJob(job.data);
         }
         case 'sell-item': {
-          const { heroId, uniqueId } = job.data;
-          const inventory = await this.getInventory(heroId);
-          if (!inventory.inventory) {
-            throw new Error('Inventory not found');
-          }
-
-          const updatedInventory = inventory.inventory.filter(
-            (item) => item.uniqueId !== uniqueId
-          );
-          if (updatedInventory.length === inventory.inventory.length) {
-            throw new Error('Item not found in inventory');
-          }
-
-          const heroIdMongo: Types.ObjectId =
-            heroId as unknown as Types.ObjectId;
-          const itemToSell = inventory.inventory.find(
-            (item) => item.uniqueId === uniqueId
-          );
-          if (!itemToSell) {
-            throw new Error('Item not found in inventory');
-          }
-
-          await this.inventoryRepository.update(
-            { heroId },
-            { inventory: updatedInventory }
-          );
-          await this.heroService.earnCoins(
-            heroIdMongo,
-            this.getValueOfItem(itemToSell.rarity)
-          );
-          return updatedInventory;
+          return await this.handleSellItemJob(job.data);
         }
         case 'get-by-rarity': {
-          const { heroId, rarity } = job.data;
-          const inventory = await this.getInventory(heroId);
-          if (!inventory.inventory) {
-            throw new Error('Inventory not found');
-          }
-
-          const filteredItems =
-            inventory.inventory?.filter(
-              (item: Item) => item.rarity === rarity
-            ) || [];
-              console.log('filtered:',filteredItems)
-          return filteredItems;
+          return await this.handleItemByRarity(job.data);
         }
       }
     } catch (error) {
-      console.error('InventoryProcessor', error);
       throw error;
     }
   }
@@ -102,6 +51,74 @@ export class InventoryProcessor extends WorkerHost {
     }
 
     return await this.inventoryRepository.save(inventory);
+  }
+
+  private async handleAddJob(data: {
+    heroId: string;
+    item: Item;
+  }): Promise<any> {
+    const { heroId, item } = data;
+    if (!item) return;
+    let inventory = await this.getInventory(heroId);
+
+    if (!inventory.inventory) {
+      throw new Error('Inventory not found');
+    }
+
+    inventory.inventory.push(item);
+    return await this.inventoryRepository.save(inventory);
+  }
+
+  private async handleSellItemJob(data: {
+    heroId: string;
+    uniqueId: string;
+  }): Promise<any> {
+    const { heroId, uniqueId } = data;
+    const inventory = await this.getInventory(heroId);
+    if (!inventory.inventory) {
+      throw new Error('Inventory not found');
+    }
+
+    const updatedInventory = inventory.inventory.filter(
+      (item) => item.uniqueId !== uniqueId
+    );
+    if (updatedInventory.length === inventory.inventory.length) {
+      throw new Error('Item not found in inventory');
+    }
+
+    const heroIdMongo: Types.ObjectId = heroId as unknown as Types.ObjectId;
+    const itemToSell = inventory.inventory.find(
+      (item) => item.uniqueId === uniqueId
+    );
+    if (!itemToSell) {
+      throw new Error('Item not found in inventory');
+    }
+
+    await this.inventoryRepository.update(
+      { heroId },
+      { inventory: updatedInventory }
+    );
+    await this.heroService.earnCoins(
+      heroIdMongo,
+      this.getValueOfItem(itemToSell.rarity)
+    );
+    return updatedInventory;
+  }
+
+  private async handleItemByRarity(data: {
+    heroId: string;
+    rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  }): Promise<any> {
+    const { heroId, rarity } = data;
+    const inventory = await this.getInventory(heroId);
+    if (!inventory.inventory) {
+      throw new Error('Inventory not found');
+    }
+
+    const filteredItems =
+      inventory.inventory?.filter((item: Item) => item.rarity === rarity) || [];
+    console.log('filtered:', filteredItems);
+    return filteredItems;
   }
 
   private getValueOfItem(
