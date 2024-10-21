@@ -26,7 +26,7 @@ export class BattleProcessor extends WorkerHost {
   async process(job: Job<any, any, string>): Promise<any> {
     switch (job.name) {
       case 'get-monsters': {
-        return await this.monstersService.getMonsters();
+        return await this.monstersService.getRandomMonsters(6);
       }
       case 'attack': {
         return await this.handleAttackJob(job.data);

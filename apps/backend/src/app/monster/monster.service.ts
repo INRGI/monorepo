@@ -27,4 +27,33 @@ export class MonstersService {
   getMonsterById(id: number): Monster {
     return this.monsters.find(monster => monster.id === id);
   }
+
+  async getRandomMonsters(monsters: number): Promise<Monster[]>{
+    const randomMonsters: Monster[] = [];
+    const uniqueIds = new Set<number>();
+
+    while (randomMonsters.length < monsters) {
+      const randomIndex = Math.floor(Math.random() * this.monsters.length);
+      const monster = this.monsters[randomIndex];
+
+      if (!uniqueIds.has(monster.id)) {
+        uniqueIds.add(monster.id);
+
+        const modifiedMonster: Monster = {
+          ...monster,
+          health: this.getRandomizedValue(monster.health),
+          attack: this.getRandomizedValue(monster.attack),
+          xp: this.getRandomizedValue(monster.xp),
+        };
+
+        randomMonsters.push(modifiedMonster);
+      }
+    }
+    return randomMonsters;
+  }
+
+  private getRandomizedValue(baseValue: number): number{
+    const variation = baseValue * 0.2;
+    return Math.floor(baseValue + (Math.random() * (variation * 2)) -variation);
+  }
 }
