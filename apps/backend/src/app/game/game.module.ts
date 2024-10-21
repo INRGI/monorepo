@@ -38,6 +38,13 @@ import { ShopProcessor } from './processors/shop.processor';
         port: 6379,
       },
     }),
+    BullModule.registerQueue({
+      name: 'itemBox',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
   ],
 })
 export class GameModule {}
