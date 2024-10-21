@@ -2,10 +2,18 @@ import styled from '@emotion/styled';
 import Modal from 'react-modal';
 
 export const Container = styled.div`
-  background-color: #2e2e2e;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  background-color: #1e1e1e;
+  color: white;
   padding: 20px;
   border-radius: 10px;
-  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  margin: 0 auto;
 `;
 
 export const ModalContainer = styled(Modal)`

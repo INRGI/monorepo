@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Container, ModalContainer, DiceContainer } from './DiceGame.styled';
+import { ModalContainer, Container } from './DiceGame.styled';
 import { Character } from '../../types/types';
 
 interface DiceGameProps {
