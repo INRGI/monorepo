@@ -31,7 +31,8 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
     fetchInventory();
   }, [hero._id]);
 
-  const handleItemSell = async (uniqueId: string) => {
+  const handleItemSell = async (uniqueId: string, event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     try {
       setLoading(true)
       const response = await axios.delete(`http://localhost:3000/inventory/sell/${hero._id}/${uniqueId}`);
@@ -68,7 +69,7 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
             <p>Type: {item.type}</p>
             <p>Rarity: {item.rarity}</p>
             <p>Enchanted: {item.enchanted}</p>
-            <button onClick={() => handleItemSell(item.uniqueId)}>Sell Item</button>
+            <button onClick={(event) => handleItemSell(item.uniqueId, event)}>Sell Item</button>
           </InventoryCard>
         ))}
       </InventoryContainer>

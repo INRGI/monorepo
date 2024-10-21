@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, BoxCard, ModalContainer, BoxesContainer } from './BoxContainer.styled';
+import { Container } from '../BattleContainer/BattleContainer.styled';
+import { BoxCard, ModalContainer, BoxesContainer } from './BoxContainer.styled';
 import { Box, Character, Item } from '../../types/types';
 
 interface BoxContainerProps {

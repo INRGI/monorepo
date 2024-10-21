@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import axios from 'axios';
 import styled from '@emotion/styled';
 import BattleContainer from './components/BattleContainer/BattleContainer';
@@ -6,10 +7,11 @@ import RegistrationForm from './components/RegistrationForm/RegistrationForm';
 import LoginForm from './components/LoginForm/LoginForm';
 import { Character } from './types/types';
 import BoxContainer from './components/BoxContainer/BoxContainer';
-import Modal from 'react-modal';
 import ItemByRarity from './components/ItemByRarity/ItemByRarity';
 import Inventory from './components/Inventory/Inventory';
 import Chat from './components/Chat/Chat';
+import Modal from 'react-modal';
+import Navbar from './components/Navbar/Navbar';
 
 Modal.setAppElement('#root');
 
@@ -74,24 +76,43 @@ export function App() {
   };
 
   return (
-    <StyledApp>
-      {isAuthenticated && hero ? (
-        <>
-          <Chat roomId="1" senderId={hero.name} />
-          <BattleContainer hero={hero} updateHero={updateHero} />
-          <BoxContainer hero={hero} updateHero={updateHero} />
-          <ItemByRarity hero={hero} updateHero={updateHero} />
-          <Inventory hero={hero} updateHero={updateHero} />
-        </>
-      ) : (
-        <>
-          <RegistrationForm onLogin={handleLogin} />
-          <LoginForm onLogin={handleLogin} />
-        </>
-      )}
-    </StyledApp>
+    <Router>
+      <StyledApp>
+        {isAuthenticated && hero ? (
+          <>
+            <Chat roomId="1" senderId={hero.name} />
+            <Navbar />
+            <Routes>
+              <Route
+                path="/"
+                element={<BattleContainer hero={hero} updateHero={updateHero} />}
+              />
+              <Route
+                path="/shop"
+                element={
+                  <>
+                    <BoxContainer hero={hero} updateHero={updateHero} />
+                    <ItemByRarity hero={hero} updateHero={updateHero} />
+                  </>
+                }
+              />
+              <Route
+                path="/inventory"
+                element={<Inventory hero={hero} updateHero={updateHero} />}
+              />
+            </Routes>
+          </>
+        ) : (
+          <>
+            <RegistrationForm onLogin={handleLogin} />
+            <LoginForm onLogin={handleLogin} />
+          </>
+        )}
+      </StyledApp>
+    </Router>
   );
 }
 
 export default App;
+
 // test8@t.com

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Box, Character, Item } from '../../types/types';
-import { BoxCard, BoxesContainer, Container, ModalContainer } from './ItemByRarity.styled';
+import { Character, Item } from '../../types/types';
+import { BoxCard, BoxesContainer, ModalContainer } from './ItemByRarity.styled';
+import { Container } from '../BattleContainer/BattleContainer.styled';
 
 interface ItemByRarityProps {
   hero: Character;

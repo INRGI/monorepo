@@ -43,14 +43,14 @@ export const InventoryCard = styled.div`
   }
 
   button {
-    background-color: #0aa601;
+    background-color: #a60101;
     color: white;
     border: none;
     padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
     &:hover {
-      background-color: #2cac25;
+      background-color: #ac2525;
     }
   }
 `;

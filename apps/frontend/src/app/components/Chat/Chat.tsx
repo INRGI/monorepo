@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { ChatProps, Message } from '../../types/types';
-import { Card, InfoText, InfoTitle } from './Chat.styled';
+import { ChatContainer, MessageList, InputContainer, InfoTitle, InfoText } from './Chat.styled';
 
 const socket = io('http://localhost:3000');
 
@@ -35,9 +35,20 @@ const Chat: React.FC<ChatProps> = ({ roomId, senderId }) => {
   };
 
   return (
-    <Card>
+    <ChatContainer>
       <InfoTitle>Chat Room: {roomId}</InfoTitle>
-      <div>
+      <MessageList>
+        {messages.length === 0 ? (
+          <li>No messages yet</li>
+        ) : (
+          messages.map((msg, index) => (
+            <li key={index}>
+              <InfoText>{msg.senderId}: {msg.message}</InfoText>
+            </li>
+          ))
+        )}
+      </MessageList>
+      <InputContainer>
         <input
           type="text"
           placeholder="Message"
@@ -45,22 +56,8 @@ const Chat: React.FC<ChatProps> = ({ roomId, senderId }) => {
           onChange={(e) => setMessage(e.target.value)}
         />
         <button onClick={handleSendMessage}>Send</button>
-      </div>
-      <div>
-        <InfoText>Messages:</InfoText>
-        <ul>
-          {messages.length === 0 ? (
-            <li>No messages yet</li>
-          ) : (
-            messages.map((msg, index) => (
-              <li key={index}>
-                <InfoText>{msg.senderId}: {msg.message}</InfoText>
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
-    </Card>
+      </InputContainer>
+    </ChatContainer>
   );
 };
 
