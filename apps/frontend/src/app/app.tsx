@@ -12,6 +12,7 @@ import Inventory from './components/Inventory/Inventory';
 import Chat from './components/Chat/Chat';
 import Modal from 'react-modal';
 import Navbar from './components/Navbar/Navbar';
+import DiceGame from './components/DiceGame/DiceGame';
 
 Modal.setAppElement('#root');
 
@@ -85,7 +86,10 @@ export function App() {
             <Routes>
               <Route
                 path="/"
-                element={<BattleContainer hero={hero} updateHero={updateHero} />}
+                element={<>
+                  <BattleContainer hero={hero} updateHero={updateHero} />
+                  <DiceGame hero={hero} updateHero={updateHero}/>
+                </>}
               />
               <Route
                 path="/shop"
