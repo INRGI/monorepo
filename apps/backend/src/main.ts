@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app/app.module';
 import { config } from 'dotenv';
 import FastifyCors from '@fastify/cors';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -24,6 +25,8 @@ async function bootstrap() {
     origin: '*',
     methods: ['GET', 'POST', 'DELETE', 'PUT'],
   });
+
+  app.useGlobalPipes(new ValidationPipe());
 
   app.useWebSocketAdapter(new IoAdapter(app));
 
