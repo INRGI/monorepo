@@ -12,6 +12,7 @@ import { UnsplashModule } from '@org/unsplash';
 import { SlackBotModule } from '@org/slack-bot';
 import { ItemModule } from './loot/loot.module';
 import { ChatModule } from './chat/chat.module';
+import { GuildModule } from './guild/guild.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ChatModule } from './chat/chat.module';
     GameModule,
     AuthModule,
     ItemModule,
+    GuildModule,
     // GoogleDriveModule.register({
     //   client_email: process.env.GOOGLE_CLIENT_EMAIL!,
     //   private_key: process.env.GOOGLE_PRIVATE_KEY!

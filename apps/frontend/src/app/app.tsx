@@ -13,6 +13,7 @@ import Chat from './components/Chat/Chat';
 import Modal from 'react-modal';
 import Navbar from './components/Navbar/Navbar';
 import DiceGame from './components/DiceGame/DiceGame';
+import GuildContainer from './components/GuildContainer/GuildContainer';
 
 Modal.setAppElement('#root');
 
@@ -89,6 +90,7 @@ export function App() {
                 element={<>
                   <BattleContainer hero={hero} updateHero={updateHero} />
                   <DiceGame hero={hero} updateHero={updateHero}/>
+                  <GuildContainer heroId={hero._id}/>
                 </>}
               />
               <Route
