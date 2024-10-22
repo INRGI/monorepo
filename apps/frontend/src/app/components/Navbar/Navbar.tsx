@@ -14,6 +14,9 @@ const Navbar: React.FC = () => {
       <NavItem>
         <Link to="/inventory">Inventory</Link>
       </NavItem>
+      <NavItem>
+        <Link to="/guild">Guild</Link>
+      </NavItem>
     </NavContainer>
   );
 };

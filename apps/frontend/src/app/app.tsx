@@ -90,7 +90,7 @@ export function App() {
                 element={<>
                   <BattleContainer hero={hero} updateHero={updateHero} />
                   <DiceGame hero={hero} updateHero={updateHero}/>
-                  <GuildContainer heroId={hero._id}/>
+                  
                 </>}
               />
               <Route
@@ -106,6 +106,8 @@ export function App() {
                 path="/inventory"
                 element={<Inventory hero={hero} updateHero={updateHero} />}
               />
+              <Route path='/guild'
+              element={<GuildContainer heroId={hero._id}/>}/>
             </Routes>
           </>
         ) : (

@@ -20,6 +20,11 @@ export class GuildController {
         return await this.guildService.getGuildById(id);
     }
 
+    @Get('my/:heroId')
+    async getMyGuild(@Param('heroId') heroId: string){
+        return await this.guildService.getMyGuild(heroId);
+    }
+
     @Post()
     async createGuild(@Body() guildData: CreateGuildDto): Promise<Guild>{
         return await this.guildService.createGuild(guildData);

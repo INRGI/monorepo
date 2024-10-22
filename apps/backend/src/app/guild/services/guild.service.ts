@@ -38,6 +38,12 @@ export class GuildService {
     return result;
   }
 
+  async getMyGuild(heroId: string){
+    const job = await this.guildQueue.add('get-my', {heroId});
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result;
+  }
+
   async inviteToGuild(inviteToGuildDto: InviteToGuildDto) {
     const job = await this.guildQueue.add('invite', {inviteToGuildDto});
     const result = await job.waitUntilFinished(this.queueEvents);

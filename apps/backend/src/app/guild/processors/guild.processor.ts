@@ -1,5 +1,10 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { ConflictException, HttpException, Inject, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  Inject,
+  NotFoundException,
+} from '@nestjs/common';
 import { Job } from 'bullmq';
 import { Repository } from 'typeorm';
 import { Guild } from '../entities/guild.entity';
@@ -31,6 +36,9 @@ export class GuildProcessor extends WorkerHost {
       case 'get-one': {
         return await this.handleGetOneJob(job.data);
       }
+      case 'get-my': {
+        return await this.handleGetMyJob(job.data);
+      }
       case 'get-all': {
         return await this.handleGetAllJob();
       }
@@ -50,10 +58,20 @@ export class GuildProcessor extends WorkerHost {
     createGuildDto: CreateGuildDto;
   }): Promise<Guild | { error: string }> {
     const { createGuildDto } = data;
-    const guild = await this.guildRepository.findOne({where: {name: createGuildDto.name}});
-    if(guild) return {error: 'Guild already exists'}
+
+    const existingParticipant = await this.guildParticipantsRepository.findOne({
+      where: { heroId: createGuildDto.guildMastersId },
+    });
+    if (existingParticipant)
+      return { error: 'You are already a member of a guild' };
+
+    const guild = await this.guildRepository.findOne({
+      where: { name: createGuildDto.name },
+    });
+    if (guild) return { error: 'Guild already exists' };
 
     const newGuild = this.guildRepository.create(createGuildDto);
+    newGuild.guildMastersId = createGuildDto.guildMastersId;
     return await this.guildRepository.save(newGuild);
   }
 
@@ -86,16 +104,44 @@ export class GuildProcessor extends WorkerHost {
       .getMany();
   }
 
+  private async handleGetMyJob(data: {
+    heroId: number;
+  }): Promise<Guild | { error: string }> {
+    const { heroId } = data;
+  
+    const guild = await this.guildRepository
+      .createQueryBuilder('guild')
+      .leftJoinAndSelect('guild.guildParticipants', 'guildParticipants')
+      .where(
+        'guild.guildMastersId = :heroId OR guildParticipants.heroId = :heroId',
+        { heroId }
+      )
+      .getOne();
+  
+    if (!guild) return { error: 'Guild not found' };
+    return guild;
+  }
+  
+
   private async handleInviteJob(data: {
     inviteToGuildDto: InviteToGuildDto;
   }): Promise<Guild | { error: string }> {
     const { inviteToGuildDto } = data;
     const { id, heroId } = inviteToGuildDto;
 
-    const guild = await this.guildRepository.findOne({where: {id}});
-    if(!guild) return {error: 'Guild not found'};
+    const existingParticipant = await this.guildParticipantsRepository.findOne({
+      where: { heroId },
+    });
+    if (existingParticipant)
+      return { error: 'You are already a member of a guild' };
 
-    const participant = this.guildParticipantsRepository.create({heroId, guild});
+    const guild = await this.guildRepository.findOne({ where: { id } });
+    if (!guild) return { error: 'Guild not found' };
+
+    const participant = this.guildParticipantsRepository.create({
+      heroId,
+      guild,
+    });
     await this.guildParticipantsRepository.save(participant);
 
     guild.guildParticipants.push(participant);
@@ -108,14 +154,18 @@ export class GuildProcessor extends WorkerHost {
     const { removeFromGuildDto } = data;
     const { id, heroId } = removeFromGuildDto;
 
-    const guild = await this.guildRepository.findOne({where: {id}});
-    if(!guild) throw new NotFoundException('Guild not found');
+    const guild = await this.guildRepository.findOne({ where: { id } });
+    if (!guild) throw new NotFoundException('Guild not found');
 
-    const participant = guild.guildParticipants.find(part => part.heroId === heroId);
-    if (!participant) return {error: 'Participant not found'};
+    const participant = guild.guildParticipants.find(
+      (part) => part.heroId === heroId
+    );
+    if (!participant) return { error: 'Participant not found' };
 
     await this.guildParticipantsRepository.delete(participant.id);
-    guild.guildParticipants = guild.guildParticipants.filter(part => part.heroId !== participant.heroId);
+    guild.guildParticipants = guild.guildParticipants.filter(
+      (part) => part.heroId !== participant.heroId
+    );
 
     return await this.guildRepository.save(guild);
   }
