@@ -13,6 +13,7 @@ import { SlackBotModule } from '@org/slack-bot';
 import { ItemModule } from './loot/loot.module';
 import { ChatModule } from './chat/chat.module';
 import { GuildModule } from './guild/guild.module';
+import { AuctionModule } from './auction/auction.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { GuildModule } from './guild/guild.module';
     AuthModule,
     ItemModule,
     GuildModule,
+    AuctionModule,
     // GoogleDriveModule.register({
     //   client_email: process.env.GOOGLE_CLIENT_EMAIL!,
     //   private_key: process.env.GOOGLE_PRIVATE_KEY!

@@ -72,8 +72,9 @@ export class InventoryProcessor extends WorkerHost {
   private async handleSellItemJob(data: {
     heroId: string;
     uniqueId: string;
+    price?: number
   }): Promise<any> {
-    const { heroId, uniqueId } = data;
+    const { heroId, uniqueId, price } = data;
     const inventory = await this.getInventory(heroId);
     if (!inventory.inventory) {
       throw new Error('Inventory not found');
@@ -100,7 +101,7 @@ export class InventoryProcessor extends WorkerHost {
     );
     await this.heroService.earnCoins(
       heroIdMongo,
-      this.getValueOfItem(itemToSell.rarity)
+      price || this.getValueOfItem(itemToSell.rarity)
     );
     return updatedInventory;
   }

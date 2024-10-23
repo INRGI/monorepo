@@ -3,7 +3,7 @@ import { Job } from 'bullmq';
 import { Repository } from 'typeorm';
 import { Item } from '../entities/item.entity';
 import { ItemBox } from '../entities/itemBox.entity';
-import { Inject } from '@nestjs/common';
+import { Inject, NotFoundException } from '@nestjs/common';
 import { CreateItemDto } from '../dtos/CreateItem.dto';
 import { UpdateItemDto } from '../dtos/UpdateItem.dto';
 import { DeleteItemDto } from '../dtos/DeleteItem.dto';
@@ -32,6 +32,9 @@ export class ItemProcessor extends WorkerHost {
       case 'delete': {
         return await this.handleDeleteJob(job.data);
       }
+      case 'find-one': {
+        return await this.findOneJob(job.data);
+      }
     }
   }
 
@@ -42,6 +45,13 @@ export class ItemProcessor extends WorkerHost {
       .getMany();
 
     return itemboxes;
+  }
+
+  private async findOneJob(data: {id: string}): Promise<Item>{
+    const {id} = data;
+    const item = await this.itemRepository.findOne({where: {uniqueId: id}});
+    if (!item) throw new NotFoundException('Item not found');
+    return item;
   }
 
   private async handleCreateJob(data: {

@@ -19,6 +19,12 @@ export class ItemService {
     return result;
   }
 
+  async findOne(id: string): Promise<Item> {
+    const job = await this.itemQueue.add('find-one', {id});
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result;
+  }
+
   async create(itemData: CreateItemDto): Promise<Item> {
     const job = await this.itemQueue.add('create', {});
     const result = await job.waitUntilFinished(this.queueEvents);

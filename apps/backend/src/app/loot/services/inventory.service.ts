@@ -25,7 +25,7 @@ export class InventoryService {
     return result;
   }
 
-  async sellFromInventory(heroId: string, uniqueId: string) {
+  async sellFromInventory(heroId: string, uniqueId: string, price?: number) {
     const job = await this.inventoryQueue.add('sell-item', { heroId, uniqueId });
     const result = await job.waitUntilFinished(this.queueEvents);
     return result;
