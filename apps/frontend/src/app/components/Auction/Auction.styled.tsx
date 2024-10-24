@@ -35,15 +35,33 @@ export const AuctionCard = styled.div`
   }
 
   button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    &:hover {
-      background-color: #0056b3;
-    }
+    width: 90%;
+  padding: 10px 15px;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #45a049;
+  }
+  }
+`;
+
+export const StyledButton = styled.button`
+  width: 80%;
+  padding: 10px 15px;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #45a049;
   }
 `;
 

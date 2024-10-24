@@ -50,6 +50,12 @@ export class GuildService {
     return result;
   }
 
+  async getHeroesWithoutGuild(){
+    const job = await this.guildQueue.add('get-heroes', {});
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result;
+  }
+
   async removeFromGuild(removeFromGuildDto: RemoveFromGuildDto) {
     const job = await this.guildQueue.add('remove', {removeFromGuildDto});
     const result = await job.waitUntilFinished(this.queueEvents);

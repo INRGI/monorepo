@@ -9,6 +9,6 @@ export class GuildParticipant {
     @Column()
     heroId: string;
 
-    @ManyToOne(() => Guild, (guild) => guild.guildParticipants)
+    @ManyToOne(() => Guild, (guild) => guild.guildParticipants, { onDelete: 'CASCADE' })
     guild: Guild;
 }

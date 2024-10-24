@@ -5,10 +5,8 @@ import { DatabaseModule } from '../database/database.module';
 import { BullModule } from '@nestjs/bullmq';
 import { AuctionController } from './controllers/auction.controller';
 import { AuctionService } from './services/auction.service';
+import { UsersModule } from '@org/users';
 import { ItemModule } from '../loot/loot.module';
-import { InventoryService } from '../loot/services/inventory.service';
-import { ItemService } from '../loot/services/item.service';
-import { HeroService, UsersModule } from '@org/users';
 
 @Module({
   providers: [
@@ -19,8 +17,8 @@ import { HeroService, UsersModule } from '@org/users';
   controllers: [AuctionController],
   imports: [
     DatabaseModule,
-    ItemModule,
     UsersModule,
+    ItemModule,
     BullModule.forRoot({
       connection: {
         host: 'localhost',

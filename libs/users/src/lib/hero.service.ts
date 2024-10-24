@@ -11,6 +11,10 @@ export class HeroService {
     return await this.heroModel.findOne({ _id: userId }).exec();
   }
 
+  async findAll():Promise<HeroDocument[]>{
+    return await this.heroModel.find();
+  }
+
   async earnCoins(heroId: Types.ObjectId, coins: number): Promise<Hero>{
     const hero = await this.findByUserId(heroId);
 

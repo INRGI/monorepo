@@ -33,12 +33,16 @@ export class GuildController {
     return await this.guildService.getMyGuild(heroId);
   }
 
+  @Get('heroes')
+  async getAllHeroes(){
+    return await this.guildService.getHeroesWithoutGuild();
+  }
+
   @Post()
   async createGuild(@Body() guildData: CreateGuildDto): Promise<Guild> {
     return await this.guildService.createGuild(guildData);
   }
 
-  @Put()
   @Put()
   async updateGuild(@Body() guildData: UpdateGuildDto): Promise<Guild> {
     return await this.guildService.updateGuild(guildData);

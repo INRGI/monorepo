@@ -8,7 +8,6 @@ import { Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InventoryService } from '../../loot/services/inventory.service';
 import { Item } from '../../loot/entities/item.entity';
-import { ItemService } from '../../loot/services/item.service';
 import { HeroService } from '@org/users';
 import { Types } from 'mongoose';
 

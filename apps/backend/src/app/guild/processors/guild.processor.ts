@@ -1,10 +1,5 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
-import {
-  ConflictException,
-  HttpException,
-  Inject,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, NotFoundException } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { Repository } from 'typeorm';
 import { Guild } from '../entities/guild.entity';
@@ -13,10 +8,12 @@ import { UpdateGuildDto } from '../dtos/UpdateGuild.dto';
 import { InviteToGuildDto } from '../dtos/InviteToGuild.dto';
 import { RemoveFromGuildDto } from '../dtos/RemoveFromGuild.dto';
 import { GuildParticipant } from '../entities/guildParticipant.entity';
+import { HeroService } from '@org/users';
 
 @Processor('guild')
 export class GuildProcessor extends WorkerHost {
   constructor(
+    private readonly heroService: HeroService,
     @Inject('GUILD_REPOSITORY')
     private readonly guildRepository: Repository<Guild>,
     @Inject('GUILD_PARTICIPANT_REPOSITORY')
@@ -51,7 +48,22 @@ export class GuildProcessor extends WorkerHost {
       case 'delete': {
         return await this.handleDeleteJob(job.data);
       }
+      case 'get-heroes': {
+        return await this.handleGetHeroesJob();
+      }
     }
+  }
+
+  private async handleGetHeroesJob() {
+    const heroes = await this.heroService.findAll();
+    const participants = await this.guildParticipantsRepository.find();
+
+    const heroesWithoutGuild = heroes.filter(
+      (hero) =>
+        !participants.some((participant) => participant.heroId === hero.id)
+    );
+
+    return heroesWithoutGuild;
   }
 
   private async handleCreateJob(data: {
@@ -70,19 +82,30 @@ export class GuildProcessor extends WorkerHost {
     });
     if (guild) return { error: 'Guild already exists' };
 
-    const newGuild = this.guildRepository.create(createGuildDto);
+    const newGuild = await this.guildRepository.create(createGuildDto);
+
     newGuild.guildMastersId = createGuildDto.guildMastersId;
-    return await this.guildRepository.save(newGuild);
+    const savedGuild =  await this.guildRepository.save(newGuild);
+
+    const participant = this.guildParticipantsRepository.create({
+      heroId: createGuildDto.guildMastersId,
+      guild: savedGuild,
+    });
+    await this.guildParticipantsRepository.save(participant);
+
+    return savedGuild
   }
 
-  private async handleUpdateJob(data: { updateGuildDto: UpdateGuildDto }): Promise<Guild | { error: string }> {
+  private async handleUpdateJob(data: {
+    updateGuildDto: UpdateGuildDto;
+  }): Promise<Guild | { error: string }> {
     try {
       const { updateGuildDto } = data;
-  
+
       const guild = await this.guildRepository.findOne({
         where: { id: updateGuildDto.id },
       });
-  
+
       if (!guild) {
         return { error: 'Guild not found' };
       }
@@ -90,7 +113,7 @@ export class GuildProcessor extends WorkerHost {
       await this.guildRepository.update(updateGuildDto.id, {
         name: updateGuildDto.name,
       });
-  
+
       return await this.guildRepository.findOne({
         where: { id: updateGuildDto.id },
       });
@@ -98,7 +121,6 @@ export class GuildProcessor extends WorkerHost {
       return { error: 'An error occurred while updating the guild' };
     }
   }
-  
 
   private async handleGetOneJob(data: { id: number }): Promise<Guild> {
     const { id } = data;
