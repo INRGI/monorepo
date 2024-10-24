@@ -3,7 +3,11 @@ import axios from 'axios';
 import { Character, Item } from '../../types/types';
 import { Container } from '../BattleContainer/BattleContainer.styled';
 import { ModalContainer } from '../BoxContainer/BoxContainer.styled';
-import { InventoryCard, InventoryContainer } from './Inventory.styled';
+import {
+  AuctionContainer,
+  InventoryCard,
+  InventoryContainer,
+} from './Inventory.styled';
 
 interface Inventory {
   hero: Character;
@@ -12,13 +16,16 @@ interface Inventory {
 
 const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
   const [inventoryItems, setInventoryItems] = useState<Item[]>([]);
+  const [activeItem, setActiveItem] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [openedItem, setOpenedItem] = useState<Item | null>(null);
+  const [auctionPrice, setAuctionPrice] = useState<number>(0);
 
   const fetchInventory = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/inventory/${hero._id}`);
+      const response = await axios.get(
+        `http://localhost:3000/inventory/${hero._id}`
+      );
       setInventoryItems(response.data.inventory || []);
     } catch (error) {
       console.error('Failed to fetch inventory:', error);
@@ -31,11 +38,16 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
     fetchInventory();
   }, [hero._id]);
 
-  const handleItemSell = async (uniqueId: string, event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleItemSell = async (
+    uniqueId: string,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.stopPropagation();
     try {
-      setLoading(true)
-      const response = await axios.delete(`http://localhost:3000/inventory/sell/${hero._id}/${uniqueId}`);
+      setLoading(true);
+      const response = await axios.delete(
+        `http://localhost:3000/inventory/sell/${hero._id}/${uniqueId}`
+      );
       setInventoryItems(response.data || []);
     } catch (error) {
       console.error('Failed to delete item:', error);
@@ -44,16 +56,35 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
       fetchInventory();
       updateHero(hero);
     }
-  }
+  };
 
-  const handleItemClick = (item: Item) => {
-    setOpenedItem(item);
+  const handleItemClick = async (item: Item) => {
     setModalIsOpen(true);
+    setActiveItem(item);
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
-    setOpenedItem(null);
+    setActiveItem(null);
+  };
+
+  const handleAuctionList = async () => {
+    if (!activeItem) return;
+    try {
+      setLoading(true);
+      await axios.post(`http://localhost:3000/auction/open`, {
+        sellerId: hero._id,
+        uniqueItemId: activeItem.uniqueId,
+        price: auctionPrice,
+        name: activeItem.name,
+        rarity: activeItem.rarity
+      });
+      closeModal();
+    } catch (error) {
+      console.error('Failed to list item on auction:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) return <Container>Loading...</Container>;
@@ -69,24 +100,43 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
             <p>Type: {item.type}</p>
             <p>Rarity: {item.rarity}</p>
             <p>Enchanted: {item.enchanted}</p>
-            <button onClick={(event) => handleItemSell(item.uniqueId, event)}>Sell Item</button>
+            <button onClick={(event) => handleItemSell(item.uniqueId, event)}>
+              Sell Item
+            </button>
           </InventoryCard>
         ))}
       </InventoryContainer>
 
-      <ModalContainer isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Item Details">
+      <ModalContainer
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Item Details"
+      >
         <h2>Item Details</h2>
-        {openedItem && (
+        {activeItem && (
           <div>
-            <img width={300} src={openedItem.image} alt={openedItem.name} />
-            <h4>{openedItem.name}</h4>
-            <p>Type: {openedItem.type}</p>
-            <p>Rarity: {openedItem.rarity}</p>
-            <p>Enchanted: {openedItem.enchanted}</p>
-            {openedItem.stats.attack && <p>Attack: {openedItem.stats.attack}</p> || openedItem.stats.health && <p>Health: {openedItem.stats.health}</p>}
+            <img width={300} src={activeItem.image} alt={activeItem.name} />
+            <h4>{activeItem.name}</h4>
+            <p>Type: {activeItem.type}</p>
+            <p>Rarity: {activeItem.rarity}</p>
+            <p>Enchanted: {activeItem.enchanted}</p>
+            {(activeItem.stats.attack && (
+              <p>Attack: {activeItem.stats.attack}</p>
+            )) ||
+              (activeItem.stats.health && (
+                <p>Health: {activeItem.stats.health}</p>
+              ))}
           </div>
         )}
-        <button onClick={closeModal}>Close</button>
+        <AuctionContainer>
+          <input
+            type="number"
+            value={auctionPrice}
+            onChange={(e) => setAuctionPrice(Number(e.target.value))}
+            placeholder="Enter auction price"
+          />
+          <button onClick={handleAuctionList}>Add to Auction</button>
+        </AuctionContainer>
       </ModalContainer>
     </Container>
   );

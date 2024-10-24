@@ -17,6 +17,9 @@ const Navbar: React.FC = () => {
       <NavItem>
         <Link to="/guild">Guild</Link>
       </NavItem>
+      <NavItem>
+        <Link to='/auction'>Auction</Link>
+      </NavItem>
     </NavContainer>
   );
 };

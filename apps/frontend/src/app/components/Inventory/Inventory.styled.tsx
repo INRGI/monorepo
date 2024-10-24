@@ -7,6 +7,13 @@ export const Container = styled.div`
   height: 400px;
 `;
 
+export const AuctionContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+`;
+
 export const InventoryContainer = styled.div`
   display: flex;
   gap: 20px;

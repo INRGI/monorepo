@@ -33,6 +33,9 @@ export class InventoryProcessor extends WorkerHost {
         case 'get-by-rarity': {
           return await this.handleItemByRarity(job.data);
         }
+        case 'find-one': {
+          return await this.findOneItem(job.data);
+        }
       }
     } catch (error) {
       throw error;
@@ -51,6 +54,23 @@ export class InventoryProcessor extends WorkerHost {
     }
 
     return await this.inventoryRepository.save(inventory);
+  }
+
+  private async findOneItem(data: {heroId: string, uniqueId: string}): Promise<Item>{
+    const {heroId, uniqueId} = data;
+    const inventory = await this.getInventory(heroId);
+    if (!inventory.inventory) {
+      throw new Error('Inventory not found');
+    }
+
+    const item = inventory.inventory.filter(
+      (item) => item.uniqueId === uniqueId
+    );
+    if (!item[0]) {
+      throw new Error('Item not found');
+    }
+
+    return item[0];
   }
 
   private async handleAddJob(data: {

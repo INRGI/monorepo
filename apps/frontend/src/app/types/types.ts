@@ -30,6 +30,9 @@ export interface Box {
 }
 
 export interface Item {
+  uniqueItemId?: string;
+  sellerId?: string;
+  price?: number;
   id: number;
   uniqueId: string;
   name: string;

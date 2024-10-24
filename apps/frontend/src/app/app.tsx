@@ -14,6 +14,7 @@ import Modal from 'react-modal';
 import Navbar from './components/Navbar/Navbar';
 import DiceGame from './components/DiceGame/DiceGame';
 import GuildContainer from './components/GuildContainer/GuildContainer';
+import Auction from './components/Auction/Auction';
 
 Modal.setAppElement('#root');
 
@@ -108,6 +109,7 @@ export function App() {
               />
               <Route path='/guild'
               element={<GuildContainer heroId={hero._id}/>}/>
+              <Route path='/auction' element={<Auction heroId={hero._id} updateHero={updateHero}/>}/>
             </Routes>
           </>
         ) : (

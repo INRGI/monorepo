@@ -8,6 +8,13 @@ export class AuctionItem {
 
   @IsString()
   @Column()
+  name: string;
+
+  @Column({ type: 'enum', enum: ['common' , 'rare' , 'epic' , 'legendary'], default: 'common' })
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+
+  @IsString()
+  @Column()
   uniqueItemId: string;
 
   @IsString()

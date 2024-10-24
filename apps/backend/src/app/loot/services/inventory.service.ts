@@ -31,6 +31,12 @@ export class InventoryService {
     return result;
   }
 
+  async findItem(heroId: string, uniqueId: string){
+    const job = await this.inventoryQueue.add('find-one', {heroId, uniqueId});
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result
+  }
+
   async getByRarity(
     heroId: string,
     rarity: 'common' | 'rare' | 'epic' | 'legendary'

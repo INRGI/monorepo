@@ -16,7 +16,6 @@ import { Types } from 'mongoose';
 export class AuctionProcessor extends WorkerHost {
   constructor(
     private readonly heroService: HeroService,
-    private readonly itemService: ItemService,
     private readonly inventoryService: InventoryService,
     @Inject('AUCTION_REPOSITORY')
     private readonly auctionItemRepository: Repository<AuctionItem>
@@ -86,10 +85,11 @@ export class AuctionProcessor extends WorkerHost {
     buyItemDto: BuyItemDto;
   }): Promise<Item | { error: string }> {
     const { buyItemDto } = data;
+
     const buyerHeroIdMongo: Types.ObjectId =
       buyItemDto.newOwnerHeroId as unknown as Types.ObjectId;
 
-    const item = await this.itemService.findOne(buyItemDto.uniqueId);
+    const item = await this.inventoryService.findItem(buyItemDto.oldOwnerHeroId, buyItemDto.uniqueId);
     if (!item) return { error: 'Item not found' };
 
     const existing = await this.auctionItemRepository.findOne({
@@ -111,6 +111,13 @@ export class AuctionProcessor extends WorkerHost {
     if (!sellResult)
       return { error: 'Something went wrong during the selling' };
 
+    await this.auctionItemRepository
+      .createQueryBuilder()
+      .delete()
+      .from(AuctionItem)
+      .where('id = :id', { id: buyItemDto.id })
+      .execute();
+
     await this.inventoryService.addToInventory(buyItemDto.newOwnerHeroId, item);
     return item;
   }
@@ -123,10 +130,10 @@ export class AuctionProcessor extends WorkerHost {
     const existing = await this.auctionItemRepository.findOne({
       where: { id: id, status: 'open' },
     });
+    
     if (!existing) return { error: 'Item not found' };
 
-    const item = await this.itemService.findOne(existing.uniqueItemId);
-
+    const item = await this.inventoryService.findItem(existing.sellerId, existing.uniqueItemId);
     if (!item) return { error: 'Item not found' };
 
     return item;
