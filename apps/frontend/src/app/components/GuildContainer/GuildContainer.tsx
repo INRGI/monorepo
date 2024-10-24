@@ -45,7 +45,9 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
   const [myGuild, setMyGuild] = useState<Guild | null>(null);
   const [name, setName] = useState('');
   const [guildId, setGuildId] = useState<number | null>(null);
-  const [currentGuildDetail, setCurrentGuildDetail] = useState<Guild | null>(null);
+  const [currentGuildDetail, setCurrentGuildDetail] = useState<Guild | null>(
+    null
+  );
 
   useEffect(() => {
     fetchGuilds();
@@ -72,6 +74,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
       } else {
         setMyGuild(response.data);
         setGuildId(response.data.id);
+        if (response.data.id) fetchGuildDetails(response.data.id);
       }
     } catch (error) {
       console.error('Error fetching my guild:', error);
@@ -82,12 +85,14 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
   const inviteHeroToGuild = async (heroId: string) => {
     try {
       await axios.post('http://localhost:3000/guild/invite', {
-        heroId,
-        guildId,
+        heroId: heroId,
+        id: guildId,
       });
-      fetchAllHeroes();
     } catch (error) {
       console.error('Error inviting hero to guild:', error);
+    } finally {
+      fetchMyGuild();
+      fetchAllHeroes();
     }
   };
 
@@ -109,12 +114,11 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
     try {
       const response = await axios.get(`http://localhost:3000/guild/${id}`);
       setCurrentGuildDetail(response.data);
-      setModalIsOpen(true);
     } catch (error) {
       console.error('Error creating guild:', error);
       setCurrentGuildDetail(null);
     }
-  }
+  };
 
   const createGuild = async () => {
     if (!name) return;
@@ -156,9 +160,21 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
     }
   };
 
+  const kickFromGuild = async (heroId: string) => {
+    try {
+      await axios.post(`http://localhost:3000/guild/remove`, {
+        id: guildId,
+        heroId: heroId,
+      });
+      fetchMyGuild();
+      fetchAllHeroes();
+    } catch (error) {
+      console.error('Error kicking users:', error);
+    }
+  };
+
   const closeModal = () => {
     setModalIsOpen(false);
-    setCurrentGuildDetail(null);
   };
 
   return (
@@ -183,6 +199,22 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
                     Delete Guild
                   </EditButton>
                 </ButtonGroup>
+                {currentGuildDetail &&
+                  currentGuildDetail.guildParticipants?.map((part, index) => (
+                    <ParticipantCard key={index}>
+                      <p>Name: {part.hero.name}</p>
+                      <p>Level: {part.hero.level}</p>
+                      <p>Attack: {part.hero.attack}</p>
+                      {(currentGuildDetail.guildMastersId === heroId &&
+                        part.heroId !== heroId && (
+                          <EditButton
+                            onClick={() => kickFromGuild(part.heroId)}
+                          >
+                            KICK
+                          </EditButton>
+                        )) || <p>Role: Guild Master</p>}
+                    </ParticipantCard>
+                  ))}
               </>
             ) : (
               <p>You are a member of the guild but not the master.</p>
@@ -209,48 +241,51 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
             <GuildCard key={guild.id}>
               <h4>{guild.name}</h4>
               <StyledButton
-                onClick={() => fetchGuildDetails(guild.id)}
+                onClick={() => {
+                  fetchGuildDetails(guild.id);
+                  setModalIsOpen(true);
+                }}
               >
                 View Guild
               </StyledButton>
             </GuildCard>
           ))}
           <ModalContainer
-              isOpen={modalIsOpen}
-              onRequestClose={closeModal}
-              contentLabel="Item Details"
-            >
-              <h2>Guild Details</h2>
-              {currentGuildDetail && (
-                <>
-                  <h2>Name: {currentGuildDetail.name}</h2>
-                  <p>Members:</p>
-                  {currentGuildDetail.guildParticipants?.map((part, index) => (
-                    <ParticipantCard key={index}>
-                      <p>Name: {part.hero.name}</p>
-                      <p>Level: {part.hero.level}</p>
-                      <p>Attack: {part.hero.attack}</p>
-                    </ParticipantCard>
-                  ))}
-                  <button onClick={closeModal}>Close</button>
-                </>
-              )}
-            </ModalContainer>
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            contentLabel="Item Details"
+          >
+            <h2>Guild Details</h2>
+            {currentGuildDetail && (
+              <>
+                <h2>Name: {currentGuildDetail.name}</h2>
+                <p>Members:</p>
+                {currentGuildDetail.guildParticipants?.map((part, index) => (
+                  <ParticipantCard key={index}>
+                    <p>Name: {part.hero.name}</p>
+                    <p>Level: {part.hero.level}</p>
+                    <p>Attack: {part.hero.attack}</p>
+                  </ParticipantCard>
+                ))}
+                <button onClick={closeModal}>Close</button>
+              </>
+            )}
+          </ModalContainer>
         </CardContainer>
       </GuildListContainer>
 
       <HeroesListContainer>
         <h3>Heroes Without Guild</h3>
         <HeroesList>
-        {heroesWithoutGuild.map((hero) => (
-          <HeroesCard key={hero._id}>
-            <p>{hero.name}</p>
-            <p>Level: {hero.level}</p>
-            <StyledButton onClick={() => inviteHeroToGuild(hero._id)}>
-              Invite to Guild
-            </StyledButton>
-          </HeroesCard>
-        ))}
+          {heroesWithoutGuild.map((hero) => (
+            <HeroesCard key={hero._id}>
+              <p>{hero.name}</p>
+              <p>Level: {hero.level}</p>
+              <StyledButton onClick={() => inviteHeroToGuild(hero._id)}>
+                Invite to Guild
+              </StyledButton>
+            </HeroesCard>
+          ))}
         </HeroesList>
       </HeroesListContainer>
     </Container>

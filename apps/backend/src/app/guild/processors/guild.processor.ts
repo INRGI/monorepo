@@ -201,22 +201,15 @@ export class GuildProcessor extends WorkerHost {
   }): Promise<Guild | { error: string }> {
     const { removeFromGuildDto } = data;
     const { id, heroId } = removeFromGuildDto;
-
+  
     const guild = await this.guildRepository.findOne({ where: { id } });
     if (!guild) throw new NotFoundException('Guild not found');
 
-    const participant = guild.guildParticipants.find(
-      (part) => part.heroId === heroId
-    );
-    if (!participant) return { error: 'Participant not found' };
+    await this.guildParticipantsRepository.delete({ heroId });
 
-    await this.guildParticipantsRepository.delete(participant.id);
-    guild.guildParticipants = guild.guildParticipants.filter(
-      (part) => part.heroId !== participant.heroId
-    );
-
-    return await this.guildRepository.save(guild);
+    return guild;
   }
+  
 
   private async handleDeleteJob(data: { id: number }): Promise<string> {
     const { id } = data;
