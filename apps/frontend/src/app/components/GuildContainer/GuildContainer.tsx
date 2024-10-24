@@ -16,6 +16,8 @@ import {
   HeroesList,
   HeroesCard,
   EditButton,
+  ModalContainer,
+  ParticipantCard,
 } from './GuildContainer.styled';
 import { Character } from '../../types/types';
 
@@ -23,6 +25,13 @@ interface Guild {
   id: number;
   name: string;
   guildMastersId: string;
+  guildParticipants?: Participant[];
+}
+
+interface Participant {
+  id: number;
+  heroId: string;
+  hero: Character;
 }
 
 interface GuildContainerProps {
@@ -30,11 +39,13 @@ interface GuildContainerProps {
 }
 
 const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [heroesWithoutGuild, setHeroesWithoutGuild] = useState<Character[]>([]);
   const [guilds, setGuilds] = useState<Guild[]>([]);
   const [myGuild, setMyGuild] = useState<Guild | null>(null);
   const [name, setName] = useState('');
   const [guildId, setGuildId] = useState<number | null>(null);
+  const [currentGuildDetail, setCurrentGuildDetail] = useState<Guild | null>(null);
 
   useEffect(() => {
     fetchGuilds();
@@ -94,6 +105,17 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
     fetchAllHeroes();
   }, []);
 
+  const fetchGuildDetails = async (id: number) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/guild/${id}`);
+      setCurrentGuildDetail(response.data);
+      setModalIsOpen(true);
+    } catch (error) {
+      console.error('Error creating guild:', error);
+      setCurrentGuildDetail(null);
+    }
+  }
+
   const createGuild = async () => {
     if (!name) return;
     try {
@@ -132,6 +154,11 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
     } catch (error) {
       console.error('Error deleting guild:', error);
     }
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setCurrentGuildDetail(null);
   };
 
   return (
@@ -182,12 +209,33 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
             <GuildCard key={guild.id}>
               <h4>{guild.name}</h4>
               <StyledButton
-                onClick={() => console.log(`Join guild ${guild.id}`)}
+                onClick={() => fetchGuildDetails(guild.id)}
               >
                 View Guild
               </StyledButton>
             </GuildCard>
           ))}
+          <ModalContainer
+              isOpen={modalIsOpen}
+              onRequestClose={closeModal}
+              contentLabel="Item Details"
+            >
+              <h2>Guild Details</h2>
+              {currentGuildDetail && (
+                <>
+                  <h2>Name: {currentGuildDetail.name}</h2>
+                  <p>Members:</p>
+                  {currentGuildDetail.guildParticipants?.map((part, index) => (
+                    <ParticipantCard key={index}>
+                      <p>Name: {part.hero.name}</p>
+                      <p>Level: {part.hero.level}</p>
+                      <p>Attack: {part.hero.attack}</p>
+                    </ParticipantCard>
+                  ))}
+                  <button onClick={closeModal}>Close</button>
+                </>
+              )}
+            </ModalContainer>
         </CardContainer>
       </GuildListContainer>
 

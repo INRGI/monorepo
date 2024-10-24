@@ -122,13 +122,27 @@ export class GuildProcessor extends WorkerHost {
     }
   }
 
-  private async handleGetOneJob(data: { id: number }): Promise<Guild> {
+  private async handleGetOneJob(data: { id: number }): Promise<Guild | { error: string }> {
     const { id } = data;
-    return await this.guildRepository
+    const guild = await this.guildRepository
       .createQueryBuilder('Guild')
       .leftJoinAndSelect('Guild.guildParticipants', 'guildParticipants')
       .where('Guild.id = :id', { id: id })
       .getOne();
+
+      if (!guild) return { error: 'Guild not found' };
+    
+    const heroes = await this.heroService.findAll();
+    
+    guild.guildParticipants = guild.guildParticipants.map(participant => {
+      const hero = heroes.find(hero => hero.id === participant.heroId);
+      return {
+        ...participant,
+        hero,
+      };
+    });
+
+    return guild;
   }
 
   private async handleGetAllJob(): Promise<Guild[]> {
