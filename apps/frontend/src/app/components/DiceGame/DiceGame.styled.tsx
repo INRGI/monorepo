@@ -3,17 +3,51 @@ import Modal from 'react-modal';
 
 export const Container = styled.div`
   display: flex;
-  gap: 10px;
-  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
   align-content: center;
   align-items: center;
-  background-color: #1e1e1e;
-  color: white;
+  gap: 20px;
+  width: 500px;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  width: 80%;
+  background-color: #3e3e3e;
+  border-radius: 8px;
+  color: white;
   margin: 0 auto;
+  p{
+    padding: 0;
+    margin: 0;
+  }
+  h3{
+    padding: 0;
+    margin: 0;
+  }
+`;
+
+export const StyledInput = styled.input`
+  padding: 10px;
+  margin: 0px;
+  border: none;
+  border-radius: 4px;
+  width: 100px;
+  font-size: 16px;
+  height: 30px;
+`;
+
+export const StyledButton = styled.button`
+  width: 100px;
+  height: 50px;
+  padding: 10px 15px;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #45a049;
+  }
 `;
 
 export const ModalContainer = styled(Modal)`

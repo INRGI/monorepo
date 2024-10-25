@@ -90,6 +90,12 @@ export function App() {
                 path="/"
                 element={<>
                   <BattleContainer hero={hero} updateHero={updateHero} />
+                  
+                </>}
+              />
+              <Route
+                path="/minigames"
+                element={<>
                   <DiceGame hero={hero} updateHero={updateHero}/>
                   
                 </>}

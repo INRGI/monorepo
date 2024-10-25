@@ -186,7 +186,7 @@ export const GuildCard = styled.li`
 
 export const StyledInput = styled.input`
   padding: 10px;
-  margin: px;
+  margin: 0px;
   border: none;
   border-radius: 4px;
   width: 75%;

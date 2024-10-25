@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { ModalContainer, Container } from './DiceGame.styled';
+import { ModalContainer, Container, StyledInput, StyledButton } from './DiceGame.styled';
 import { Character } from '../../types/types';
 
 interface DiceGameProps {
@@ -43,18 +43,18 @@ const DiceGame: React.FC<DiceGameProps> = ({ hero, updateHero }) => {
   return (
     <Container>
       <h3>Dice Game</h3>
-      <label>
-        Bet Amount:
-        <input
-          type="number"
+      
+        <p>Bet Amount:</p>
+        <StyledInput
+          type="text"
           value={betAmount}
           onChange={(e) => setBetAmount(Number(e.target.value))}
           disabled={isLoading}
         />
-      </label>
-      <button onClick={playGame} disabled={isLoading}>
+      
+      <StyledButton onClick={playGame} disabled={isLoading}>
         {isLoading ? 'Rolling...' : 'Roll Dice'}
-      </button>
+      </StyledButton>
 
 
       <ModalContainer isOpen={modalIsOpen} onRequestClose={closeModal}>

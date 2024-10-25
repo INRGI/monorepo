@@ -20,6 +20,9 @@ const Navbar: React.FC = () => {
       <NavItem>
         <Link to='/auction'>Auction</Link>
       </NavItem>
+      <NavItem>
+        <Link to='/minigames'>Mini Games</Link>
+      </NavItem>
     </NavContainer>
   );
 };

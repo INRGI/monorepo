@@ -96,28 +96,6 @@ export class GuildProcessor extends WorkerHost {
     return savedGuild;
   }
 
-  // private async handleUpdateJob(data: { updateGuildDto: UpdateGuildDto }): Promise<Guild | { error: string }> {
-  //   try {
-  //     const { updateGuildDto } = data;
-
-  //     const guild = await this.guildRepository.findOne({
-  //       where: { id: updateGuildDto.id },
-  //     });
-
-  //     if (!guild) {
-  //       return { error: 'Guild not found' };
-  //     }
-  //     if (updateGuildDto.name) guild.name = updateGuildDto.name;
-  //     if (updateGuildDto.logo) guild.logo = updateGuildDto.logo;
-
-  //     await this.guildRepository.save(guild);
-
-  //     return guild;
-  //   } catch (error) {
-  //     return { error: 'An error occurred while updating the guild' };
-  //   }
-  // }
-
   private async handleUpdateJob(data: {
     updateGuildDto: UpdateGuildDto;
   }): Promise<Guild | { error: string }> {
