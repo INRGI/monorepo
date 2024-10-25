@@ -49,6 +49,12 @@ export const ModalContainer = styled(Modal)`
   }
 `;
 
+export const UpdateModalContainer = styled(ModalContainer)`
+  height: 200px;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
