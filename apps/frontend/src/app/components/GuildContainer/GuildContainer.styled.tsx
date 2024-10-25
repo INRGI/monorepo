@@ -67,7 +67,7 @@ export const GuildInfoContainer = styled.div`
   border-radius: 8px;
   padding: 20px;
   width: 29%;
-  height: 400px;
+  height: 600px;
 `;
 
 export const GuildListContainer = styled.div`
@@ -134,12 +134,35 @@ export const MyGuildContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 10px;
+
+  img {
+    float: left;
+    width: 100px;
+    height: 150px;
+    object-fit: cover;
+    padding-bottom: 20px;
+  }
+`;
+export const ScrollContainer = styled.div`
+  padding: 0;
+  margin: 0;
+  height: 520px;
+  overflow-y: auto;
+  width: 90%;
+`;
+
+export const GuildMatesContainer = styled(ScrollContainer)`
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
 `;
 
 export const CardContainer = styled.ul`
   display: flex;
-  width: 250px;
   flex-direction: column;
+  width: 90%;
   gap: 20px;
   padding: 0;
 `;

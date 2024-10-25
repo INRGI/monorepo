@@ -43,7 +43,7 @@ export class GuildController {
     return await this.guildService.createGuild(guildData);
   }
 
-  @Put()
+  @Put('update')
   async updateGuild(@Body() guildData: UpdateGuildDto): Promise<Guild> {
     return await this.guildService.updateGuild(guildData);
   }

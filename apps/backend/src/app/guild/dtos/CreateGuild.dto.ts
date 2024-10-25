@@ -6,4 +6,7 @@ export class CreateGuildDto{
 
     @IsString()
     guildMastersId: string;
+
+    @IsString()
+    logo?: string;
 }

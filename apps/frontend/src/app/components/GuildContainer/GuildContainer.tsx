@@ -18,12 +18,15 @@ import {
   EditButton,
   ModalContainer,
   ParticipantCard,
+  ScrollContainer,
+  GuildMatesContainer,
 } from './GuildContainer.styled';
 import { Character } from '../../types/types';
 
 interface Guild {
   id: number;
   name: string;
+  logo: string;
   guildMastersId: string;
   guildParticipants?: Participant[];
 }
@@ -46,6 +49,9 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
   const [name, setName] = useState('');
   const [guildId, setGuildId] = useState<number | null>(null);
   const [currentGuildDetail, setCurrentGuildDetail] = useState<Guild | null>(
+    null
+  );
+  const [myGuildDetails, setMyGuildDetails] = useState<Guild | null>(
     null
   );
 
@@ -74,7 +80,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
       } else {
         setMyGuild(response.data);
         setGuildId(response.data.id);
-        if (response.data.id) fetchGuildDetails(response.data.id);
+        if (response.data.id) fetchMyGuildDetails(response.data.id);
       }
     } catch (error) {
       console.error('Error fetching my guild:', error);
@@ -120,6 +126,16 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
     }
   };
 
+  const fetchMyGuildDetails = async (id: number) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/guild/${id}`);
+      setMyGuildDetails(response.data);
+    } catch (error) {
+      console.error('Error creating guild:', error);
+      setMyGuildDetails(null);
+    }
+  };
+
   const createGuild = async () => {
     if (!name) return;
     try {
@@ -140,7 +156,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
     console.log(name, guildId);
     if (!guildId || !name) return;
     try {
-      await axios.put(`http://localhost:3000/guild`, { id: guildId, name });
+      await axios.put(`http://localhost:3000/guild/update`, { id: guildId, name: name });
       setName('');
       fetchGuilds();
       fetchMyGuild();
@@ -182,6 +198,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
       <GuildInfoContainer>
         {myGuild ? (
           <MyGuildContainer>
+            <img src={myGuild.logo} alt={myGuild.name} />
             <Heading>My Guild: {myGuild.name}</Heading>
             {myGuild.guildMastersId === heroId ? (
               <>
@@ -199,13 +216,14 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
                     Delete Guild
                   </EditButton>
                 </ButtonGroup>
-                {currentGuildDetail &&
-                  currentGuildDetail.guildParticipants?.map((part, index) => (
+                <GuildMatesContainer>
+                {myGuildDetails &&
+                  myGuildDetails.guildParticipants?.map((part, index) => (
                     <ParticipantCard key={index}>
                       <p>Name: {part.hero.name}</p>
                       <p>Level: {part.hero.level}</p>
                       <p>Attack: {part.hero.attack}</p>
-                      {(currentGuildDetail.guildMastersId === heroId &&
+                      {(myGuildDetails.guildMastersId === heroId &&
                         part.heroId !== heroId && (
                           <EditButton
                             onClick={() => kickFromGuild(part.heroId)}
@@ -215,6 +233,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
                         )) || <p>Role: Guild Master</p>}
                     </ParticipantCard>
                   ))}
+                  </GuildMatesContainer>
               </>
             ) : (
               <p>You are a member of the guild but not the master.</p>
@@ -236,6 +255,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
 
       <GuildListContainer>
         <SubHeading>Existing Guilds</SubHeading>
+        <ScrollContainer>
         <CardContainer>
           {guilds.map((guild) => (
             <GuildCard key={guild.id}>
@@ -272,10 +292,12 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
             )}
           </ModalContainer>
         </CardContainer>
+        </ScrollContainer>
       </GuildListContainer>
 
       <HeroesListContainer>
         <h3>Heroes Without Guild</h3>
+        <ScrollContainer>
         <HeroesList>
           {heroesWithoutGuild.map((hero) => (
             <HeroesCard key={hero._id}>
@@ -287,6 +309,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
             </HeroesCard>
           ))}
         </HeroesList>
+        </ScrollContainer>
       </HeroesListContainer>
     </Container>
   );

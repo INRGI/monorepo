@@ -85,7 +85,7 @@ export class GuildProcessor extends WorkerHost {
     const newGuild = await this.guildRepository.create(createGuildDto);
 
     newGuild.guildMastersId = createGuildDto.guildMastersId;
-    const savedGuild =  await this.guildRepository.save(newGuild);
+    const savedGuild = await this.guildRepository.save(newGuild);
 
     const participant = this.guildParticipantsRepository.create({
       heroId: createGuildDto.guildMastersId,
@@ -93,36 +93,57 @@ export class GuildProcessor extends WorkerHost {
     });
     await this.guildParticipantsRepository.save(participant);
 
-    return savedGuild
+    return savedGuild;
   }
+
+  // private async handleUpdateJob(data: { updateGuildDto: UpdateGuildDto }): Promise<Guild | { error: string }> {
+  //   try {
+  //     const { updateGuildDto } = data;
+
+  //     const guild = await this.guildRepository.findOne({
+  //       where: { id: updateGuildDto.id },
+  //     });
+
+  //     if (!guild) {
+  //       return { error: 'Guild not found' };
+  //     }
+  //     if (updateGuildDto.name) guild.name = updateGuildDto.name;
+  //     if (updateGuildDto.logo) guild.logo = updateGuildDto.logo;
+
+  //     await this.guildRepository.save(guild);
+
+  //     return guild;
+  //   } catch (error) {
+  //     return { error: 'An error occurred while updating the guild' };
+  //   }
+  // }
 
   private async handleUpdateJob(data: {
     updateGuildDto: UpdateGuildDto;
   }): Promise<Guild | { error: string }> {
-    try {
-      const { updateGuildDto } = data;
+    const { updateGuildDto } = data;
 
-      const guild = await this.guildRepository.findOne({
-        where: { id: updateGuildDto.id },
-      });
+    await this.guildRepository
+      .createQueryBuilder()
+      .update(Guild)
+      .set(updateGuildDto)
+      .where('id = :id', { id: updateGuildDto.id })
+      .execute();
 
-      if (!guild) {
-        return { error: 'Guild not found' };
-      }
+    const guild = await this.guildRepository.findOne({
+      where: { id: updateGuildDto.id },
+    });
 
-      await this.guildRepository.update(updateGuildDto.id, {
-        name: updateGuildDto.name,
-      });
-
-      return await this.guildRepository.findOne({
-        where: { id: updateGuildDto.id },
-      });
-    } catch (error) {
-      return { error: 'An error occurred while updating the guild' };
+    if (!guild) {
+      return { error: 'Guild not found' };
     }
+
+    return guild;
   }
 
-  private async handleGetOneJob(data: { id: number }): Promise<Guild | { error: string }> {
+  private async handleGetOneJob(data: {
+    id: number;
+  }): Promise<Guild | { error: string }> {
     const { id } = data;
     const guild = await this.guildRepository
       .createQueryBuilder('Guild')
@@ -130,12 +151,12 @@ export class GuildProcessor extends WorkerHost {
       .where('Guild.id = :id', { id: id })
       .getOne();
 
-      if (!guild) return { error: 'Guild not found' };
-    
+    if (!guild) return { error: 'Guild not found' };
+
     const heroes = await this.heroService.findAll();
-    
-    guild.guildParticipants = guild.guildParticipants.map(participant => {
-      const hero = heroes.find(hero => hero.id === participant.heroId);
+
+    guild.guildParticipants = guild.guildParticipants.map((participant) => {
+      const hero = heroes.find((hero) => hero.id === participant.heroId);
       return {
         ...participant,
         hero,
@@ -201,7 +222,7 @@ export class GuildProcessor extends WorkerHost {
   }): Promise<Guild | { error: string }> {
     const { removeFromGuildDto } = data;
     const { id, heroId } = removeFromGuildDto;
-  
+
     const guild = await this.guildRepository.findOne({ where: { id } });
     if (!guild) throw new NotFoundException('Guild not found');
 
@@ -209,7 +230,6 @@ export class GuildProcessor extends WorkerHost {
 
     return guild;
   }
-  
 
   private async handleDeleteJob(data: { id: number }): Promise<string> {
     const { id } = data;
