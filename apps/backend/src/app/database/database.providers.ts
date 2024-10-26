@@ -6,6 +6,8 @@ import { Inventory } from '../loot/entities/inventory.entity';
 import { Guild } from '../guild/entities/guild.entity';
 import { GuildParticipant } from '../guild/entities/guildParticipant.entity';
 import { AuctionItem } from '../auction/entities/auctionItem.entity';
+import { Quests } from '../quests/entities/quests.entity';
+import { HeroQuest } from '../quests/entities/heroQuest.entity';
 
 export const databaseProviders = [
   {
@@ -18,7 +20,7 @@ export const databaseProviders = [
             username: 'root',
             password: 'root',
             database: 'loot',
-            entities: [Item, ItemBox, Enchant, Inventory, Guild, GuildParticipant, AuctionItem],
+            entities: [Item, ItemBox, Enchant, Inventory, Guild, GuildParticipant, AuctionItem, Quests, HeroQuest],
             synchronize: true,
           });
           

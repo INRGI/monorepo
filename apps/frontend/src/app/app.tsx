@@ -15,6 +15,8 @@ import Navbar from './components/Navbar/Navbar';
 import DiceGame from './components/DiceGame/DiceGame';
 import GuildContainer from './components/GuildContainer/GuildContainer';
 import Auction from './components/Auction/Auction';
+import QuestContainer from './components/QuestContainer/QuestContainer';
+import CreateQuestForm from './components/CreateQuestForm/CreateQuestForm';
 
 Modal.setAppElement('#root');
 
@@ -90,7 +92,8 @@ export function App() {
                 path="/"
                 element={<>
                   <BattleContainer hero={hero} updateHero={updateHero} />
-                  
+                  <QuestContainer heroId={hero._id}/>
+                  {/* <CreateQuestForm /> */}
                 </>}
               />
               <Route

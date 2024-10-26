@@ -1,4 +1,14 @@
-import { User } from "@org/users";
+import { User } from '@org/users';
+
+export interface HeroQuest {
+  id: string;
+  name: string;
+  description: string;
+  heroId: string;
+  status: 'active' | 'completed' | 'failed';
+  progress: number;
+  reward: string;
+}
 
 export interface Character {
   _id: string;
@@ -20,7 +30,6 @@ export interface Monster {
   imageUrl: string;
   xp: number;
 }
-
 
 export interface Box {
   id: number;
