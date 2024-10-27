@@ -43,9 +43,7 @@ const QuestContainer: React.FC<QuestContainerProps> = ({ heroId }) => {
               <QuestInfoContainer>
                 <SubHeading>{quest.name}</SubHeading>
                 <p>{quest.description}</p>
-                <StyledButton onClick={() => console.log(`Starting quest: ${quest.name}`)}>
-                  Start Quest
-                </StyledButton>
+               
               </QuestInfoContainer>
             </QuestCard>
           ))}
