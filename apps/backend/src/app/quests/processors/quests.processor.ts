@@ -7,10 +7,13 @@ import { HeroQuest } from '../entities/heroQuest.entity';
 import { CreateQuestDto } from '../dtos/CreateQuest.dto';
 import { UpdateQuestDto } from '../dtos/UpdateQuest.dto';
 import { StatusUpdateDto } from '../dtos/StatusUpdate.dto';
+import { HeroService } from '@org/users';
+import { Types } from 'mongoose';
 
 @Processor('quests')
 export class QuestsProcessor extends WorkerHost {
   constructor(
+    private readonly heroService: HeroService,
     @Inject('QUESTS_REPOSITORY')
     private readonly questsRepository: Repository<Quests>,
     @Inject('HERO_QUEST_REPOSITORY')
@@ -35,6 +38,29 @@ export class QuestsProcessor extends WorkerHost {
       }
       case 'update-status-hero-quest': {
         return await this.handleUpdateStatus(job.data);
+      }
+      case 'complete-quest': {
+        return await this.handleCompleteQuestJob(job.data);
+      }
+    }
+  }
+
+  private async handleCompleteQuestJob(data: { heroId: string, type: string }) {
+    const { heroId, type } = data;
+
+    const activeQuests = await this.heroQuestRepository.find({
+      where: { heroId, isCompleted: false },
+      relations: ['quest'],
+    });
+
+    for (const heroQuest of activeQuests) {
+      if (heroQuest.quest.taskType === type) {
+        heroQuest.isCompleted = true;
+        await this.heroService.earnCoins(
+          heroId as unknown as Types.ObjectId,
+          heroQuest.quest.rewardCoins
+        );
+        await this.heroQuestRepository.save(heroQuest);
       }
     }
   }
@@ -133,6 +159,12 @@ export class QuestsProcessor extends WorkerHost {
     const quest = await this.heroQuestRepository.findOne({
       where: { id: updateStatusDto.id },
     });
+
+    if (updateStatusDto.isCompleted)
+      await this.heroService.earnCoins(
+        quest.heroId as unknown as Types.ObjectId,
+        quest.quest.rewardCoins
+      );
 
     return quest;
   }

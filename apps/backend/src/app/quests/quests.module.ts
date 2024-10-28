@@ -5,11 +5,13 @@ import { QuestsController } from "./controllers/quests.controller";
 import { DatabaseModule } from "../database/database.module";
 import { BullModule } from "@nestjs/bullmq";
 import { QuestsProcessor } from "./processors/quests.processor";
+import { UsersModule } from "@org/users";
 
 @Module({
     providers: [...questsProviders, QuestsService, QuestsProcessor],
     controllers: [QuestsController],
     imports: [
+        UsersModule,
         DatabaseModule,
         BullModule.forRoot({
             connection: {
