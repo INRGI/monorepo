@@ -6,12 +6,15 @@ import { Inventory } from '../entities/inventory.entity';
 import { HeroService } from '@org/users';
 import { Types } from 'mongoose';
 import { Item } from '../entities/item.entity';
+import { Equip } from '../entities/equip.entity';
 
 @Processor('inventory')
 export class InventoryProcessor extends WorkerHost {
   constructor(
     @Inject('INVENTORY_REPOSITORY')
     private inventoryRepository: Repository<Inventory>,
+    @Inject('EQUIP_REPOSITORY')
+    private equipRepository: Repository<Equip>,
     private readonly heroService: HeroService,
     @InjectQueue('quests') private readonly questsQueue: Queue
   ) {
@@ -37,10 +40,126 @@ export class InventoryProcessor extends WorkerHost {
         case 'find-one': {
           return await this.findOneItem(job.data);
         }
+        case 'get-equiped': {
+          return await this.handleGetEquipJob(job.data);
+        }
+        case 'equip-item': {
+          return await this.handleEquipJob(job.data);
+        }
+        case 'unequip-item': {
+          return await this.handleUnequipJob(job.data);
+        }
       }
     } catch (error) {
       throw error;
     }
+  }
+
+  private async handleGetEquipJob(data: { heroId: string }) {
+    const { heroId } = data;
+
+    const inventory = await this.inventoryRepository
+      .createQueryBuilder('inventory')
+      .leftJoinAndSelect('inventory.equip', 'equip')
+      .where('inventory.heroId = :heroId', { heroId: heroId })
+      .getOne();
+
+    if (!inventory) {
+      throw new Error('Inventory not found for this hero');
+    }
+
+    return inventory.equip;
+  }
+
+  private async handleEquipJob(data: { heroId: string; uniqueId: string }) {
+    const { heroId, uniqueId } = data;
+
+    const inventory = await this.inventoryRepository
+      .createQueryBuilder('inventory')
+      .leftJoinAndSelect('inventory.equip', 'equip')
+      .where('inventory.heroId = :heroId', { heroId })
+      .getOne();
+
+    if (!inventory.inventory) {
+      throw new Error('Inventory not found');
+    }
+
+    const itemToEquip = inventory.inventory.find(
+      (item) => item.uniqueId === uniqueId
+    );
+
+    if (!itemToEquip) {
+      throw new Error('Item not found in inventory');
+    }
+
+    const updatedInventory = inventory.inventory.filter(
+      (item) => item.uniqueId !== uniqueId
+    );
+
+    await this.inventoryRepository.update(
+      { heroId },
+      { inventory: updatedInventory }
+    );
+
+    const equip: Equip = await this.equipRepository.findOne({
+      where: { id: inventory.equip.id },
+    });
+
+    if (itemToEquip.type === 'weapon') {
+      await this.handleUnequipJob({ heroId, itemType: 'weapon' });
+      equip.weapon = itemToEquip;
+    }
+    if (itemToEquip.type === 'armor') {
+      await this.handleUnequipJob({ heroId, itemType: 'armor' });
+      equip.armor = itemToEquip;
+    }
+
+    await this.equipRepository.save(equip);
+    return inventory.inventory;
+  }
+
+  private async handleUnequipJob(data: {
+    heroId: string;
+    itemType: 'weapon' | 'armor';
+  }) {
+    const { heroId, itemType } = data;
+
+    const inventory = await this.inventoryRepository
+      .createQueryBuilder('inventory')
+      .leftJoinAndSelect('inventory.equip', 'equip')
+      .where('inventory.heroId = :heroId', { heroId })
+      .getOne();
+
+    if (!inventory.inventory) {
+      throw new Error('Inventory not found');
+    }
+
+    const equip: Equip = await this.equipRepository.findOne({
+      where: { id: inventory.equip.id },
+    });
+    if (!equip) {
+      throw new Error('Equip record not found');
+    }
+
+    let itemToUnequip: Item;
+
+    if (itemType === 'weapon') {
+      itemToUnequip = equip.weapon;
+      equip.weapon = null;
+    }
+    if (itemType === 'armor') {
+      itemToUnequip = equip.armor;
+      equip.armor = null;
+    }
+
+    if (itemToUnequip) {
+      inventory.inventory.push(itemToUnequip);
+    }
+
+    await this.equipRepository.save(equip);
+    await this.inventoryRepository.save(inventory);
+    
+    return inventory.inventory;
   }
 
   private async getInventory(heroId: string): Promise<Inventory> {
@@ -57,8 +176,11 @@ export class InventoryProcessor extends WorkerHost {
     return await this.inventoryRepository.save(inventory);
   }
 
-  private async findOneItem(data: {heroId: string, uniqueId: string}): Promise<Item>{
-    const {heroId, uniqueId} = data;
+  private async findOneItem(data: {
+    heroId: string;
+    uniqueId: string;
+  }): Promise<Item> {
+    const { heroId, uniqueId } = data;
     const inventory = await this.getInventory(heroId);
     if (!inventory.inventory) {
       throw new Error('Inventory not found');
@@ -93,7 +215,7 @@ export class InventoryProcessor extends WorkerHost {
   private async handleSellItemJob(data: {
     heroId: string;
     uniqueId: string;
-    price?: number
+    price?: number;
   }): Promise<any> {
     const { heroId, uniqueId, price } = data;
     const inventory = await this.getInventory(heroId);
@@ -124,7 +246,10 @@ export class InventoryProcessor extends WorkerHost {
       heroIdMongo,
       price || this.getValueOfItem(itemToSell.rarity)
     );
-    await this.questsQueue.add('complete-quest', {heroId: heroId, type: 'Selling'});
+    await this.questsQueue.add('complete-quest', {
+      heroId: heroId,
+      type: 'Selling',
+    });
     return updatedInventory;
   }
 

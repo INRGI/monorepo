@@ -1,5 +1,9 @@
 import { User } from '@org/users';
-
+export interface Equip {
+  id: string;
+  weapon: Item;
+  armor: Item;
+}
 export interface HeroQuest {
   id: string;
   heroId: string;

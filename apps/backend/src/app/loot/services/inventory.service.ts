@@ -37,6 +37,24 @@ export class InventoryService {
     return result
   }
 
+  async getEquip(heroId: string){
+    const job = await this.inventoryQueue.add('get-equiped', {heroId});
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result
+  }
+
+  async equipItem(heroId: string, uniqueId: string){
+    const job = await this.inventoryQueue.add('equip-item', {heroId, uniqueId});
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result
+  }
+
+  async unequipItem(heroId: string, itemType: 'weapon' | 'armor'){
+    const job = await this.inventoryQueue.add('unequip-item', {heroId, itemType});
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result
+  }
+
   async getByRarity(
     heroId: string,
     rarity: 'common' | 'rare' | 'epic' | 'legendary'

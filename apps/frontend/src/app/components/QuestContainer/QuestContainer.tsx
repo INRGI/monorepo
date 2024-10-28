@@ -9,6 +9,8 @@ import {
   ScrollContainer,
   QuestCard,
   QuestInfoContainer,
+  CompletedStatus,
+  NotCompletedStatus,
 } from './QuestContainer.styled';
 import { HeroQuest } from '../../types/types';
 
@@ -46,7 +48,9 @@ const QuestContainer: React.FC<QuestContainerProps> = ({ heroId }) => {
                 <SubHeading>{quest.quest.name}</SubHeading>
                 <p>Type: {quest.quest.taskType}</p>
                 <p>Reward: {quest.quest.rewardCoins}</p>
-                <p>Completed: {(quest.isCompleted && 'Done') || 'Nope'}</p>
+                {(quest.isCompleted && 'Done' && (
+                  <CompletedStatus>Completed: Done</CompletedStatus>
+                )) || <NotCompletedStatus>Completed: Nope</NotCompletedStatus>}
               </QuestInfoContainer>
             </QuestCard>
           ))}

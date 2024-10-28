@@ -17,6 +17,7 @@ import GuildContainer from './components/GuildContainer/GuildContainer';
 import Auction from './components/Auction/Auction';
 import QuestContainer from './components/QuestContainer/QuestContainer';
 import CreateQuestForm from './components/CreateQuestForm/CreateQuestForm';
+import EquipContainer from './components/Equip/Equip';
 
 Modal.setAppElement('#root');
 
@@ -93,6 +94,7 @@ export function App() {
                 element={
                   <>
                     <BattleContainer hero={hero} updateHero={updateHero} />
+                    <EquipContainer hero={hero} />
                   </>
                 }
               />
@@ -124,7 +126,11 @@ export function App() {
               />
               <Route
                 path="/inventory"
-                element={<Inventory hero={hero} updateHero={updateHero} />}
+                element={
+                  <>
+                    <Inventory hero={hero} updateHero={updateHero} />
+                  </>
+                }
               />
               <Route
                 path="/guild"

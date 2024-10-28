@@ -3,6 +3,7 @@ import { Item } from '../entities/item.entity';
 import { ItemBox } from '../entities/itemBox.entity';
 import { Enchant } from '../entities/enchant.entity';
 import { Inventory } from '../entities/inventory.entity';
+import { Equip } from '../entities/equip.entity';
 
 export const lootProviders = [
   {
@@ -23,6 +24,11 @@ export const lootProviders = [
   {
     provide: 'INVENTORY_REPOSITORY',
     useFactory: (dataSource: DataSource) => dataSource.getRepository(Inventory),
+    inject: ['DATA_SOURCE'],
+  },
+  {
+    provide: 'EQUIP_REPOSITORY',
+    useFactory: (dataSource: DataSource) => dataSource.getRepository(Equip),
     inject: ['DATA_SOURCE'],
   },
 ];

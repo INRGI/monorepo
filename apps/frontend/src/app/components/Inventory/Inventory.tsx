@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Character, Item } from '../../types/types';
 import { Container } from '../BattleContainer/BattleContainer.styled';
-import { ModalContainer } from '../BoxContainer/BoxContainer.styled';
 import {
   AuctionContainer,
+  EquipButton,
   InventoryCard,
   InventoryContainer,
+  ModalContainer
 } from './Inventory.styled';
 
 interface Inventory {
@@ -87,6 +88,16 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
     }
   };
 
+  const handleEquipItem = async () => {
+    if (!activeItem) return;
+    await axios.post(`http://localhost:3000/inventory/equip`, {
+      heroId: hero._id,
+      uniqueId: activeItem.uniqueId
+    })
+    closeModal();
+    fetchInventory();
+  }
+
   if (loading) return <Container>Loading...</Container>;
 
   return (
@@ -116,6 +127,7 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
         {activeItem && (
           <div>
             <img width={300} src={activeItem.image} alt={activeItem.name} />
+            
             <h4>{activeItem.name}</h4>
             <p>Type: {activeItem.type}</p>
             <p>Rarity: {activeItem.rarity}</p>
@@ -126,6 +138,7 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
               (activeItem.stats.health && (
                 <p>Health: {activeItem.stats.health}</p>
               ))}
+              <EquipButton onClick={handleEquipItem}>Equip</EquipButton>
           </div>
         )}
         <AuctionContainer>

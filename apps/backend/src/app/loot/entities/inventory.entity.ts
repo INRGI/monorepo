@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Item } from './item.entity';
+import { Equip } from './equip.entity';
 
 @Entity()
 export class Inventory {
@@ -11,4 +12,8 @@ export class Inventory {
 
   @Column()
   heroId: string;
+
+  @OneToOne(() => Equip, equip => equip.inventory)
+  @JoinColumn()
+  equip: Equip;
 }
