@@ -13,9 +13,10 @@ import {
 interface Inventory {
   hero: Character;
   updateHero: (hero: Character) => void;
+  handleFetchHero: () => void;
 }
 
-const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
+const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) => {
   const [inventoryItems, setInventoryItems] = useState<Item[]>([]);
   const [activeItem, setActiveItem] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
@@ -95,6 +96,7 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero }) => {
       uniqueId: activeItem.uniqueId
     })
     closeModal();
+    handleFetchHero();
     fetchInventory();
   }
 

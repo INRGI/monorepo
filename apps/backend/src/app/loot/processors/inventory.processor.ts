@@ -106,11 +106,22 @@ export class InventoryProcessor extends WorkerHost {
     });
 
     if (itemToEquip.type === 'weapon') {
+      const attack = itemToEquip?.stats?.attack;
+
       await this.handleUnequipJob({ heroId, itemType: 'weapon' });
+      await this.heroService.addAttack(
+        heroId as unknown as Types.ObjectId,
+        attack
+      );
       equip.weapon = itemToEquip;
     }
     if (itemToEquip.type === 'armor') {
+      const health = itemToEquip?.stats?.health;
       await this.handleUnequipJob({ heroId, itemType: 'armor' });
+      await this.heroService.addHealth(
+        heroId as unknown as Types.ObjectId,
+        health
+      );
       equip.armor = itemToEquip;
     }
 
@@ -145,10 +156,26 @@ export class InventoryProcessor extends WorkerHost {
 
     if (itemType === 'weapon') {
       itemToUnequip = equip.weapon;
+
+      if (itemToUnequip) {
+        const attack = itemToUnequip?.stats?.attack;
+        await this.heroService.minusAttack(
+          heroId as unknown as Types.ObjectId,
+          attack
+        );
+      }
+
       equip.weapon = null;
     }
     if (itemType === 'armor') {
       itemToUnequip = equip.armor;
+      if (itemToUnequip) {
+        const health = itemToUnequip?.stats?.health;
+        await this.heroService.minusHealth(
+          heroId as unknown as Types.ObjectId,
+          health
+        );
+      }
       equip.armor = null;
     }
 
@@ -158,7 +185,7 @@ export class InventoryProcessor extends WorkerHost {
 
     await this.equipRepository.save(equip);
     await this.inventoryRepository.save(inventory);
-    
+
     return inventory.inventory;
   }
 

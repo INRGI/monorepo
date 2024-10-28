@@ -15,10 +15,10 @@ export class Hero {
   @Prop({ default: 1 })
   level: number;
 
-  @Prop({ default: 10 })
+  @Prop({ type: Number, default: 10 })
   attack: number;
 
-  @Prop({ default: 100 })
+  @Prop({ type: Number, default: 100 })
   health: number
 
   @Prop({ default: 0 })

@@ -71,6 +71,7 @@ export class HeroService {
 
   async addAttack(heroId: Types.ObjectId, attack: number): Promise<Hero> {
     const hero = await this.findByUserId(heroId);
+
     if (!hero) {
       throw new NotFoundException('Hero not Found');
     }
@@ -96,6 +97,7 @@ export class HeroService {
     }
 
     hero.attack -= attack;
+    
     return await hero.save();
   }
 

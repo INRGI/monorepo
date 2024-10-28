@@ -18,6 +18,7 @@ import Auction from './components/Auction/Auction';
 import QuestContainer from './components/QuestContainer/QuestContainer';
 import CreateQuestForm from './components/CreateQuestForm/CreateQuestForm';
 import EquipContainer from './components/Equip/Equip';
+import { Container } from './app.styled';
 
 Modal.setAppElement('#root');
 
@@ -62,6 +63,23 @@ export function App() {
     }
   }, []);
 
+  const handleFetchHero = async () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios
+        .get('http://localhost:3000/auth/me', {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          setIsAuthenticated(true);
+          setHero(response.data.hero);
+        })
+        .catch(() => {
+          setIsAuthenticated(false);
+        });
+    }
+  }
+
   const handleLogin = () => {
     setIsAuthenticated(true);
 
@@ -92,10 +110,10 @@ export function App() {
               <Route
                 path="/"
                 element={
-                  <>
+                  <Container>
                     <BattleContainer hero={hero} updateHero={updateHero} />
-                    <EquipContainer hero={hero} />
-                  </>
+                    <EquipContainer hero={hero} handleFetchHero={handleFetchHero} />
+                  </Container>
                 }
               />
               <Route
@@ -118,17 +136,17 @@ export function App() {
               <Route
                 path="/shop"
                 element={
-                  <>
+                  <Container>
                     <BoxContainer hero={hero} updateHero={updateHero} />
                     <ItemByRarity hero={hero} updateHero={updateHero} />
-                  </>
+                  </Container>
                 }
               />
               <Route
                 path="/inventory"
                 element={
                   <>
-                    <Inventory hero={hero} updateHero={updateHero} />
+                    <Inventory hero={hero} updateHero={updateHero} handleFetchHero={handleFetchHero} />
                   </>
                 }
               />

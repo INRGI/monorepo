@@ -15,9 +15,10 @@ import {
 
 interface EquipContainerProps {
   hero: Character;
+  handleFetchHero: () => void;
 }
 
-const EquipContainer: React.FC<EquipContainerProps> = ({ hero }) => {
+const EquipContainer: React.FC<EquipContainerProps> = ({ hero, handleFetchHero }) => {
   const [equip, setEquip] = useState<Equip>();
 
   useEffect(() => {
@@ -41,6 +42,7 @@ const EquipContainer: React.FC<EquipContainerProps> = ({ hero }) => {
       itemType: type
     })
     fetchEquip();
+    handleFetchHero();
   }
 
   return (
