@@ -18,14 +18,16 @@ interface QuestContainerProps {
 
 const QuestContainer: React.FC<QuestContainerProps> = ({ heroId }) => {
   const [quests, setQuests] = useState<HeroQuest[]>([]);
-  
+
   useEffect(() => {
     fetchQuests();
   }, [heroId]);
 
   const fetchQuests = async () => {
     try {
-      const response = await axios.get<HeroQuest[]>(`http://localhost:3000/quests/${heroId}`);
+      const response = await axios.get<HeroQuest[]>(
+        `http://localhost:3000/quests/${heroId}`
+      );
       setQuests(response.data);
     } catch (error) {
       console.error('Error fetching quests:', error);
@@ -41,9 +43,10 @@ const QuestContainer: React.FC<QuestContainerProps> = ({ heroId }) => {
           {quests.map((quest) => (
             <QuestCard key={quest.id}>
               <QuestInfoContainer>
-                <SubHeading>{quest.name}</SubHeading>
-                <p>{quest.description}</p>
-               
+                <SubHeading>{quest.quest.name}</SubHeading>
+                <p>Type: {quest.quest.taskType}</p>
+                <p>Reward: {quest.quest.rewardCoins}</p>
+                <p>Completed: {(quest.isCompleted && 'Done') || 'Nope'}</p>
               </QuestInfoContainer>
             </QuestCard>
           ))}

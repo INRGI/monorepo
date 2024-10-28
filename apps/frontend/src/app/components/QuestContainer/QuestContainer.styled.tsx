@@ -14,14 +14,15 @@ export const Container = styled.div`
 
 export const CardContainer = styled.ul`
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   width: 90%;
   gap: 20px;
   padding: 0;
 `;
 
 export const QuestCard = styled.li`
-  width: 100%;
+  width: 200px;
+  height: 200px;
   background-color: #1f1f1f;
   border: 2px solid #fff;
   border-radius: 8px;

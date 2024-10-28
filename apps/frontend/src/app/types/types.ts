@@ -2,12 +2,16 @@ import { User } from '@org/users';
 
 export interface HeroQuest {
   id: string;
-  name: string;
-  description: string;
   heroId: string;
-  status: 'active' | 'completed' | 'failed';
-  progress: number;
-  reward: string;
+  isCompleted: boolean;
+  quest: {
+    name: string;
+    description: string;
+    id: number;
+    taskType: string;
+    targetAmount: number;
+    rewardCoins: number;
+  };
 }
 
 export interface Character {

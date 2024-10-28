@@ -90,18 +90,28 @@ export function App() {
             <Routes>
               <Route
                 path="/"
-                element={<>
-                  <BattleContainer hero={hero} updateHero={updateHero} />
-                  <QuestContainer heroId={hero._id}/>
-                  {/* <CreateQuestForm /> */}
-                </>}
+                element={
+                  <>
+                    <BattleContainer hero={hero} updateHero={updateHero} />
+                  </>
+                }
+              />
+              <Route
+                path="/quests"
+                element={
+                  <>
+                    {/* <CreateQuestForm /> */}
+                    <QuestContainer heroId={hero._id} />
+                  </>
+                }
               />
               <Route
                 path="/minigames"
-                element={<>
-                  <DiceGame hero={hero} updateHero={updateHero}/>
-                  
-                </>}
+                element={
+                  <>
+                    <DiceGame hero={hero} updateHero={updateHero} />
+                  </>
+                }
               />
               <Route
                 path="/shop"
@@ -116,9 +126,14 @@ export function App() {
                 path="/inventory"
                 element={<Inventory hero={hero} updateHero={updateHero} />}
               />
-              <Route path='/guild'
-              element={<GuildContainer heroId={hero._id}/>}/>
-              <Route path='/auction' element={<Auction heroId={hero._id} updateHero={updateHero}/>}/>
+              <Route
+                path="/guild"
+                element={<GuildContainer heroId={hero._id} />}
+              />
+              <Route
+                path="/auction"
+                element={<Auction heroId={hero._id} updateHero={updateHero} />}
+              />
             </Routes>
           </>
         ) : (
