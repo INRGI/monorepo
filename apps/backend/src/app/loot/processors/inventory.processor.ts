@@ -1,6 +1,6 @@
-import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Inject } from '@nestjs/common';
-import { Job } from 'bullmq';
+import { Job, Queue } from 'bullmq';
 import { Repository } from 'typeorm';
 import { Inventory } from '../entities/inventory.entity';
 import { HeroService } from '@org/users';
@@ -12,7 +12,8 @@ export class InventoryProcessor extends WorkerHost {
   constructor(
     @Inject('INVENTORY_REPOSITORY')
     private inventoryRepository: Repository<Inventory>,
-    private readonly heroService: HeroService
+    private readonly heroService: HeroService,
+    @InjectQueue('quests') private readonly questsQueue: Queue
   ) {
     super();
   }
@@ -123,6 +124,7 @@ export class InventoryProcessor extends WorkerHost {
       heroIdMongo,
       price || this.getValueOfItem(itemToSell.rarity)
     );
+    await this.questsQueue.add('complete-quest', {heroId: heroId, type: 'Selling'});
     return updatedInventory;
   }
 

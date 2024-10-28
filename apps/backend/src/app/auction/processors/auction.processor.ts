@@ -1,5 +1,5 @@
-import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { Job } from 'bullmq';
+import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq';
+import { Job, Queue } from 'bullmq';
 import { OpenToSellDto } from '../dtos/OpenToSell.dto';
 import { CloseItemDto } from '../dtos/CloseItem.dto';
 import { BuyItemDto } from '../dtos/BuyItem.dto';
@@ -17,7 +17,8 @@ export class AuctionProcessor extends WorkerHost {
     private readonly heroService: HeroService,
     private readonly inventoryService: InventoryService,
     @Inject('AUCTION_REPOSITORY')
-    private readonly auctionItemRepository: Repository<AuctionItem>
+    private readonly auctionItemRepository: Repository<AuctionItem>,
+    @InjectQueue('quests') private readonly questsQueue: Queue
   ) {
     super();
   }
@@ -118,6 +119,7 @@ export class AuctionProcessor extends WorkerHost {
       .execute();
 
     await this.inventoryService.addToInventory(buyItemDto.newOwnerHeroId, item);
+    await this.questsQueue.add('complete-quest', {heroId: buyItemDto.newOwnerHeroId, type: 'Auction'});
     return item;
   }
 

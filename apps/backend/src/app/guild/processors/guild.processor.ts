@@ -1,6 +1,6 @@
-import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Inject, NotFoundException } from '@nestjs/common';
-import { Job } from 'bullmq';
+import { Job, Queue } from 'bullmq';
 import { Repository } from 'typeorm';
 import { Guild } from '../entities/guild.entity';
 import { CreateGuildDto } from '../dtos/CreateGuild.dto';
@@ -17,7 +17,8 @@ export class GuildProcessor extends WorkerHost {
     @Inject('GUILD_REPOSITORY')
     private readonly guildRepository: Repository<Guild>,
     @Inject('GUILD_PARTICIPANT_REPOSITORY')
-    private readonly guildParticipantsRepository: Repository<GuildParticipant>
+    private readonly guildParticipantsRepository: Repository<GuildParticipant>,
+    @InjectQueue('quests') private readonly questsQueue: Queue
   ) {
     super();
   }
@@ -92,6 +93,7 @@ export class GuildProcessor extends WorkerHost {
       guild: savedGuild,
     });
     await this.guildParticipantsRepository.save(participant);
+    await this.questsQueue.add('complete-quest', {heroId: createGuildDto.guildMastersId, type: 'Guild'});
 
     return savedGuild;
   }

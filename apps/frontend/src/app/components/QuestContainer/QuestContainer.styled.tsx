@@ -4,6 +4,8 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  align-content: center;
   padding: 20px;
   background-color: #3e3e3e;
   border-radius: 8px;
@@ -14,6 +16,8 @@ export const Container = styled.div`
 
 export const CardContainer = styled.ul`
   display: flex;
+  align-items: center;
+  align-content: center;
   flex-wrap: wrap;
   width: 90%;
   gap: 20px;
@@ -58,6 +62,10 @@ export const ScrollContainer = styled.div`
   height: 520px;
   overflow-y: auto;
   width: 100%;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const Heading = styled.h2`

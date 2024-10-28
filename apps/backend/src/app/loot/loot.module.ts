@@ -55,6 +55,13 @@ import { ItemBoxProcessor } from './processors/itemBox.processor';
         port: 6379,
       },
     }),
+    BullModule.registerQueue({
+      name: 'quests',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
   ],
   providers: [
     ...lootProviders,

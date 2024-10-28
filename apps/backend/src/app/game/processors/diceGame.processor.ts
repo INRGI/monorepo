@@ -1,11 +1,11 @@
-import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq';
 import { NotFoundException } from '@nestjs/common';
 import { HeroInterface, HeroService } from '@org/users';
-import { Job } from 'bullmq';
+import { Job, Queue } from 'bullmq';
 
 @Processor('dice')
 export class DiceGameProcessor extends WorkerHost {
-  constructor(private readonly heroService: HeroService) {
+  constructor(private readonly heroService: HeroService, @InjectQueue('quests') private readonly questsQueue: Queue) {
     super();
   }
 
@@ -42,6 +42,7 @@ export class DiceGameProcessor extends WorkerHost {
         }
 
         const hero = await this.heroService.findByUserId(character._id);
+        await this.questsQueue.add('complete-quest', {heroId: character._id, type: 'Dices'});
 
         return { hero, heroRoll, botRoll, winnings };
   }

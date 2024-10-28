@@ -9,11 +9,7 @@ import { UsersModule } from '@org/users';
 import { ItemModule } from '../loot/loot.module';
 
 @Module({
-  providers: [
-    ...auctionProviders,
-    AuctionProcessor,
-    AuctionService,
-  ],
+  providers: [...auctionProviders, AuctionProcessor, AuctionService],
   controllers: [AuctionController],
   imports: [
     DatabaseModule,
@@ -40,12 +36,19 @@ import { ItemModule } from '../loot/loot.module';
       },
     }),
     BullModule.registerQueue({
-        name: 'item',
-        connection: {
-          host: 'localhost',
-          port: 6379,
-        },
-      }),
+      name: 'item',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
+    BullModule.registerQueue({
+      name: 'quests',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
   ],
   exports: [...auctionProviders],
 })
