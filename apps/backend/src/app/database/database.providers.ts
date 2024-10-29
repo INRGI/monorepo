@@ -9,22 +9,36 @@ import { AuctionItem } from '../auction/entities/auctionItem.entity';
 import { Quests } from '../quests/entities/quests.entity';
 import { HeroQuest } from '../quests/entities/heroQuest.entity';
 import { Equip } from '../loot/entities/equip.entity';
+import { HeroSkill } from '../skills/entities/heroSkill.entity';
+import { Skills } from '../skills/entities/skills.entity';
 
 export const databaseProviders = [
   {
     provide: 'DATA_SOURCE',
     useFactory: async () => {
-        const dataSource = new DataSource({
-            type: 'mysql',
-            host: '127.0.0.1',
-            port: 8889,
-            username: 'root',
-            password: 'root',
-            database: 'loot',
-            entities: [Item, ItemBox, Enchant, Inventory, Guild, GuildParticipant, AuctionItem, Quests, HeroQuest, Equip],
-            synchronize: true,
-          });
-          
+      const dataSource = new DataSource({
+        type: 'mysql',
+        host: '127.0.0.1',
+        port: 8889,
+        username: 'root',
+        password: 'root',
+        database: 'loot',
+        entities: [
+          Item,
+          ItemBox,
+          Enchant,
+          Inventory,
+          Guild,
+          GuildParticipant,
+          AuctionItem,
+          Quests,
+          HeroQuest,
+          Equip,
+          HeroSkill,
+          Skills,
+        ],
+        synchronize: true,
+      });
 
       return dataSource.initialize();
     },
