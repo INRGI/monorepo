@@ -48,7 +48,9 @@ export class SkillsProcessor extends WorkerHost {
     const { createSkillDto } = data;
 
     const newSkill = await this.skillsRepository.create(createSkillDto);
-    return await this.skillsRepository.save(newSkill);
+   
+    const result = await this.skillsRepository.save(newSkill);
+    return result;
   }
 
   private async handleUpdateSkillJob(data: {

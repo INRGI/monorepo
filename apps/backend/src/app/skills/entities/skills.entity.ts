@@ -15,17 +15,14 @@ export class Skills {
   @Column()
   skillType: string;
 
-  @Column()
+  @Column({nullable: true, default: 0})
   damage?: number;
   
-  @Column()
+  @Column({nullable: true , default: 0})
   healing?: number;
   
   @Column({ type: 'int', default: 0 })
   cooldown: number;
-
-  @Column({ type: 'int', default: 0 })
-  cooldownTurnsLeft: number;
 
   @OneToMany(() => HeroSkill, (heroSkill) => heroSkill.skill, {cascade: true})
   heroes: HeroSkill[];

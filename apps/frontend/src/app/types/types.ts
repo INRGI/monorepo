@@ -18,6 +18,22 @@ export interface HeroQuest {
   };
 }
 
+export interface HeroSkill {
+  id: string;
+  heroId: string;
+  level: number;
+  cooldownTurnsLeft?: number;
+  skill: {
+    id: number;
+    name: string;
+    description: string;
+    skillType: string;
+    damage?: number;
+    healing?: number;
+    cooldown: number;
+  };
+}
+
 export interface Character {
   _id: string;
   name: string;

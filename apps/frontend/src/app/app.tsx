@@ -19,6 +19,8 @@ import QuestContainer from './components/QuestContainer/QuestContainer';
 import CreateQuestForm from './components/CreateQuestForm/CreateQuestForm';
 import EquipContainer from './components/Equip/Equip';
 import { Container } from './app.styled';
+import SkillsContainer from './components/SkillsContainer/SkillsContainer';
+import CreateSkillForm from './components/CreateSkillForm/CreateSkillForm';
 
 Modal.setAppElement('#root');
 
@@ -113,6 +115,8 @@ export function App() {
                   <Container>
                     <BattleContainer hero={hero} updateHero={updateHero} />
                     <EquipContainer hero={hero} handleFetchHero={handleFetchHero} />
+                    
+                    
                   </Container>
                 }
               />
@@ -122,6 +126,15 @@ export function App() {
                   <>
                     {/* <CreateQuestForm /> */}
                     <QuestContainer heroId={hero._id} />
+                  </>
+                }
+              />
+              <Route
+                path="/skills"
+                element={
+                  <>
+                    {/* <CreateSkillForm /> */}
+                    <SkillsContainer hero={hero}/>
                   </>
                 }
               />

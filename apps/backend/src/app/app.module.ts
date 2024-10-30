@@ -15,6 +15,7 @@ import { ChatModule } from './chat/chat.module';
 import { GuildModule } from './guild/guild.module';
 import { AuctionModule } from './auction/auction.module';
 import { QuestsModule } from './quests/quests.module';
+import { SkillsModule } from './skills/skills.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { QuestsModule } from './quests/quests.module';
     GuildModule,
     AuctionModule,
     QuestsModule,
+    SkillsModule,
     // GoogleDriveModule.register({
     //   client_email: process.env.GOOGLE_CLIENT_EMAIL!,
     //   private_key: process.env.GOOGLE_PRIVATE_KEY!

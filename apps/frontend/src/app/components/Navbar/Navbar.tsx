@@ -12,6 +12,9 @@ const Navbar: React.FC = () => {
         <Link to="/quests">Quests</Link>
       </NavItem>
       <NavItem>
+        <Link to='/skills'>Skills</Link>
+      </NavItem>
+      <NavItem>
         <Link to="/shop">Shop</Link>
       </NavItem>
       <NavItem>

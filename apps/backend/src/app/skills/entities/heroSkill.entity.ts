@@ -12,6 +12,9 @@ export class HeroSkill{
     @Column()
     level: number;
 
+    @Column({ default: 0 })
+    cooldownTurnsLeft?: number;
+
     @ManyToOne(() => Skills, { eager: true })
     skill: Skills;
 }
