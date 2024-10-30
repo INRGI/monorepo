@@ -40,6 +40,9 @@ export class SkillsProcessor extends WorkerHost {
       case 'level-up-skill': {
         return await this.handleLevelUpSkillJob(job.data);
       }
+      case 'reset-skills': {
+        return await this.handleResetSkillJob(job.data);
+      }
       case 'cast-skill': {
         return await this.handleCastSkillJob(job.data);
       }
@@ -47,6 +50,23 @@ export class SkillsProcessor extends WorkerHost {
         return await this.handleReduceCooldownJob(job.data);
       }
     }
+  }
+
+  private async handleResetSkillJob(data: {
+    heroId: string;
+  }): Promise<HeroSkill[]> {
+    const { heroId } = data;
+
+    const skills = await this.heroSkillRepository.find({
+      where: { heroId },
+      relations: ['skill'],
+    });
+
+    const updatedSkills = skills.map((skill) => {
+      skill.level = 0;
+      return skill;
+    });
+    return await this.heroSkillRepository.save(updatedSkills);
   }
 
   private async handleReduceCooldownJob(data: {
@@ -78,7 +98,7 @@ export class SkillsProcessor extends WorkerHost {
       where: { id: castSkillDto.skillId },
       relations: ['skill'],
     });
-    if(skill.cooldownTurnsLeft > 0) return skill;
+    if (skill.cooldownTurnsLeft > 0) return skill;
     skill.cooldownTurnsLeft = skill.skill.cooldown;
     return await this.heroSkillRepository.save(skill);
   }

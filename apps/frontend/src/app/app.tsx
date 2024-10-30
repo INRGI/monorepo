@@ -22,6 +22,7 @@ import { Container } from './app.styled';
 import SkillsContainer from './components/SkillsContainer/SkillsContainer';
 import CreateSkillForm from './components/CreateSkillForm/CreateSkillForm';
 import ActiveSkillsContainer from './components/ActiveSkillsContainer/ActiveSkillsContainer';
+import Shop from './components/Shop/Shop';
 
 Modal.setAppElement('#root');
 
@@ -155,6 +156,7 @@ export function App() {
                   <Container>
                     <BoxContainer hero={hero} updateHero={updateHero} />
                     <ItemByRarity hero={hero} updateHero={updateHero} />
+                    <Shop hero={hero} updateHero={updateHero} />
                   </Container>
                 }
               />

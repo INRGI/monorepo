@@ -13,7 +13,8 @@ export class ShopProcessor extends WorkerHost {
     private readonly heroService: HeroService,
     private readonly itemBoxService: ItemBoxService,
     private readonly inventoryService: InventoryService,
-    @InjectQueue('quests') private readonly questsQueue: Queue
+    @InjectQueue('quests') private readonly questsQueue: Queue,
+    @InjectQueue('skills') private readonly skillsQueue: Queue
   ) {
     super();
   }
@@ -25,7 +26,27 @@ export class ShopProcessor extends WorkerHost {
       case 'buy-random-item': {
         return await this.handleBuyRandomItemJob(job.data);
       }
+      case 'buy-reset-skills': {
+        return await this.handleBuyResetSkillsJob(job.data);
+      }
     }
+  }
+
+  private async handleBuyResetSkillsJob(data: {
+    heroId: string;
+    price: number;
+  }): Promise<any> {
+    const { heroId, price } = data;
+
+    const result = await this.heroService.spendCoins(
+      heroId as unknown as Types.ObjectId,
+      price
+    );
+    if (!result) {
+      throw new HttpException('Something went wrong', 303);
+    }
+    await this.skillsQueue.add('reset-skills', { heroId });
+    return 'Done';
   }
 
   private async handleBuyCaseJob(data: {
@@ -51,7 +72,10 @@ export class ShopProcessor extends WorkerHost {
       `${heroId}`,
       item
     );
-    await this.questsQueue.add('complete-quest', {heroId: hero._id, type: 'Shop'});
+    await this.questsQueue.add('complete-quest', {
+      heroId: hero._id,
+      type: 'Shop',
+    });
     return item;
   }
 
@@ -78,7 +102,10 @@ export class ShopProcessor extends WorkerHost {
       `${heroId}`,
       item
     );
-    await this.questsQueue.add('complete-quest', {heroId: hero._id, type: 'Shop'});
+    await this.questsQueue.add('complete-quest', {
+      heroId: hero._id,
+      type: 'Shop',
+    });
 
     return { item, inventory };
   }

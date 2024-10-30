@@ -1,14 +1,12 @@
 import { Controller, Post, Param, Body } from '@nestjs/common';
 import { ShopService } from '../services/shop.service';
-import { HeroDocument, HeroService } from '@org/users';
-import { Types } from 'mongoose';
+import { HeroDocument } from '@org/users';
 import { DeleteItemDto } from '../../loot/dtos/DeleteItem.dto';
 
 @Controller('shop')
 export class ShopController {
   constructor(
     private readonly shopService: ShopService,
-    private readonly heroService: HeroService
   ) {}
 
   @Post('buy/:itemBoxId')
@@ -18,6 +16,14 @@ export class ShopController {
     @Body('price') price: number
   ) {
     return await this.shopService.buyCase(hero, price, itemBoxId);
+  }
+
+  @Post('buy-reset')
+  async buyResetSkill(
+    @Body('heroId') heroId: string,
+    @Body('price') price: number
+  ) {
+    return await this.shopService.buyReset(heroId, price);
   }
 
   @Post('buyByRarity/:rarity')
