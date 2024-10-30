@@ -9,7 +9,8 @@ export class BattleProcessor extends WorkerHost {
   constructor(
     private readonly monstersService: MonstersService,
     private readonly heroService: HeroService,
-    @InjectQueue('quests') private readonly questsQueue: Queue
+    @InjectQueue('quests') private readonly questsQueue: Queue,
+    @InjectQueue('skills') private readonly skillsQueue: Queue
   ) {
     super();
   }
@@ -44,7 +45,7 @@ export class BattleProcessor extends WorkerHost {
       await this.heroService.earnCoins(character._id, monster.xp);
       await this.questsQueue.add('complete-quest', {heroId: character._id, type: 'Battle'});
     }
-
+    await this.skillsQueue.add('reduce-cooldown', {heroId: character._id});
     const hero = await this.heroService.findByUserId(character._id);
 
     return { monster, hero };

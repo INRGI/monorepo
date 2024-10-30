@@ -7,6 +7,7 @@ import { HeroSkill } from '../entities/heroSkill.entity';
 import { CreateSkillDto } from '../dtos/CreateSkill.dto';
 import { UpdateSkillDto } from '../dtos/UpdateSkill.dto';
 import { LevelUpSkillDto } from '../dtos/LevelUpSkill.dto';
+import { CastSkillDto } from '../dtos/CastSkill.dto';
 
 @Processor('skills')
 export class SkillsProcessor extends WorkerHost {
@@ -39,7 +40,47 @@ export class SkillsProcessor extends WorkerHost {
       case 'level-up-skill': {
         return await this.handleLevelUpSkillJob(job.data);
       }
+      case 'cast-skill': {
+        return await this.handleCastSkillJob(job.data);
+      }
+      case 'reduce-cooldown': {
+        return await this.handleReduceCooldownJob(job.data);
+      }
     }
+  }
+
+  private async handleReduceCooldownJob(data: {
+    heroId: string;
+  }): Promise<HeroSkill[]> {
+    const { heroId } = data;
+
+    const skills = await this.heroSkillRepository.find({
+      where: { heroId },
+      relations: ['skill'],
+    });
+
+    const updatedSkills = skills.map((skill) => {
+      if (skill.cooldownTurnsLeft > 0) {
+        skill.cooldownTurnsLeft -= 1;
+      }
+      return skill;
+    });
+
+    return await this.heroSkillRepository.save(updatedSkills);
+  }
+
+  private async handleCastSkillJob(data: {
+    castSkillDto: CastSkillDto;
+  }): Promise<HeroSkill> {
+    const { castSkillDto } = data;
+
+    const skill = await this.heroSkillRepository.findOne({
+      where: { id: castSkillDto.skillId },
+      relations: ['skill'],
+    });
+    if(skill.cooldownTurnsLeft > 0) return skill;
+    skill.cooldownTurnsLeft = skill.skill.cooldown;
+    return await this.heroSkillRepository.save(skill);
   }
 
   private async handleCreateSkillJob(data: {
@@ -48,7 +89,7 @@ export class SkillsProcessor extends WorkerHost {
     const { createSkillDto } = data;
 
     const newSkill = await this.skillsRepository.create(createSkillDto);
-   
+
     const result = await this.skillsRepository.save(newSkill);
     return result;
   }

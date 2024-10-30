@@ -21,6 +21,7 @@ import EquipContainer from './components/Equip/Equip';
 import { Container } from './app.styled';
 import SkillsContainer from './components/SkillsContainer/SkillsContainer';
 import CreateSkillForm from './components/CreateSkillForm/CreateSkillForm';
+import ActiveSkillsContainer from './components/ActiveSkillsContainer/ActiveSkillsContainer';
 
 Modal.setAppElement('#root');
 
@@ -80,7 +81,7 @@ export function App() {
           setIsAuthenticated(false);
         });
     }
-  }
+  };
 
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -114,9 +115,11 @@ export function App() {
                 element={
                   <Container>
                     <BattleContainer hero={hero} updateHero={updateHero} />
-                    <EquipContainer hero={hero} handleFetchHero={handleFetchHero} />
                     
-                    
+                    <EquipContainer
+                      hero={hero}
+                      handleFetchHero={handleFetchHero}
+                    />
                   </Container>
                 }
               />
@@ -134,7 +137,7 @@ export function App() {
                 element={
                   <>
                     {/* <CreateSkillForm /> */}
-                    <SkillsContainer hero={hero}/>
+                    <SkillsContainer hero={hero} />
                   </>
                 }
               />
@@ -159,7 +162,11 @@ export function App() {
                 path="/inventory"
                 element={
                   <>
-                    <Inventory hero={hero} updateHero={updateHero} handleFetchHero={handleFetchHero} />
+                    <Inventory
+                      hero={hero}
+                      updateHero={updateHero}
+                      handleFetchHero={handleFetchHero}
+                    />
                   </>
                 }
               />

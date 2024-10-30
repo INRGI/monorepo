@@ -62,6 +62,13 @@ import { DiceGameService } from './services/diceGame.service';
         port: 6379,
       },
     }),
+    BullModule.registerQueue({
+      name: 'skills',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
   ],
 })
 export class GameModule {}

@@ -4,6 +4,7 @@ import { Queue, QueueEvents } from 'bullmq';
 import { CreateSkillDto } from '../dtos/CreateSkill.dto';
 import { UpdateSkillDto } from '../dtos/UpdateSkill.dto';
 import { LevelUpSkillDto } from '../dtos/LevelUpSkill.dto';
+import { CastSkillDto } from '../dtos/CastSkill.dto';
 
 @Injectable()
 export class SkillsService {
@@ -45,6 +46,12 @@ export class SkillsService {
 
   async levelUpSkill(levelUpSkillDto:LevelUpSkillDto) {
     const job = await this.skillsQueue.add('level-up-skill', {levelUpSkillDto});
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result;
+  }
+
+  async castSkill(castSkillDto: CastSkillDto){
+    const job = await this.skillsQueue.add('cast-skill', {castSkillDto});
     const result = await job.waitUntilFinished(this.queueEvents);
     return result;
   }

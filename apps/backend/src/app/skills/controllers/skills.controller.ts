@@ -13,6 +13,7 @@ import { Skills } from '../entities/skills.entity';
 import { UpdateSkillDto } from '../dtos/UpdateSkill.dto';
 import { LevelUpSkillDto } from '../dtos/LevelUpSkill.dto';
 import { HeroSkill } from '../entities/heroSkill.entity';
+import { CastSkillDto } from '../dtos/CastSkill.dto';
 
 @Controller('skills')
 export class SkillsController {
@@ -48,5 +49,10 @@ export class SkillsController {
     @Body() levelUpSkillDto: LevelUpSkillDto
   ): Promise<HeroSkill> {
     return await this.skillsService.levelUpSkill(levelUpSkillDto);
+  }
+
+  @Put('cast')
+  async castSkill (@Body() castSkillDto: CastSkillDto): Promise<HeroSkill>{
+    return await this.skillsService.castSkill(castSkillDto);
   }
 }
