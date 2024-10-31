@@ -11,6 +11,7 @@ import { HeroQuest } from '../quests/entities/heroQuest.entity';
 import { Equip } from '../loot/entities/equip.entity';
 import { HeroSkill } from '../skills/entities/heroSkill.entity';
 import { Skills } from '../skills/entities/skills.entity';
+import { GuildBoss } from '../guild/entities/guildBoss.entity';
 
 export const databaseProviders = [
   {
@@ -36,6 +37,7 @@ export const databaseProviders = [
           Equip,
           HeroSkill,
           Skills,
+          GuildBoss,
         ],
         synchronize: true,
       });
