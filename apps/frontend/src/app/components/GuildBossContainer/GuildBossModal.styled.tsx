@@ -55,12 +55,6 @@ export const UpdateModalContainer = styled(ModalContainer)`
   justify-content: center;
 `;
 
-export const StartEventModalContainer = styled(ModalContainer)`
-  height: 300px;
-  align-items: center;
-  justify-content: center;
-`;
-
 export const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -141,10 +135,6 @@ export const ParticipantCard = styled.li`
   }
 `;
 
-export const BossCard = styled(ParticipantCard)`
-padding: 10px;
-`;
-
 export const MyGuildContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -169,14 +159,6 @@ export const ScrollContainer = styled.div`
 
 export const GuildMatesContainer = styled(ScrollContainer)`
   height: 240px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-`;
-
-export const BossesContainer = styled(ScrollContainer)`
-  height: 290px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -254,7 +236,6 @@ export const SubHeading = styled.h3`
 
 export const ButtonGroup = styled.div`
   display: flex;
-  flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
 `;

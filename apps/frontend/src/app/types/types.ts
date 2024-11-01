@@ -4,6 +4,16 @@ export interface Equip {
   weapon: Item;
   armor: Item;
 }
+
+export interface GuildBoss {
+  id: number;
+  name: string;
+  health: number;
+  attack: number;
+  image: string;
+  rewardCoins: number;
+}
+
 export interface HeroQuest {
   id: string;
   heroId: string;

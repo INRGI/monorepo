@@ -23,6 +23,7 @@ import SkillsContainer from './components/SkillsContainer/SkillsContainer';
 import CreateSkillForm from './components/CreateSkillForm/CreateSkillForm';
 import ActiveSkillsContainer from './components/ActiveSkillsContainer/ActiveSkillsContainer';
 import Shop from './components/Shop/Shop';
+import CreateGuildBossForm from './components/CreateGuildBossForm/CreateGuildBossForm';
 
 Modal.setAppElement('#root');
 
@@ -115,6 +116,7 @@ export function App() {
                 path="/"
                 element={
                   <Container>
+                    {/* <CreateGuildBossForm /> */}
                     <BattleContainer hero={hero} updateHero={updateHero} />
                     
                     <EquipContainer
@@ -174,7 +176,7 @@ export function App() {
               />
               <Route
                 path="/guild"
-                element={<GuildContainer heroId={hero._id} />}
+                element={<GuildContainer hero={hero} heroId={hero._id} />}
               />
               <Route
                 path="/auction"

@@ -1,7 +1,7 @@
-import { Processor, WorkerHost } from '@nestjs/bullmq';
+import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Inject } from '@nestjs/common';
-import { Job } from 'bullmq';
-import { Repository } from 'typeorm';
+import { Job, Queue } from 'bullmq';
+import { MoreThan, Repository } from 'typeorm';
 import { GuildBoss } from '../entities/guildBoss.entity';
 import { Guild } from '../entities/guild.entity';
 import { CreateGuildBossDto } from '../dtos/CreateGuildBoss.dto';
@@ -12,6 +12,7 @@ import { Types } from 'mongoose';
 @Processor('guild-boss')
 export class GuildBossProcessor extends WorkerHost {
   constructor(
+    @InjectQueue('skills') private readonly skillsQueue: Queue,
     private readonly heroService: HeroService,
     @Inject('GUILD_BOSS_REPOSITORY')
     private readonly guildBossRepository: Repository<GuildBoss>,
@@ -94,7 +95,11 @@ export class GuildBossProcessor extends WorkerHost {
   }
 
   private async handleGetAllJob(): Promise<GuildBoss[]> {
-    const bosses = await this.guildBossRepository.find();
+    const bosses = await this.guildBossRepository.find({
+      where: {
+        health: MoreThan(0),
+      },
+    });
 
     return bosses;
   }
@@ -155,8 +160,9 @@ export class GuildBossProcessor extends WorkerHost {
     guildBossId: number;
     damage: number;
     guildId: number;
+    heroId: string;
   }): Promise<GuildBoss | Guild> {
-    const { guildId, damage, guildBossId } = data;
+    const { guildId, damage, guildBossId, heroId } = data;
 
     const guild = await this.guildRepository
       .createQueryBuilder('guild')
@@ -189,12 +195,18 @@ export class GuildBossProcessor extends WorkerHost {
         );
       }
 
+      guild.boss.health = 0;
+
+      await this.guildBossRepository.save(guild.boss);
       guild.boss = null;
       await this.guildRepository.save(guild);
-
       return guild;
     }
     await this.guildRepository.save(guild);
+    await this.guildBossRepository.save(guild.boss);
+    await this.skillsQueue.add('reduce-cooldown', {
+      heroId: heroId as unknown as Types.ObjectId,
+    });
 
     return guild.boss;
   }

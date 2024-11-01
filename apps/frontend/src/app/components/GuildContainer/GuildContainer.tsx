@@ -21,8 +21,12 @@ import {
   ScrollContainer,
   GuildMatesContainer,
   UpdateModalContainer,
+  StartEventModalContainer,
+  BossesContainer,
+  BossCard,
 } from './GuildContainer.styled';
-import { Character } from '../../types/types';
+import { Character, GuildBoss } from '../../types/types';
+import GuildBossModal from '../GuildBossContainer/GuildBossModal';
 
 interface Guild {
   id: number;
@@ -40,11 +44,14 @@ interface Participant {
 
 interface GuildContainerProps {
   heroId: string;
+  hero: Character
 }
 
-const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
+const GuildContainer: React.FC<GuildContainerProps> = ({ heroId, hero }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [bossModalIsOpen, setBossModalIsOpen] = useState(false);
   const [updateModalIsOpen, setUpdateModalIsOpen] = useState(false);
+  const [eventModalIsOpen, setEventModalIsOpen] = useState(false);
   const [heroesWithoutGuild, setHeroesWithoutGuild] = useState<Character[]>([]);
   const [guilds, setGuilds] = useState<Guild[]>([]);
   const [myGuild, setMyGuild] = useState<Guild | null>(null);
@@ -55,6 +62,8 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
     null
   );
   const [myGuildDetails, setMyGuildDetails] = useState<Guild | null>(null);
+  const [bosses, setBosses] = useState<GuildBoss[] | null>(null);
+  const [guildBoss, setGuildBoss] = useState<GuildBoss | null>(null);
 
   useEffect(() => {
     fetchGuilds();
@@ -131,9 +140,20 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
     try {
       const response = await axios.get(`http://localhost:3000/guild/${id}`);
       setMyGuildDetails(response.data);
+      fetchBoss(id);
     } catch (error) {
       console.error('Error creating guild:', error);
       setMyGuildDetails(null);
+    }
+  };
+
+  const fetchBosses = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/guild-boss`);
+      setBosses(response.data);
+    } catch (error) {
+      console.error('Error fetching:', error);
+      setBosses(null);
     }
   };
 
@@ -200,6 +220,45 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
     }
   };
 
+  const startEvent = async (bossId: number) => {
+    if(!guildId) return;
+    try {
+      const response = await axios.put(`http://localhost:3000/guild-boss/startIvent`, {
+        guildBossId: bossId,
+        guildId,
+      });
+      setGuildBoss(response.data.data?.boss);
+      fetchBoss(guildId);
+    } catch (error) {
+      console.error('Error starting event:', error);
+    }
+  };
+
+  const leaveEvent = async () => {
+    if(!guildId) return;
+    try {
+      await axios.put(`http://localhost:3000/guild-boss/leaveIvent`, {
+        guildId,
+      });
+      setGuildBoss(null);
+      fetchBoss(guildId);
+    } catch (error) {
+      console.error('Error leaving event:', error);
+    }
+  };
+
+  const fetchBoss = async (id: number) => {
+    try {
+      const response = await axios.get<GuildBoss>(
+        `http://localhost:3000/guild-boss/${id}`
+      );
+      setGuildBoss(response.data);
+    } catch (error) {
+      setGuildBoss(null);
+      console.error('Error fetching boss:', error);
+    }
+  };
+
   const closeModal = () => {
     setModalIsOpen(false);
   };
@@ -242,7 +301,50 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId }) => {
                   <EditButton onClick={() => deleteGuild(myGuild.id)}>
                     Delete Guild
                   </EditButton>
+                  {!guildBoss && (
+                    <EditButton
+                      onClick={() => {
+                        setEventModalIsOpen(true);
+                        fetchBosses();
+                      }}
+                    >
+                      Start Event
+                    </EditButton>
+                  )}
+                  <StartEventModalContainer
+                    isOpen={eventModalIsOpen}
+                    onRequestClose={() => setEventModalIsOpen(false)}
+                    contentLabel="Events"
+                  >
+                    <BossesContainer>
+                      {bosses &&
+                        bosses.map((boss) => (
+                          <BossCard key={boss.id}>
+                            <p>Name: {boss.name}</p>
+                            <p>Health: {boss.health}</p>
+                            <p>Reward: {boss.rewardCoins}</p>
+                            <EditButton
+                              onClick={() => {
+                                startEvent(boss.id);
+                                setEventModalIsOpen(false);
+                              }}
+                            >
+                              Start Fight
+                            </EditButton>
+                          </BossCard>
+                        ))}
+                    </BossesContainer>
+                  </StartEventModalContainer>
+                  {guildBoss && (
+                    <><EditButton onClick={() => leaveEvent()}>
+                      Leave Event
+                    </EditButton>
+                    <EditButton onClick={() => setBossModalIsOpen(true)}>
+                    Start Fighting
+                  </EditButton></>
+                  )}
                 </ButtonGroup>
+                {guildId && guildBoss && <GuildBossModal fetchBoss={fetchBoss} boss={guildBoss} hero={hero} guildId={guildId}  modalIsOpen={bossModalIsOpen} closeModal={() => setBossModalIsOpen(false)}/>}
                 <GuildMatesContainer>
                   {myGuildDetails &&
                     myGuildDetails.guildParticipants?.map((part, index) => (

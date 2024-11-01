@@ -63,8 +63,9 @@ export class GuildBossController {
   async attack(
     @Body('guildBossId') guildBossId: number,
     @Body('damage') damage: number,
-    @Body('guildId') guildId: number
+    @Body('guildId') guildId: number,
+    @Body('heroId') heroId: string
   ): Promise<GuildBoss | Guild> {
-    return await this.guildBossService.attack(guildBossId, damage, guildId);
+    return await this.guildBossService.attack(guildBossId, damage, guildId, heroId);
   }
 }

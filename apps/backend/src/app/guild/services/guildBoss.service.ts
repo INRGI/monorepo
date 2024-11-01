@@ -49,11 +49,12 @@ export class GuildBossService {
     const result = await job.waitUntilFinished(this.queueEvents);
     return result;
   }
-  async attack(guildBossId: number, damage: number, guildId: number) {
+  async attack(guildBossId: number, damage: number, guildId: number, heroId: string) {
     const job = await this.guildBossQueue.add('attack', {
       guildBossId,
       damage,
-      guildId
+      guildId,
+      heroId
     });
     const result = await job.waitUntilFinished(this.queueEvents);
     return result;
