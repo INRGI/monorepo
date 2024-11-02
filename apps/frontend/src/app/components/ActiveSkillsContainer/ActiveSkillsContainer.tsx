@@ -12,6 +12,8 @@ import {
   StyledButton,
   SubHeading,
 } from './ActiveSkillsContainer.styled';
+import { toastCustom } from '../../helpers/toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface ActiveSkillsContainerProps {
   hero: Character;
@@ -43,6 +45,7 @@ const ActiveSkillsContainer: React.FC<ActiveSkillsContainerProps> = ({
   const handleCastSkill = async (damage: number, skillId: number) => {
     await axios.put('http://localhost:3000/skills/cast', { skillId });
     await onUse(damage);
+    toastCustom(`🩸 You dealed ${damage}`);
     fetchYourSkills();
   };
 

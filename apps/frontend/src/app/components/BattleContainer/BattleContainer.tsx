@@ -4,6 +4,8 @@ import { Character, Monster } from '../../types/types';
 import Battle from '../Battle/Battle';
 import { Container, Message } from './BattleContainer.styled';
 import ActiveSkillsContainer from '../ActiveSkillsContainer/ActiveSkillsContainer';
+import { toastCustom } from '../../helpers/toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface BattleContainerProps {
   hero: Character;
@@ -14,6 +16,7 @@ const BattleContainer: React.FC<BattleContainerProps> = ({ hero, updateHero }) =
   const [monsters, setMonsters] = useState<Monster[]>([]);
   const [currentMonsterIndex, setCurrentMonsterIndex] = useState(0);
   const [isMonsterDefeated, setIsMonsterDefeated] = useState(false);
+  const [isHit, setIsHit] = useState(false);
 
   useEffect(() => {
     axios
@@ -23,7 +26,7 @@ const BattleContainer: React.FC<BattleContainerProps> = ({ hero, updateHero }) =
         setCurrentMonsterIndex(0);
       })
       .catch((error) => {
-        console.error('Error fetching monsters:', error);
+        toastCustom(`😰 Error fetching monsters`);
       });
   }, []);
 
@@ -35,11 +38,13 @@ const BattleContainer: React.FC<BattleContainerProps> = ({ hero, updateHero }) =
         monsterId: monster.id,
       })
       .then((response) => {
+        setIsHit(true);
         const updatedMonster = response.data.monster;
         const updatedHero = response.data.hero;
 
         if (updatedMonster.health <= 0) {
           setIsMonsterDefeated(true);
+          toastCustom(`💰 You defeated the monster and find ${monster.xp} coins`);
           setTimeout(() => {
             setCurrentMonsterIndex((prevIndex) => prevIndex + 1);
             setIsMonsterDefeated(false);
@@ -53,8 +58,8 @@ const BattleContainer: React.FC<BattleContainerProps> = ({ hero, updateHero }) =
         updateHero(updatedHero);
       })
       .catch((error) => {
-        console.error('Error processing attack:', error);
-      });
+        toastCustom(`😰 Error processing attack`);
+      }).finally(() => {setTimeout(() => setIsHit(false), 300);});
   };
 
   const handleCastSkills = (damage: number) => {
@@ -66,11 +71,13 @@ const BattleContainer: React.FC<BattleContainerProps> = ({ hero, updateHero }) =
         monsterId: monster.id,
       })
       .then((response) => {
+        setIsHit(true)
         const updatedMonster = response.data.monster;
         const updatedHero = response.data.hero;
 
         if (updatedMonster.health <= 0) {
           setIsMonsterDefeated(true);
+          toastCustom(`💰 You defeated the monster and find ${monster.xp} coins`);
           setTimeout(() => {
             setCurrentMonsterIndex((prevIndex) => prevIndex + 1);
             setIsMonsterDefeated(false);
@@ -85,7 +92,7 @@ const BattleContainer: React.FC<BattleContainerProps> = ({ hero, updateHero }) =
       })
       .catch((error) => {
         console.error('Error processing attack:', error);
-      });
+      }).finally(() => {setTimeout(() => setIsHit(false), 300);});
   }
 
   const monster = monsters && monsters.length > 0 ? monsters[currentMonsterIndex] : null;
@@ -95,7 +102,7 @@ const BattleContainer: React.FC<BattleContainerProps> = ({ hero, updateHero }) =
       {monster ? (
         <>
           {isMonsterDefeated && <Message>You defeated the {monster.name}!</Message>}
-          <Battle character={hero} monster={monster} onAttack={handleAttack} />
+          <Battle isHit={isHit} character={hero} monster={monster} onAttack={handleAttack} />
           <ActiveSkillsContainer hero={hero} onUse={handleCastSkills}/>
         </>
       ) : (

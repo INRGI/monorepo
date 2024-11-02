@@ -27,6 +27,8 @@ import {
 } from './GuildContainer.styled';
 import { Character, GuildBoss } from '../../types/types';
 import GuildBossModal from '../GuildBossContainer/GuildBossModal';
+import { toastCustom } from '../../helpers/toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Guild {
   id: number;
@@ -104,6 +106,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId, hero }) => {
         heroId: heroId,
         id: guildId,
       });
+      toastCustom(`✅ Hero invited to guild`);
     } catch (error) {
       console.error('Error inviting hero to guild:', error);
     } finally {
@@ -168,6 +171,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId, hero }) => {
       fetchGuilds();
       fetchMyGuild();
       fetchAllHeroes();
+      toastCustom(`✅ Guild ${name} created`);
     } catch (error) {
       console.error('Error creating guild:', error);
     }
@@ -191,6 +195,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId, hero }) => {
       setLogo('');
       fetchGuilds();
       fetchMyGuild();
+      toastCustom(`✅ Guild ${name} updated`);
     } catch (error) {
       console.error('Error updating guild:', error);
     }
@@ -202,6 +207,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId, hero }) => {
       fetchGuilds();
       fetchMyGuild();
       fetchAllHeroes();
+      toastCustom(`✅ Guild ${name} deleted`);
     } catch (error) {
       console.error('Error deleting guild:', error);
     }
@@ -215,6 +221,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId, hero }) => {
       });
       fetchMyGuild();
       fetchAllHeroes();
+      toastCustom(`👞 Hero kicked`);
     } catch (error) {
       console.error('Error kicking users:', error);
     }
@@ -229,6 +236,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId, hero }) => {
       });
       setGuildBoss(response.data.data?.boss);
       fetchBoss(guildId);
+      toastCustom(`☠️ Boss event started`);
     } catch (error) {
       console.error('Error starting event:', error);
     }
@@ -242,6 +250,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId, hero }) => {
       });
       setGuildBoss(null);
       fetchBoss(guildId);
+      toastCustom(`☠️ Boss event closed`);
     } catch (error) {
       console.error('Error leaving event:', error);
     }

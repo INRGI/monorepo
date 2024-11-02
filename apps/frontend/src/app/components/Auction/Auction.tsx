@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Container } from '../BattleContainer/BattleContainer.styled';
 import { AuctionCard, AuctionContainer, ModalContainer } from './Auction.styled';
 import { Item } from '../../types/types';
+import { toastCustom } from '../../helpers/toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface AuctionProps {
   heroId: string;
@@ -20,7 +22,7 @@ const Auction: React.FC<AuctionProps> = ({ heroId, updateHero }) => {
       const response = await axios.get(`http://localhost:3000/auction`);
       setAuctionItems(response.data || []);
     } catch (error) {
-      console.error('Failed to fetch auction items:', error);
+      toastCustom(`😰 Failed to fetch auction items`);
     } finally {
       setLoading(false);
     }
@@ -41,8 +43,9 @@ const Auction: React.FC<AuctionProps> = ({ heroId, updateHero }) => {
         uniqueId: item.uniqueItemId
       });
       updateHero(response.data.updatedHero);
+      toastCustom(`💵 You bought ${item.name} for ${item.price}`);
     } catch (error) {
-      console.error('Failed to buy item:', error);
+      toastCustom(`😰 Failed to buy item`);
     } finally {
       setLoading(false);
       fetchAuctionItems();
@@ -56,7 +59,7 @@ const Auction: React.FC<AuctionProps> = ({ heroId, updateHero }) => {
       );
       setSelectedItem(response.data);
     } catch (error) {
-      console.error('Failed to fetch auction items:', error);
+      toastCustom(`😰 Failed to get item`);
     } finally {
       setLoading(false);
       setModalIsOpen(true);

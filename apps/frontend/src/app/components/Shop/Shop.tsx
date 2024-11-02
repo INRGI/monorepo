@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios';
-import { Character, Item } from '../../types/types';
+import { Character } from '../../types/types';
 
 import { Container } from '../BattleContainer/BattleContainer.styled';
 import { BoxCard, BoxesContainer } from './Shop.styled';
+
+import { toastCustom } from '../../helpers/toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface ShopProps {
   hero: Character;
@@ -22,13 +25,14 @@ const Shop: React.FC<ShopProps> = ({ hero, updateHero }) => {
       );
 
       if (!response) {
-        throw new Error('Not enough coins');
+        return toastCustom(`💸 Not enough coins`);
       }
 
       const updatedHero = { ...hero, coins: hero.coins - price };
+      toastCustom(`💸 You spent ${price} coins`);
       updateHero(updatedHero);
     } catch (error) {
-      console.error('Error buying box:', error);
+      toastCustom('Error buying box');
     }
   };
 

@@ -24,6 +24,7 @@ import CreateSkillForm from './components/CreateSkillForm/CreateSkillForm';
 import ActiveSkillsContainer from './components/ActiveSkillsContainer/ActiveSkillsContainer';
 import Shop from './components/Shop/Shop';
 import CreateGuildBossForm from './components/CreateGuildBossForm/CreateGuildBossForm';
+import { Slide, ToastContainer } from 'react-toastify';
 
 Modal.setAppElement('#root');
 
@@ -111,6 +112,19 @@ export function App() {
           <>
             <Chat roomId="1" senderId={hero.name} />
             <Navbar />
+            <ToastContainer
+              position="top-right"
+              autoClose={1000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss={false}
+              draggable
+              pauseOnHover={false}
+              theme="dark"
+              transition={Slide}
+            />
             <Routes>
               <Route
                 path="/"
@@ -118,7 +132,7 @@ export function App() {
                   <Container>
                     {/* <CreateGuildBossForm /> */}
                     <BattleContainer hero={hero} updateHero={updateHero} />
-                    
+
                     <EquipContainer
                       hero={hero}
                       handleFetchHero={handleFetchHero}

@@ -14,6 +14,36 @@ export const Card = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   color: white;
   text-align: center;
+  div.hit-animation {border: 2px solid #da0505;}
+
+  &.hit-animation {
+    animation: shake 0.3s ease-in-out;
+    filter: brightness(0.6) saturate(1.5);
+    scale: 0.95;
+  }
+
+  p.hit-animation {
+    animation: shake 0.3s ease-in-out;
+    color: #da0505;
+    filter: brightness(0.6) saturate(1.5);
+    scale: 0.95;
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    50% {
+      transform: translateX(5px);
+    }
+    75% {
+      transform: translateX(-5px);
+    }
+  }
 `;
 
 export const Image = styled.img`

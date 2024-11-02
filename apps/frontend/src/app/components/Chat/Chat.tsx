@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { ChatProps, Message } from '../../types/types';
 import { ChatContainer, MessageList, InputContainer, InfoTitle, InfoText } from './Chat.styled';
+import { toastCustom } from '../../helpers/toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const socket = io('http://localhost:3000');
 
@@ -14,6 +16,7 @@ const Chat: React.FC<ChatProps> = ({ roomId, senderId }) => {
 
     socket.on('messages', (receivedMessages: Message[]) => {
       setMessages(receivedMessages);
+      toastCustom(`💌 New message in a chat`);
     });
 
     socket.on('newMessage', (newMessage: Message) => {

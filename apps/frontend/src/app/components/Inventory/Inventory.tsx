@@ -9,6 +9,8 @@ import {
   InventoryContainer,
   ModalContainer
 } from './Inventory.styled';
+import { toastCustom } from '../../helpers/toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Inventory {
   hero: Character;
@@ -51,6 +53,7 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) =
         `http://localhost:3000/inventory/sell/${hero._id}/${uniqueId}`
       );
       setInventoryItems(response.data || []);
+      toastCustom(`✅ Item Sold`);
     } catch (error) {
       console.error('Failed to delete item:', error);
     } finally {
@@ -81,6 +84,7 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) =
         name: activeItem.name,
         rarity: activeItem.rarity
       });
+      toastCustom(`✅ Item went to the auction`);
       closeModal();
     } catch (error) {
       console.error('Failed to list item on auction:', error);
@@ -95,6 +99,7 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) =
       heroId: hero._id,
       uniqueId: activeItem.uniqueId
     })
+    toastCustom(`🛡️ Item equiped`);
     closeModal();
     handleFetchHero();
     fetchInventory();

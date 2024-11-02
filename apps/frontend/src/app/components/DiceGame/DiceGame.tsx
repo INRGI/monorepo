@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { ModalContainer, Container, StyledInput, StyledButton } from './DiceGame.styled';
 import { Character } from '../../types/types';
+import { toastCustom } from '../../helpers/toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface DiceGameProps {
   hero: Character;
@@ -25,11 +27,14 @@ const DiceGame: React.FC<DiceGameProps> = ({ hero, updateHero }) => {
       const updatedHero = response.data.hero;
 
       setGameResult(response.data);
-
+      if(response.data.winnings > 0) toastCustom(`🤑 You won ${response.data.winnings} coins`);
+      if(response.data.winnings < 0) toastCustom(`😿 You lost ${response.data.winnings} coins`);
+      if(response.data.winnings === 0) toastCustom(`😰 Tie`);
+      
       setModalIsOpen(true);
       updateHero(updatedHero);
     } catch (error) {
-      console.error('Error playing dice game:', error);
+      toastCustom(`😰 Error playing dice game`);
     } finally {
 
       setIsLoading(false);

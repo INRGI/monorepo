@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Container } from '../BattleContainer/BattleContainer.styled';
 import { BoxCard, ModalContainer, BoxesContainer } from './BoxContainer.styled';
 import { Box, Character, Item } from '../../types/types';
+import { toastCustom } from '../../helpers/toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface BoxContainerProps {
   hero: Character;
@@ -23,15 +25,16 @@ const BoxContainer: React.FC<BoxContainerProps> = ({ hero, updateHero }) => {
       });
 
       if(!response){
-        throw new Error('Not enough coins');
+        return toastCustom(`😰 Not enough coins`);
       }
 
       setOpenedItem(response.data);
       setModalIsOpen(true);
+      toastCustom(`🎁 You Won ${response.data.name}`);
       const updatedHero ={...hero, 'coins': hero.coins - price};
       updateHero(updatedHero);
     } catch (error) {
-      console.error('Error buying box:', error);
+      toastCustom(`😰 Error buying box`);
     }
   };
 
@@ -41,7 +44,7 @@ const BoxContainer: React.FC<BoxContainerProps> = ({ hero, updateHero }) => {
         const response = await axios.get('http://localhost:3000/itemBox/top');
         setBoxes(response.data);
       } catch (error) {
-        console.error('Failed to fetch boxes:', error);
+        toastCustom(`😰 Failed to fetch boxes`);
       } finally {
         setLoading(false);
       }

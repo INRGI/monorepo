@@ -35,6 +35,35 @@ export const ModalContainer = styled(Modal)`
     padding-bottom: 20px;
   }
 
+  img.hit-animation {
+    animation: shake 0.3s ease-in-out;
+    filter: brightness(0.6) saturate(1.5);
+    scale: 0.95;
+  }
+
+  p.hit-animation {
+    animation: shake 0.3s ease-in-out;
+    color: #da0505;
+    filter: brightness(0.6) saturate(1.5);
+    scale: 0.95;
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    50% {
+      transform: translateX(5px);
+    }
+    75% {
+      transform: translateX(-5px);
+    }
+  }
+
   button {
     background-color: #a60101;
     color: white;
@@ -98,7 +127,7 @@ export const HeroesListContainer = styled.div`
 `;
 
 export const HeroesList = styled.ul`
-display: flex;
+  display: flex;
   width: 100%;
   flex-direction: column;
   gap: 20px;
@@ -129,7 +158,7 @@ export const ParticipantCard = styled.li`
   align-items: center;
   gap: 5px;
 
-  p{
+  p {
     padding: 0;
     margin: 0;
   }

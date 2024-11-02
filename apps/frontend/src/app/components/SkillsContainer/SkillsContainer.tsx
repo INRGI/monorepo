@@ -2,7 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Character, HeroSkill } from '../../types/types';
 import { CardContainer, Container, Heading, ScrollContainer, SkillCard, SkillInfoContainer, StyledButton, SubHeading } from './SkillsContainer.styled';
-
+import { toastCustom } from '../../helpers/toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface SkillsContainerProps {
   hero: Character;
@@ -33,6 +34,7 @@ const SkillsContainer: React.FC<SkillsContainerProps> = ({ hero }) => {
   const levelUpSkill = async (skillId: number) => {
     await axios.put(`http://localhost:3000/skills/levelUp`,{ heroId: hero._id, skillId: skillId})
     fetchSkills()
+    toastCustom(`☝️ Your skill leveled up`);
   }
 
   return (
@@ -45,8 +47,6 @@ const SkillsContainer: React.FC<SkillsContainerProps> = ({ hero }) => {
               <SkillInfoContainer>
                 <SubHeading>{skill.skill.name}</SubHeading>
                 <p>Level: {skill.level}</p>
-                {/* <p>Description: {skill.skill.description}</p>
-                <p>Type: {skill.skill.skillType}</p> */}
                 <p>Cooldown: {skill.skill.cooldown}</p>
                 {(skill.skill.damage && (
                   <p>Damage: {skill.skill.damage}</p>

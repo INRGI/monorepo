@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Character, Item } from '../../types/types';
 import { BoxCard, BoxesContainer, ModalContainer } from './ItemByRarity.styled';
 import { Container } from '../BattleContainer/BattleContainer.styled';
+import { toastCustom } from '../../helpers/toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface ItemByRarityProps {
   hero: Character;
@@ -25,6 +27,7 @@ const ItemByRarity: React.FC<ItemByRarityProps> = ({ hero, updateHero }) => {
       }
 
       setOpenedItem(response.data.item);
+      toastCustom(`🍻 You won ${response.data.item.name}`);
       setModalIsOpen(true);
       const updatedHero ={...hero, 'coins': hero.coins - price};
       updateHero(updatedHero);

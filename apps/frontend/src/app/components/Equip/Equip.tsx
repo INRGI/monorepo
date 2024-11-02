@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { toastCustom } from '../../helpers/toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { Character, Equip, HeroQuest } from '../../types/types';
+import { Character, Equip } from '../../types/types';
 import {
   CardContainer,
   Container,
@@ -42,6 +44,7 @@ const EquipContainer: React.FC<EquipContainerProps> = ({ hero, handleFetchHero }
       itemType: type
     })
     fetchEquip();
+    toastCustom(`🛡️ Unequiped ${type}`);
     handleFetchHero();
   }
 
