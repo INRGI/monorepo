@@ -7,6 +7,7 @@ export interface HeroInterface{
     level: number;
     attack: number;
     health: number;
+    hp: number;
     experience: number;
     coins: number;
     user: string;

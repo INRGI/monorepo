@@ -32,12 +32,18 @@ export class BattleProcessor extends WorkerHost {
     monsterId: number;
   }): Promise<any> {
     const { character, monsterId } = data;
+    
     const monster = await this.monstersService.getMonsterById(monsterId);
     if (!monster) {
       throw new NotFoundException('Monster not found');
     }
-
+    if(character.hp <= 0) return {monster, character};
     monster.health -= character.attack;
+
+    const chance = Math.random();
+    if (chance <= 0.1) {
+      await this.heroService.minusHP(character._id, monster.attack);
+    }
 
     if (monster.health <= 0) {
       monster.health = 0;

@@ -46,10 +46,12 @@ interface Participant {
 
 interface GuildContainerProps {
   heroId: string;
-  hero: Character
+  hero: Character;
+  updateHero: (updatedHero: any) => void;
+  handleFetchHero: () => void;
 }
 
-const GuildContainer: React.FC<GuildContainerProps> = ({ heroId, hero }) => {
+const GuildContainer: React.FC<GuildContainerProps> = ({ heroId, hero, updateHero, handleFetchHero }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [bossModalIsOpen, setBossModalIsOpen] = useState(false);
   const [updateModalIsOpen, setUpdateModalIsOpen] = useState(false);
@@ -353,7 +355,7 @@ const GuildContainer: React.FC<GuildContainerProps> = ({ heroId, hero }) => {
                   </EditButton></>
                   )}
                 </ButtonGroup>
-                {guildId && guildBoss && <GuildBossModal fetchBoss={fetchBoss} boss={guildBoss} hero={hero} guildId={guildId}  modalIsOpen={bossModalIsOpen} closeModal={() => setBossModalIsOpen(false)}/>}
+                {guildId && guildBoss && <GuildBossModal handleFetchHero={handleFetchHero} updateHero={updateHero} fetchBoss={fetchBoss} boss={guildBoss} hero={hero} guildId={guildId}  modalIsOpen={bossModalIsOpen} closeModal={() => setBossModalIsOpen(false)}/>}
                 <GuildMatesContainer>
                   {myGuildDetails &&
                     myGuildDetails.guildParticipants?.map((part, index) => (

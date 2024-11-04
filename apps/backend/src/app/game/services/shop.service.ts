@@ -3,6 +3,7 @@ import { DeleteItemBoxDto } from '../../loot/dtos/DeleteItemBox.dto';
 import { HeroDocument } from 'libs/users/src/lib/shemas/hero.schema';
 import { Queue, QueueEvents } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class ShopService {
@@ -43,6 +44,16 @@ export class ShopService {
       hero,
       price,
       rarity,
+    });
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result;
+  }
+
+  async buyHealth(heroId: Types.ObjectId, hp: number, price: number) {
+    const job = await this.shopQueue.add('buy-health', {
+      heroId: Types.ObjectId,
+      hp,
+      price,
     });
     const result = await job.waitUntilFinished(this.queueEvents);
     return result;

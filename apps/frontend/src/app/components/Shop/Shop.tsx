@@ -36,6 +36,31 @@ const Shop: React.FC<ShopProps> = ({ hero, updateHero }) => {
     }
   };
 
+  const handleBuyHealth = async (price: number, health: number) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/shop/buy-hp`,
+        {
+          heroId: hero._id,
+          price,
+          health
+        }
+      );
+
+      if (!response) {
+        return toastCustom(`💸 Not enough coins`);
+      }
+
+      const updatedHero = { ...hero, coins: hero.coins - price };
+      toastCustom(`💸 You spent ${price} coins`);
+      toastCustom(`❤️ You restored ${health} hp`);
+      updateHero(updatedHero);
+    } catch (error) {
+      toastCustom('Error healing');
+    }
+  };
+
+
   return (
     <Container>
       <h3>Unique Offers</h3>
@@ -48,6 +73,24 @@ const Shop: React.FC<ShopProps> = ({ hero, updateHero }) => {
           <h4>Reset your skills</h4>
           <p>Cost: 100000 coins</p>
           <button onClick={() => handleBuyReset(100000)}>Buy Reset</button>
+        </BoxCard>
+        <BoxCard key={2}>
+          <img
+            src="https://thumbs.dreamstime.com/b/reset-button-8588065.jpg"
+            alt="buy hp"
+          />
+          <h4>Buy health(20hp)</h4>
+          <p>Cost: 100 coins</p>
+          <button onClick={() => handleBuyHealth(100, 20)}>Buy Health</button>
+        </BoxCard>
+        <BoxCard key={3}>
+          <img
+            src="https://thumbs.dreamstime.com/b/reset-button-8588065.jpg"
+            alt="buy hp full"
+          />
+          <h4>Restore health</h4>
+          <p>Cost: 2000 coins</p>
+          <button onClick={() => handleBuyHealth(hero.health - hero.hp, 2000)}>Restore Health</button>
         </BoxCard>
       </BoxesContainer>
     </Container>

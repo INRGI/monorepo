@@ -21,6 +21,9 @@ export class Hero {
   @Prop({ type: Number, default: 100 })
   health: number
 
+  @Prop({ type: Number, default: 100 })
+  hp: number
+
   @Prop({ default: 0 })
   experience: number;
 

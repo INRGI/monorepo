@@ -14,6 +14,7 @@ interface BattleProps {
     imageUrl: string;
     coins: number;
     experience: number;
+    hp: number;
   };
   monster: {
     name: string;
@@ -24,9 +25,10 @@ interface BattleProps {
   };
   onAttack: (newMonsterHealth: number) => void;
   isHit: boolean;
+  isHeroHit: boolean;
 }
 
-const Battle: React.FC<BattleProps> = ({ character, monster, onAttack, isHit }) => {
+const Battle: React.FC<BattleProps> = ({ character, monster, onAttack, isHit, isHeroHit }) => {
   const handleAttack = () => {
     const newMonsterHealth = monster.health - character.attack;
     onAttack(newMonsterHealth);
@@ -36,7 +38,7 @@ const Battle: React.FC<BattleProps> = ({ character, monster, onAttack, isHit }) 
   return (
     <BattleContainer>
       <Stats>
-        <Character character={character} />
+        <Character character={character} isHeroHit={isHeroHit}/>
       </Stats>
       <AttackButton onClick={handleAttack}>Attack</AttackButton>
       <Stats>

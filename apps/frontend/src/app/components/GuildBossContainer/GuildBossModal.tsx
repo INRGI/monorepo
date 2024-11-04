@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Character, GuildBoss } from '../../types/types';
-import { Heading, ModalContainer, StyledButton } from './GuildBossModal.styled';
+import {
+  Heading,
+  ModalContainer,
+  StyledButton,
+  SubHeading,
+} from './GuildBossModal.styled';
 import ActiveSkillsMiniContainer from '../ActiveSkillsMiniContainer/ActiveSkillsMiniContainer';
 import { toastCustom } from '../../helpers/toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useSkipFirstRender from '../../helpers/useSkipFirstRender';
 
 interface GuildBossModalProps {
   guildId: number;
@@ -13,6 +19,8 @@ interface GuildBossModalProps {
   closeModal: () => void;
   boss: GuildBoss;
   fetchBoss: (id: number) => void;
+  updateHero: (updatedHero: any) => void;
+  handleFetchHero: () => void;
 }
 
 const GuildBossModal: React.FC<GuildBossModalProps> = ({
@@ -22,8 +30,16 @@ const GuildBossModal: React.FC<GuildBossModalProps> = ({
   closeModal,
   boss,
   fetchBoss,
+  updateHero,
+  handleFetchHero,
 }) => {
   const [isHit, setIsHit] = useState(false);
+  const [isHeroHit, setIsHeroHit] = useState(false);
+
+  useSkipFirstRender(() => {
+    setIsHeroHit(true);
+    setTimeout(() => setIsHeroHit(false), 300);
+  }, [hero.hp]);
 
   const attackBoss = async () => {
     const damage = hero.attack;
@@ -41,6 +57,7 @@ const GuildBossModal: React.FC<GuildBossModalProps> = ({
       fetchBoss(guildId);
       toastCustom(`⚔️ Dealed ${damage} damage`);
       setTimeout(() => setIsHit(false), 300);
+      handleFetchHero();
     } catch (error) {
       console.error('Error attacking boss:', error);
     } finally {
@@ -64,6 +81,7 @@ const GuildBossModal: React.FC<GuildBossModalProps> = ({
       fetchBoss(guildId);
       toastCustom(`⚔️ Dealed ${damage} damage`);
       setTimeout(() => setIsHit(false), 300);
+      handleFetchHero();
     } catch (error) {
       console.error('Error attacking boss:', error);
     } finally {
@@ -88,6 +106,9 @@ const GuildBossModal: React.FC<GuildBossModalProps> = ({
           />
           <h2>{boss.name}</h2>
           <p className={isHit ? 'hit-animation' : ''}>Health: {boss.health}</p>
+          <SubHeading className={isHeroHit ? 'hit-animation' : ''}>
+            Health: {hero.hp}/{hero.health}
+          </SubHeading>
           <StyledButton onClick={() => attackBoss()}>Attack Boss</StyledButton>
         </>
       )}

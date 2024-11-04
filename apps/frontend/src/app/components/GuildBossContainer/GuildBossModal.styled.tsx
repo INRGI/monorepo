@@ -48,6 +48,13 @@ export const ModalContainer = styled(Modal)`
     scale: 0.95;
   }
 
+  h3.hit-animation {
+    animation: shake 0.3s ease-in-out;
+    color: #da0505;
+    filter: brightness(0.6) saturate(1.5);
+    scale: 0.95;
+  }
+
   @keyframes shake {
     0%,
     100% {
@@ -258,8 +265,8 @@ export const Heading = styled.h2`
 `;
 
 export const SubHeading = styled.h3`
-  margin-top: 20px;
-  margin-bottom: 10px;
+  padding: 0;
+  margin: 0;
   font-size: 20px;
 `;
 

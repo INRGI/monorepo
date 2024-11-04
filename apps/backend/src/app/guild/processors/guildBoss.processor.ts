@@ -170,7 +170,20 @@ export class GuildBossProcessor extends WorkerHost {
       .where('guild.id = :guildId', { guildId })
       .getOne();
 
+    const hero = await this.heroService.findByUserId(
+      heroId as unknown as Types.ObjectId
+    );
+    if (hero.hp <= 0) return guild.boss;
+
     guild.boss.health -= damage;
+
+    const chance = Math.random();
+    if (chance <= 0.1) {
+      await this.heroService.minusHP(
+        heroId as unknown as Types.ObjectId,
+        guild.boss.attack
+      );
+    }
 
     if (guild.boss.health <= 0) {
       const guildParticipants = await this.guildRepository

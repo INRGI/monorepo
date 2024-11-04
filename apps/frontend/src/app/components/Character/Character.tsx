@@ -6,19 +6,21 @@ interface CharacterProps {
     name: string;
     level: number;
     health: number;
+    hp: number;
     attack: number;
     imageUrl: string;
     coins: number;
     experience: number;
   };
+  isHeroHit: boolean;
 }
 
-const Character: React.FC<CharacterProps> = ({ character }) => (
-  <Card>
-    <Image src={character.imageUrl} alt={character.name} />
+const Character: React.FC<CharacterProps> = ({ character, isHeroHit }) => (
+  <Card className={isHeroHit ? 'hit-animation' : ''}>
+    <Image className={isHeroHit ? 'hit-animation' : ''} src={character.imageUrl} alt={character.name} />
     <InfoTitle>{character.name}</InfoTitle>
     <InfoText>Level: {character.level}</InfoText>
-    <InfoText>Health: {character.health}</InfoText>
+    <InfoText className={isHeroHit ? 'hit-animation' : ''}>Health: {character.hp}/{character.health}</InfoText>
     <InfoText>Attack: {character.attack}</InfoText>
     <InfoText>Coins: {character.coins}</InfoText>
     <InfoText>Xp: {character.experience}</InfoText>

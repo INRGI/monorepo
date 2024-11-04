@@ -39,6 +39,7 @@ const defaultHero: Character = {
   level: 1,
   attack: 10,
   health: 100,
+  hp: 100,
   experience: 0,
   coins: 0,
   user: null,
@@ -190,7 +191,7 @@ export function App() {
               />
               <Route
                 path="/guild"
-                element={<GuildContainer hero={hero} heroId={hero._id} />}
+                element={<GuildContainer hero={hero} heroId={hero._id} updateHero={updateHero} handleFetchHero={handleFetchHero}/>}
               />
               <Route
                 path="/auction"

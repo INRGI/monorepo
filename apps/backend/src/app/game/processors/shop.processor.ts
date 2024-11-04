@@ -1,6 +1,6 @@
 import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq';
 import { HttpException } from '@nestjs/common';
-import { HeroDocument, HeroService } from '@org/users';
+import { Hero, HeroDocument, HeroService } from '@org/users';
 import { Job, Queue } from 'bullmq';
 import { Types } from 'mongoose';
 import { ItemBoxService } from '../../loot/services/itemBox.service';
@@ -29,7 +29,32 @@ export class ShopProcessor extends WorkerHost {
       case 'buy-reset-skills': {
         return await this.handleBuyResetSkillsJob(job.data);
       }
+      case 'buy-health': {
+        return await this.handleBuyHealthJob(job.data);
+      }
     }
+  }
+
+  private async handleBuyHealthJob(data: {
+    heroId: Types.ObjectId;
+    hp: number;
+    price: number;
+  }): Promise<Hero> {
+    const { heroId, hp, price } = data;
+
+    const result = await this.heroService.spendCoins(heroId, price);
+
+    if (!result) {
+      throw new HttpException('Something went wrong', 303);
+    }
+
+    const hero = await this.heroService.addHP(heroId, hp);
+
+    if (!hero) {
+      throw new HttpException('Something went wrong', 303);
+    }
+
+    return hero;
   }
 
   private async handleBuyResetSkillsJob(data: {

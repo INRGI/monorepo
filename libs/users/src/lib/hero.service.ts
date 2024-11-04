@@ -54,6 +54,7 @@ export class HeroService {
 
     if (hero.experience >= this.getExpToLevelUp(hero.level)) {
       this.levelUp(hero);
+      hero.hp = hero.health;
     }
 
     return await hero.save();
@@ -65,6 +66,7 @@ export class HeroService {
       throw new NotFoundException('Hero not Found');
     }
     hero.health += health;
+    hero.hp += health;
 
     return await hero.save();
   }
@@ -87,6 +89,7 @@ export class HeroService {
     }
 
     hero.health -= health;
+    hero.hp -= health;
     return await hero.save();
   }
 
@@ -97,7 +100,30 @@ export class HeroService {
     }
 
     hero.attack -= attack;
-    
+
+    return await hero.save();
+  }
+
+  async addHP(heroId: Types.ObjectId, hp: number): Promise<Hero> {
+    const hero = await this.findByUserId(heroId);
+    if (!hero) {
+      throw new NotFoundException('Hero not Found');
+    }
+    hero.hp += hp;
+    if (hero.hp > hero.health) hero.hp = hero.health;
+    return await hero.save();
+  }
+
+  async minusHP(heroId: Types.ObjectId, hp: number): Promise<Hero> {
+    const hero = await this.findByUserId(heroId);
+    if (!hero) {
+      throw new NotFoundException('Hero not Found');
+    }
+    hero.hp -= hp;
+    if (hero.hp <= 0) {
+      hero.hp = 0;
+    }
+
     return await hero.save();
   }
 

@@ -49,6 +49,7 @@ export interface Character {
   name: string;
   level: number;
   health: number;
+  hp: number;
   attack: number;
   imageUrl: string;
   experience: number;
