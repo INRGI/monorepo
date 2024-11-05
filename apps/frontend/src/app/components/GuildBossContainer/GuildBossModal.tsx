@@ -39,10 +39,14 @@ const GuildBossModal: React.FC<GuildBossModalProps> = ({
   useSkipFirstRender(() => {
     setIsHeroHit(true);
     setTimeout(() => setIsHeroHit(false), 300);
+    toastCustom(
+      `🩸 You received ${boss.attack} damage`
+    );
   }, [hero.hp]);
 
   const attackBoss = async () => {
     const damage = hero.attack;
+    if(hero.hp <= boss.attack) return toastCustom(`❤️‍🩹 Please heal your hero`);
     try {
       setIsHit(true);
       await axios.put(`http://localhost:3000/guild-boss/attack`, {
@@ -67,6 +71,7 @@ const GuildBossModal: React.FC<GuildBossModalProps> = ({
 
   const handleCastSpell = async (damage: number) => {
     try {
+      if(hero.hp <= boss.attack) return toastCustom(`❤️‍🩹 Please heal your hero`);
       setIsHit(true);
       await axios.put(`http://localhost:3000/guild-boss/attack`, {
         guildBossId: boss?.id,

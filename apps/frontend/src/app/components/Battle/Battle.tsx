@@ -30,6 +30,7 @@ interface BattleProps {
 
 const Battle: React.FC<BattleProps> = ({ character, monster, onAttack, isHit, isHeroHit }) => {
   const handleAttack = () => {
+    if(character.hp <= monster.attack) return toastCustom(`❤️‍🩹 Please heal your hero`);
     const newMonsterHealth = monster.health - character.attack;
     onAttack(newMonsterHealth);
     toastCustom(`🩸 You dealed ${character.attack} damage`);

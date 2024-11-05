@@ -29,17 +29,13 @@ export class HeroService {
 
   async spendCoins(heroId: Types.ObjectId, coins: number): Promise<Hero> {
     const hero = await this.findByUserId(heroId);
-
     if (!hero) {
       throw new NotFoundException('Hero not Found');
     }
-
     hero.coins -= coins;
-
     if (hero.coins < 0) {
       throw new HttpException('Not enough coins', 304);
     }
-
     return await hero.save();
   }
 
@@ -106,6 +102,7 @@ export class HeroService {
 
   async addHP(heroId: Types.ObjectId, hp: number): Promise<Hero> {
     const hero = await this.findByUserId(heroId);
+
     if (!hero) {
       throw new NotFoundException('Hero not Found');
     }

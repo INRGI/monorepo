@@ -36,19 +36,15 @@ export class ShopProcessor extends WorkerHost {
   }
 
   private async handleBuyHealthJob(data: {
-    heroId: Types.ObjectId;
+    heroId: string;
     hp: number;
     price: number;
   }): Promise<Hero> {
     const { heroId, hp, price } = data;
 
-    const result = await this.heroService.spendCoins(heroId, price);
-
-    if (!result) {
-      throw new HttpException('Something went wrong', 303);
-    }
-
-    const hero = await this.heroService.addHP(heroId, hp);
+    await this.heroService.spendCoins(heroId as unknown as Types.ObjectId, price);
+  
+    const hero = await this.heroService.addHP(heroId as unknown as Types.ObjectId, hp);
 
     if (!hero) {
       throw new HttpException('Something went wrong', 303);

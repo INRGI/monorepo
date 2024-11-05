@@ -49,9 +49,9 @@ export class ShopService {
     return result;
   }
 
-  async buyHealth(heroId: Types.ObjectId, hp: number, price: number) {
+  async buyHealth(heroId: string, hp: number, price: number) {
     const job = await this.shopQueue.add('buy-health', {
-      heroId: Types.ObjectId,
+      heroId,
       hp,
       price,
     });

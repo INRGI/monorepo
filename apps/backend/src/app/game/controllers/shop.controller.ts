@@ -27,7 +27,7 @@ export class ShopController {
 
   @Post('buy-hp')
   async buyHp(
-    @Body('heroId') heroId: Types.ObjectId,
+    @Body('heroId') heroId: string,
     @Body('hp') hp: number,
     @Body('price') price: number
   ) {

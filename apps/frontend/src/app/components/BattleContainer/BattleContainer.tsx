@@ -82,6 +82,7 @@ const BattleContainer: React.FC<BattleContainerProps> = ({
 
   const handleCastSkills = (damage: number) => {
     const monster = monsters[currentMonsterIndex];
+    if(hero.hp <= monster.attack) return toastCustom(`❤️‍🩹 Please heal your hero`);
     const newHero = { ...hero, attack: damage };
     axios
       .post('http://localhost:3000/battle/attack', {

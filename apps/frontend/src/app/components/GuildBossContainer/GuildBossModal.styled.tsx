@@ -23,10 +23,14 @@ export const ModalContainer = styled(Modal)`
   gap: 10px;
   width: 100%;
   max-width: 450px;
-  height: 670px;
+  height: 620px;
   text-align: center;
   font-size: 20px;
 
+  h2{
+    padding: 0;
+    margin: 0;
+  }
   img {
     float: left;
     width: 200px;

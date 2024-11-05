@@ -16,6 +16,9 @@ import { DiceGameService } from './services/diceGame.service';
 import { GuessCardService } from './services/guessCard.service';
 import { GuessTheCardProcessor } from './processors/guessTheCard.processor';
 import { GuessCardController } from './controllers/guessCard.controller';
+import { HOLGameProcessor } from './processors/holGame.processor';
+import { HOLGameService } from './services/holGame.service';
+import { HOLGameController } from './controllers/holGame.controller';
 
 @Module({
   controllers: [
@@ -23,6 +26,7 @@ import { GuessCardController } from './controllers/guessCard.controller';
     ShopController,
     DiceGameController,
     GuessCardController,
+    HOLGameController
   ],
   providers: [
     BattleService,
@@ -34,6 +38,8 @@ import { GuessCardController } from './controllers/guessCard.controller';
     DiceGameProcessor,
     GuessCardService,
     GuessTheCardProcessor,
+    HOLGameProcessor,
+    HOLGameService
   ],
   imports: [
     MonstersModule,
@@ -89,6 +95,13 @@ import { GuessCardController } from './controllers/guessCard.controller';
     }),
     BullModule.registerQueue({
       name: 'guess-the-card',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
+    BullModule.registerQueue({
+      name: 'hol',
       connection: {
         host: 'localhost',
         port: 6379,

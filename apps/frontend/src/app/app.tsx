@@ -213,7 +213,6 @@ export function App() {
           <>
             <RegistrationForm onLogin={handleLogin} />
             <LoginForm onLogin={handleLogin} />
-            {/* <Hero3D /> */}
           </>
         )}
       </StyledApp>
