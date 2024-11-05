@@ -13,10 +13,28 @@ import { ShopProcessor } from './processors/shop.processor';
 import { DiceGameController } from './controllers/diceGame.controller';
 import { DiceGameProcessor } from './processors/diceGame.processor';
 import { DiceGameService } from './services/diceGame.service';
+import { GuessCardService } from './services/guessCard.service';
+import { GuessTheCardProcessor } from './processors/guessTheCard.processor';
+import { GuessCardController } from './controllers/guessCard.controller';
 
 @Module({
-  controllers: [BattleController, ShopController, DiceGameController],
-  providers: [BattleService, ShopService, ItemBoxService, DiceGameService, BattleProcessor, ShopProcessor, DiceGameProcessor],
+  controllers: [
+    BattleController,
+    ShopController,
+    DiceGameController,
+    GuessCardController,
+  ],
+  providers: [
+    BattleService,
+    ShopService,
+    ItemBoxService,
+    DiceGameService,
+    BattleProcessor,
+    ShopProcessor,
+    DiceGameProcessor,
+    GuessCardService,
+    GuessTheCardProcessor,
+  ],
   imports: [
     MonstersModule,
     UsersModule,

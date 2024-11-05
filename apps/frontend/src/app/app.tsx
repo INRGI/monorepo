@@ -25,6 +25,8 @@ import ActiveSkillsContainer from './components/ActiveSkillsContainer/ActiveSkil
 import Shop from './components/Shop/Shop';
 import CreateGuildBossForm from './components/CreateGuildBossForm/CreateGuildBossForm';
 import { Slide, ToastContainer } from 'react-toastify';
+import GuessCardContainer from './components/GuessCardContainer/GuessCardContainer';
+import Hero3D from './components/Hero3D/Hero3D';
 
 Modal.setAppElement('#root');
 
@@ -162,9 +164,10 @@ export function App() {
               <Route
                 path="/minigames"
                 element={
-                  <>
+                  <Container>
                     <DiceGame hero={hero} updateHero={updateHero} />
-                  </>
+                    <GuessCardContainer hero={hero} updateHero={updateHero} />
+                  </Container>
                 }
               />
               <Route
@@ -191,7 +194,14 @@ export function App() {
               />
               <Route
                 path="/guild"
-                element={<GuildContainer hero={hero} heroId={hero._id} updateHero={updateHero} handleFetchHero={handleFetchHero}/>}
+                element={
+                  <GuildContainer
+                    hero={hero}
+                    heroId={hero._id}
+                    updateHero={updateHero}
+                    handleFetchHero={handleFetchHero}
+                  />
+                }
               />
               <Route
                 path="/auction"
@@ -203,6 +213,7 @@ export function App() {
           <>
             <RegistrationForm onLogin={handleLogin} />
             <LoginForm onLogin={handleLogin} />
+            {/* <Hero3D /> */}
           </>
         )}
       </StyledApp>

@@ -5,6 +5,11 @@ export interface Equip {
   armor: Item;
 }
 
+export interface Card {
+  id: number;
+  rewardCoins: number;
+}
+
 export interface GuildBoss {
   id: number;
   name: string;
