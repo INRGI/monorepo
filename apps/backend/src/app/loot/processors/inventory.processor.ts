@@ -292,7 +292,6 @@ export class InventoryProcessor extends WorkerHost {
 
     const filteredItems =
       inventory.inventory?.filter((item: Item) => item.rarity === rarity) || [];
-    console.log('filtered:', filteredItems);
     return filteredItems;
   }
 

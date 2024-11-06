@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { ModalContainer, Container, StyledInput, StyledButton } from './DiceGame.styled';
+import {
+  ModalContainer,
+  Container,
+  StyledInput,
+  StyledButton,
+} from './DiceGame.styled';
 import { Character } from '../../types/types';
 import { toastCustom } from '../../helpers/toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -27,16 +32,17 @@ const DiceGame: React.FC<DiceGameProps> = ({ hero, updateHero }) => {
       const updatedHero = response.data.hero;
 
       setGameResult(response.data);
-      if(response.data.winnings > 0) toastCustom(`🤑 You won ${response.data.winnings} coins`);
-      if(response.data.winnings < 0) toastCustom(`😿 You lost ${response.data.winnings} coins`);
-      if(response.data.winnings === 0) toastCustom(`😰 Tie`);
-      
+      if (response.data.winnings > 0)
+        toastCustom(`🤑 You won ${response.data.winnings} coins`);
+      if (response.data.winnings < 0)
+        toastCustom(`😿 You lost ${response.data.winnings} coins`);
+      if (response.data.winnings === 0) toastCustom(`😰 Tie`);
+
       setModalIsOpen(true);
       updateHero(updatedHero);
     } catch (error) {
       toastCustom(`😰 Error playing dice game`);
     } finally {
-
       setIsLoading(false);
     }
   };
@@ -48,31 +54,36 @@ const DiceGame: React.FC<DiceGameProps> = ({ hero, updateHero }) => {
   return (
     <Container>
       <h3>Dice Game</h3>
-      
-        <p>Bet Amount:</p>
-        <StyledInput
-          type="text"
-          value={betAmount}
-          onChange={(e) => setBetAmount(Number(e.target.value))}
-          disabled={isLoading}
-        />
-      
+
+      <p>Bet Amount:</p>
+      <StyledInput
+        type="text"
+        value={betAmount}
+        onChange={(e) => setBetAmount(Number(e.target.value))}
+        disabled={isLoading}
+      />
+
       <StyledButton onClick={playGame} disabled={isLoading}>
         {isLoading ? 'Rolling...' : 'Roll Dice'}
       </StyledButton>
 
-
-      <ModalContainer isOpen={modalIsOpen} onRequestClose={closeModal}>
+      <ModalContainer
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          },
+        }}
+      >
         <h2>Game Result</h2>
         {gameResult && (
           <>
-          <p>Your Dice: {gameResult.heroRoll}</p>
-          <p>Bot Dice: {gameResult.botRoll}</p>
+            <p>Your Dice: {gameResult.heroRoll}</p>
+            <p>Bot Dice: {gameResult.botRoll}</p>
             <p>
-              {gameResult.winnings > 0 &&
-                `You won: ${gameResult.winnings}`}
-              {gameResult.winnings < 0 &&
-                `You lost: ${gameResult.winnings}`}
+              {gameResult.winnings > 0 && `You won: ${gameResult.winnings}`}
+              {gameResult.winnings < 0 && `You lost: ${gameResult.winnings}`}
               {gameResult.winnings === 0 && `Tie`}
             </p>
           </>

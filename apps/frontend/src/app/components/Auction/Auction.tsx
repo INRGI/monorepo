@@ -90,6 +90,11 @@ const Auction: React.FC<AuctionProps> = ({ heroId, updateHero }) => {
               isOpen={modalIsOpen}
               onRequestClose={closeModal}
               contentLabel="Item Details"
+              style={{
+                overlay: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                },
+              }}
             >
               <h2>Item Details</h2>
               {selectedItem && (

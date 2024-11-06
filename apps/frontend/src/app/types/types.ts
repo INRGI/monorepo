@@ -5,6 +5,22 @@ export interface Equip {
   armor: Item;
 }
 
+export interface HOL {
+  guessChoosed?: 'higher' | 'lower';
+  prevNumber?: number;
+  guessedTimes?: number;
+  betAmount: number;
+  heroId: string;
+}
+
+export interface HolResult {
+  rewardCoins: number;
+  guessChoosed?: 'higher' | 'lower';
+  prevNumber: number;
+  ifLoose: boolean;
+  heroId: string;
+}
+
 export interface Card {
   id: number;
   rewardCoins: number;

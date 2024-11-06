@@ -128,6 +128,11 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) =
       <ModalContainer
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          },
+        }}
         contentLabel="Item Details"
       >
         <h2>Item Details</h2>

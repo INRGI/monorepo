@@ -7,17 +7,17 @@ export class HOLGameController {
   constructor(private readonly holGameService: HOLGameService) {}
 
   @Post('start')
-  async startGame(@Body('data') data: HOL): Promise<HOL> {
+  async startGame(@Body() data: HOL): Promise<HOL> {
     return await this.holGameService.startGame(data);
   }
 
   @Post('stop')
-  async stopGame(@Body('data') data: HOL): Promise<HOL | HolResult> {
+  async stopGame(@Body() data: HOL): Promise<HOL | HolResult> {
     return await this.holGameService.stopGame(data);
   }
 
   @Post('choose')
-  async choose(@Body('data') data: HOL): Promise<HOL | HolResult> {
+  async choose(@Body() data: HOL): Promise<HOL | HolResult> {
     return await this.holGameService.choose(data);
   }
 }

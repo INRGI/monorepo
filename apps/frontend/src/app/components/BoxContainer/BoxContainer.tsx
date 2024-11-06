@@ -19,19 +19,22 @@ const BoxContainer: React.FC<BoxContainerProps> = ({ hero, updateHero }) => {
 
   const handleBuyBox = async (boxId: number, price: number) => {
     try {
-      const response = await axios.post(`http://localhost:3000/shop/buy/${boxId}`, {
-        hero: hero,
-        price
-      });
+      const response = await axios.post(
+        `http://localhost:3000/shop/buy/${boxId}`,
+        {
+          hero: hero,
+          price,
+        }
+      );
 
-      if(!response){
+      if (!response) {
         return toastCustom(`😰 Not enough coins`);
       }
 
       setOpenedItem(response.data);
       setModalIsOpen(true);
       toastCustom(`🎁 You Won ${response.data.name}`);
-      const updatedHero ={...hero, 'coins': hero.coins - price};
+      const updatedHero = { ...hero, coins: hero.coins - price };
       updateHero(updatedHero);
     } catch (error) {
       toastCustom(`😰 Error buying box`);
@@ -69,12 +72,23 @@ const BoxContainer: React.FC<BoxContainerProps> = ({ hero, updateHero }) => {
             <img src={box.image} alt={box.name} />
             <h4>{box.name}</h4>
             <p>Cost: {box.cost} coins</p>
-            <button onClick={() => handleBuyBox(box.id, box.cost)}>Buy Box</button>
+            <button onClick={() => handleBuyBox(box.id, box.cost)}>
+              Buy Box
+            </button>
           </BoxCard>
         ))}
       </BoxesContainer>
 
-      <ModalContainer isOpen={modalIsOpen} onRequestClose={closeModal} contentLabel="Opened Item">
+      <ModalContainer
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Opened Item"
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          },
+        }}
+      >
         <h2>You've received a new item!</h2>
         {openedItem && (
           <div>
@@ -83,7 +97,12 @@ const BoxContainer: React.FC<BoxContainerProps> = ({ hero, updateHero }) => {
             <p>Type: {openedItem.type}</p>
             <p>Rarity: {openedItem.rarity}</p>
             <p>Enchanted: {openedItem.enchanted}</p>
-            {openedItem.stats.attack && <p>Attack: {openedItem.stats.attack}</p> || openedItem.stats.health && <p>Health: {openedItem.stats.health}</p>}
+            {(openedItem.stats.attack && (
+              <p>Attack: {openedItem.stats.attack}</p>
+            )) ||
+              (openedItem.stats.health && (
+                <p>Health: {openedItem.stats.health}</p>
+              ))}
           </div>
         )}
         <button onClick={closeModal}>Close</button>
@@ -91,6 +110,5 @@ const BoxContainer: React.FC<BoxContainerProps> = ({ hero, updateHero }) => {
     </Container>
   );
 };
-
 
 export default BoxContainer;

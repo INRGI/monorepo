@@ -26,7 +26,7 @@ import Shop from './components/Shop/Shop';
 import CreateGuildBossForm from './components/CreateGuildBossForm/CreateGuildBossForm';
 import { Slide, ToastContainer } from 'react-toastify';
 import GuessCardContainer from './components/GuessCardContainer/GuessCardContainer';
-import Hero3D from './components/Hero3D/Hero3D';
+import HOLGameContainer from './components/HOLGameContainer/HOLGameContainer';
 
 Modal.setAppElement('#root');
 
@@ -95,7 +95,7 @@ export function App() {
     const token = localStorage.getItem('token');
     if (token) {
       axios
-        .get('http://localhost:3000/auth/me', {
+        .get('http://localhost:3000/auth/me', { 
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
@@ -167,6 +167,7 @@ export function App() {
                   <Container>
                     <DiceGame hero={hero} updateHero={updateHero} />
                     <GuessCardContainer hero={hero} updateHero={updateHero} />
+                    <HOLGameContainer hero={hero} updateHero={updateHero}/>
                   </Container>
                 }
               />
@@ -223,3 +224,6 @@ export function App() {
 export default App;
 
 // test8@t.com
+// RANKING? MORE GAMES 
+
+//PVP 2 players online: SHIELD ATTACK DODGE (3 types)

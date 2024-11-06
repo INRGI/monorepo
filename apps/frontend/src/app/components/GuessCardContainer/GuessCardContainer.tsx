@@ -89,7 +89,15 @@ const GuessCardContainer: React.FC<GuessCardContainerProps> = ({
         {isLoading ? 'Preparing...' : 'Play'}
       </StyledButton>
 
-      <ModalContainer isOpen={modalIsOpen} onRequestClose={closeModal}>
+      <ModalContainer
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          },
+        }}
+      >
         {cards && (
           <>
             <h2>Choose One Card</h2>

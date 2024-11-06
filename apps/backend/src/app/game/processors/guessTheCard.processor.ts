@@ -47,7 +47,6 @@ export class GuessTheCardProcessor extends WorkerHost {
     const { hero, cardId, cards } = data;
 
     const chosenCard = cards.find((item) => item.id === cardId);
-    console.log(cardId)
 
     await this.heroService.earnCoins(hero._id, chosenCard.rewardCoins);
     const char = await this.heroService.findByUserId(hero._id);
