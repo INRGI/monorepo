@@ -11,6 +11,7 @@ import { GuildModule } from './guild/guild.module';
 import { AuctionModule } from './auction/auction.module';
 import { QuestsModule } from './quests/quests.module';
 import { SkillsModule } from './skills/skills.module';
+import { PvpModule } from './pvp/pvp.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { SkillsModule } from './skills/skills.module';
     AuctionModule,
     QuestsModule,
     SkillsModule,
-    ChatModule
+    ChatModule,
+    PvpModule
   ],
   controllers: [AppController,],
   providers: [AppService],

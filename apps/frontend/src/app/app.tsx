@@ -27,6 +27,7 @@ import CreateGuildBossForm from './components/CreateGuildBossForm/CreateGuildBos
 import { Slide, ToastContainer } from 'react-toastify';
 import GuessCardContainer from './components/GuessCardContainer/GuessCardContainer';
 import HOLGameContainer from './components/HOLGameContainer/HOLGameContainer';
+import PVPContainer from './components/PVPContainer/PVPContainer';
 
 Modal.setAppElement('#root');
 
@@ -140,6 +141,7 @@ export function App() {
                       hero={hero}
                       handleFetchHero={handleFetchHero}
                     />
+                    {/* <PVPContainer heroId={hero._id}/> */}
                   </Container>
                 }
               />

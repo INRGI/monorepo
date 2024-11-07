@@ -5,6 +5,20 @@ export interface Equip {
   armor: Item;
 }
 
+export type PvpRoom = {
+  id: string;
+  creatorHeroId: string;
+  oponentHeroId?: string;
+  heroName: string;
+  betAmount: number;
+};
+
+export type ChooseTypeDto = {
+  heroId: string;
+  roomId: string;
+  chosenType: 'SHIELD' | 'ATTACK' | 'DODGE';
+};
+
 export interface HOL {
   guessChoosed?: 'higher' | 'lower';
   prevNumber?: number;
