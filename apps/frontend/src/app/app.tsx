@@ -27,7 +27,7 @@ import CreateGuildBossForm from './components/CreateGuildBossForm/CreateGuildBos
 import { Slide, ToastContainer } from 'react-toastify';
 import GuessCardContainer from './components/GuessCardContainer/GuessCardContainer';
 import HOLGameContainer from './components/HOLGameContainer/HOLGameContainer';
-import PVPContainer from './components/PVPContainer/PVPContainer';
+// import Monday from './components/Monday/Monday';
 
 Modal.setAppElement('#root');
 
@@ -141,7 +141,6 @@ export function App() {
                       hero={hero}
                       handleFetchHero={handleFetchHero}
                     />
-                    {/* <PVPContainer heroId={hero._id}/> */}
                   </Container>
                 }
               />
@@ -216,6 +215,7 @@ export function App() {
           <>
             <RegistrationForm onLogin={handleLogin} />
             <LoginForm onLogin={handleLogin} />
+            {/* <Monday /> */}
           </>
         )}
       </StyledApp>
@@ -227,5 +227,3 @@ export default App;
 
 // test8@t.com
 // RANKING? MORE GAMES 
-
-//PVP 2 players online: SHIELD ATTACK DODGE (3 types)

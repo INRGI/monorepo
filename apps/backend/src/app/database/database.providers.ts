@@ -12,7 +12,7 @@ import { Equip } from '../loot/entities/equip.entity';
 import { HeroSkill } from '../skills/entities/heroSkill.entity';
 import { Skills } from '../skills/entities/skills.entity';
 import { GuildBoss } from '../guild/entities/guildBoss.entity';
-import { PvpRoom } from '../pvp/entities/PvpRoom.entity';
+// import { PvpRoom } from '../pvp(not-working)/entities/PvpRoom.entity';
 
 export const databaseProviders = [
   {
@@ -39,7 +39,7 @@ export const databaseProviders = [
           HeroSkill,
           Skills,
           GuildBoss,
-          PvpRoom,
+          // PvpRoom,
         ],
         synchronize: true,
       });

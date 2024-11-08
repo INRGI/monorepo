@@ -11,7 +11,7 @@ import { GuildModule } from './guild/guild.module';
 import { AuctionModule } from './auction/auction.module';
 import { QuestsModule } from './quests/quests.module';
 import { SkillsModule } from './skills/skills.module';
-import { PvpModule } from './pvp/pvp.module';
+// import { MondayApiModule } from './monday-api/monday-api.module';
 
 @Module({
   imports: [
@@ -33,7 +33,7 @@ import { PvpModule } from './pvp/pvp.module';
     QuestsModule,
     SkillsModule,
     ChatModule,
-    PvpModule
+    // MondayApiModule
   ],
   controllers: [AppController,],
   providers: [AppService],
