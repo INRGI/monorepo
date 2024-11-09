@@ -1,34 +1,61 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { NavContainer, NavItem } from './Navbar.styled';
+import { NavContainer, NavItem, NavMenu, NavLogo } from './Navbar.styled';
+import { FaCog, FaGamepad, FaGavel, FaHome, FaInbox, FaRegListAlt, FaShoppingCart, FaUsers } from 'react-icons/fa';
 
 const Navbar: React.FC = () => {
   return (
     <NavContainer>
-      <NavItem>
-        <Link to="/">Home</Link>
-      </NavItem>
-      <NavItem>
-        <Link to="/quests">Quests</Link>
-      </NavItem>
-      <NavItem>
-        <Link to='/skills'>Skills</Link>
-      </NavItem>
-      <NavItem>
-        <Link to="/shop">Shop</Link>
-      </NavItem>
-      <NavItem>
-        <Link to="/inventory">Inventory</Link>
-      </NavItem>
-      <NavItem>
-        <Link to="/guild">Guild</Link>
-      </NavItem>
-      <NavItem>
-        <Link to='/auction'>Auction</Link>
-      </NavItem>
-      <NavItem>
-        <Link to='/minigames'>Mini Games</Link>
-      </NavItem>
+      <NavMenu>
+        <NavItem>
+          <Link to="/">
+            <FaHome />
+            Home
+          </Link>
+        </NavItem>
+        <NavItem>
+          <Link to="/quests">
+            <FaRegListAlt />
+            Quests
+          </Link>
+        </NavItem>
+        <NavItem>
+          <Link to="/skills">
+            <FaCog />
+            Skills
+          </Link>
+        </NavItem>
+        <NavItem>
+          <Link to="/shop">
+            <FaShoppingCart />
+            Shop
+          </Link>
+        </NavItem>
+        <NavItem>
+          <Link to="/inventory">
+            <FaInbox />
+            Inventory
+          </Link>
+        </NavItem>
+        <NavItem>
+          <Link to="/guild">
+            <FaUsers />
+            Guild
+          </Link>
+        </NavItem>
+        <NavItem>
+          <Link to="/auction">
+            <FaGavel />
+            Auction
+          </Link>
+        </NavItem>
+        <NavItem>
+          <Link to="/minigames">
+            <FaGamepad />
+            Mini Games
+          </Link>
+        </NavItem>
+      </NavMenu>
     </NavContainer>
   );
 };

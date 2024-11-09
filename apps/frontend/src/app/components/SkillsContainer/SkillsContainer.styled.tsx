@@ -1,88 +1,103 @@
 import styled from '@emotion/styled';
+import { keyframes } from '@emotion/react';
+
+const fadeIn = keyframes`
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+`;
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  align-content: center;
-  padding: 20px;
-  background-color: #3e3e3e;
-  border-radius: 8px;
+  padding-top: 20px;
+  background-color: #1e1e1e;
+  border-radius: 12px;
   color: white;
-  width: 80%;
-  margin: 0 auto;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  border: 1px solid #333;
 `;
 
 export const CardContainer = styled.ul`
   display: flex;
-  align-items: center;
-  align-content: center;
   flex-wrap: wrap;
-  width: 90%;
+  justify-content: center;
   gap: 20px;
+  width: 100%;
   padding: 0;
 `;
 
 export const SkillCard = styled.li`
-  width: 200px;
-  height: 340px;
-  background-color: #1f1f1f;
-  border: 2px solid #fff;
-  border-radius: 8px;
-  padding: 15px;
+  width: 260px;
+  height: 220px;
+  background-color: #2c2f35;
+  border-radius: 12px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s, box-shadow 0.3s;
+  animation: ${fadeIn} 0.4s ease-in-out;
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
+  }
 `;
 
 export const SkillInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+
+  text-align: center;
 `;
 
 export const StyledButton = styled.button`
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
+  padding: 12px 18px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s;
 
   &:hover {
-    background-color: #45a049;
+    background-color: #388e3c;
+    transform: scale(1.05);
+  }
+
+  &:disabled {
+    background-color: #9e9e9e;
+    cursor: not-allowed;
   }
 `;
 
 export const ScrollContainer = styled.div`
-  padding: 0;
-  margin: 0;
-  height: 520px;
-  overflow-y: auto;
+  height: 300px;
   width: 100%;
   display: flex;
-  align-content: center;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  overflow-y: auto;
 `;
 
 export const Heading = styled.h2`
-  margin-bottom: 20px;
-  font-size: 24px;
+  font-size: 30px;
+  font-weight: 700;
+
+  padding: 0;
+  margin: 0;
 `;
 
 export const SubHeading = styled.h3`
-  margin-top: 10px;
-  margin-bottom: 10px;
   font-size: 20px;
+  color: #ffd54f;
+  padding: 0;
+  margin: 0;
 `;
 
-export const CompletedStatus = styled.p`
-  color: #08c908;
-`;
-
-export const NotCompletedStatus = styled.p`
-  color: red;
-`;

@@ -7,7 +7,9 @@ import {
   EquipButton,
   InventoryCard,
   InventoryContainer,
-  ModalContainer
+  ModalContainer,
+  ItemTitle,
+  ItemDetails
 } from './Inventory.styled';
 import { toastCustom } from '../../helpers/toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -98,12 +100,12 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) =
     await axios.post(`http://localhost:3000/inventory/equip`, {
       heroId: hero._id,
       uniqueId: activeItem.uniqueId
-    })
-    toastCustom(`🛡️ Item equiped`);
+    });
+    toastCustom(`🛡️ Item equipped`);
     closeModal();
     handleFetchHero();
     fetchInventory();
-  }
+  };
 
   if (loading) return <Container>Loading...</Container>;
 
@@ -112,12 +114,15 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) =
       <h3>Your Inventory</h3>
       <InventoryContainer>
         {inventoryItems.map((item, key) => (
-          <InventoryCard key={key} onClick={() => handleItemClick(item)}>
+          <InventoryCard
+            key={key}
+            onClick={() => handleItemClick(item)}
+            rarity={item.rarity}
+          >
             <img src={item.image} alt={item.name} />
-            <h4>{item.name}</h4>
-            <p>Type: {item.type}</p>
-            <p>Rarity: {item.rarity}</p>
-            <p>Enchanted: {item.enchanted}</p>
+            <ItemTitle>{item.name}</ItemTitle>
+            <ItemDetails>Type: {item.type}</ItemDetails>
+            <ItemDetails>Rarity: {item.rarity}</ItemDetails>
             <button onClick={(event) => handleItemSell(item.uniqueId, event)}>
               Sell Item
             </button>
@@ -139,7 +144,6 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) =
         {activeItem && (
           <div>
             <img width={300} src={activeItem.image} alt={activeItem.name} />
-            
             <h4>{activeItem.name}</h4>
             <p>Type: {activeItem.type}</p>
             <p>Rarity: {activeItem.rarity}</p>
@@ -150,7 +154,7 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) =
               (activeItem.stats.health && (
                 <p>Health: {activeItem.stats.health}</p>
               ))}
-              <EquipButton onClick={handleEquipItem}>Equip</EquipButton>
+            <EquipButton onClick={handleEquipItem}>Equip</EquipButton>
           </div>
         )}
         <AuctionContainer>

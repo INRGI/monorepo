@@ -49,7 +49,7 @@ const SkillsContainer: React.FC<SkillsContainerProps> = ({ hero }) => {
                 <p>Level: {skill.level}</p>
                 <p>Cooldown: {skill.skill.cooldown}</p>
                 {(skill.skill.damage && (
-                  <p>Damage: {skill.skill.damage}</p>
+                  <p>Damage: {skill.skill.damage * skill.level || skill.skill.damage}</p>
                 )) || <p>Healing: {skill.skill.healing}</p>}
                 {skill.level === 0 && <StyledButton disabled={points === 0} onClick={() => levelUpSkill(Number(skill.id))}>Learn Skill</StyledButton>}
                 {skill.level > 0 && <StyledButton disabled={points === 0} onClick={() => levelUpSkill(Number(skill.id))}>Level up Skill</StyledButton>}

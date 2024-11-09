@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Form, Input } from './RegistrationForm.styled';
+import { Button, Form, Input, FormContainer, Header, LinkText, Message } from './RegistrationForm.styled';
+import { Link } from 'react-router-dom';
 
 const RegistrationForm: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -9,7 +10,7 @@ const RegistrationForm: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const response = await axios.post('http://localhost:3000/auth/register', { email, password });
       setMessage('Registration successful!');
@@ -30,25 +31,30 @@ const RegistrationForm: React.FC<{ onLogin: () => void }> = ({ onLogin }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <h2>Register</h2>
-      <Input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        required
-      />
-      <Input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        required
-      />
-      <Button type="submit">Register</Button>
-      {message && <p>{message}</p>}
-    </Form>
+    <FormContainer>
+      <Form onSubmit={handleSubmit}>
+        <Header>Register</Header>
+        <Input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+        />
+        <Input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          required
+        />
+        <Button type="submit">Register</Button>
+        {message && <Message>{message}</Message>}
+        <LinkText>
+          Already have an account? <Link to="/">Log in</Link>
+        </LinkText>
+      </Form>
+    </FormContainer>
   );
 };
 

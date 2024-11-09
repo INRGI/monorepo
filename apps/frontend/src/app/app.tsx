@@ -96,7 +96,7 @@ export function App() {
     const token = localStorage.getItem('token');
     if (token) {
       axios
-        .get('http://localhost:3000/auth/me', { 
+        .get('http://localhost:3000/auth/me', {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
@@ -147,19 +147,19 @@ export function App() {
               <Route
                 path="/quests"
                 element={
-                  <>
+                  <Container>
                     {/* <CreateQuestForm /> */}
                     <QuestContainer heroId={hero._id} />
-                  </>
+                  </Container>
                 }
               />
               <Route
                 path="/skills"
                 element={
-                  <>
+                  <Container>
                     {/* <CreateSkillForm /> */}
                     <SkillsContainer hero={hero} />
-                  </>
+                  </Container>
                 }
               />
               <Route
@@ -168,7 +168,7 @@ export function App() {
                   <Container>
                     <DiceGame hero={hero} updateHero={updateHero} />
                     <GuessCardContainer hero={hero} updateHero={updateHero} />
-                    <HOLGameContainer hero={hero} updateHero={updateHero}/>
+                    <HOLGameContainer hero={hero} updateHero={updateHero} />
                   </Container>
                 }
               />
@@ -176,47 +176,55 @@ export function App() {
                 path="/shop"
                 element={
                   <Container>
-                    <BoxContainer hero={hero} updateHero={updateHero} />
-                    <ItemByRarity hero={hero} updateHero={updateHero} />
                     <Shop hero={hero} updateHero={updateHero} />
+                    <ItemByRarity hero={hero} updateHero={updateHero} />
+                    <BoxContainer hero={hero} updateHero={updateHero} />
                   </Container>
                 }
               />
               <Route
                 path="/inventory"
                 element={
-                  <>
+                  <Container>
                     <Inventory
                       hero={hero}
                       updateHero={updateHero}
                       handleFetchHero={handleFetchHero}
                     />
-                  </>
+                  </Container>
                 }
               />
               <Route
                 path="/guild"
                 element={
-                  <GuildContainer
-                    hero={hero}
-                    heroId={hero._id}
-                    updateHero={updateHero}
-                    handleFetchHero={handleFetchHero}
-                  />
+                  <Container>
+                    <GuildContainer
+                      hero={hero}
+                      heroId={hero._id}
+                      updateHero={updateHero}
+                      handleFetchHero={handleFetchHero}
+                    />
+                  </Container>
                 }
               />
               <Route
                 path="/auction"
-                element={<Auction heroId={hero._id} updateHero={updateHero} />}
+                element={
+                  <Container>
+                    <Auction heroId={hero._id} updateHero={updateHero} />
+                  </Container>
+                }
               />
             </Routes>
           </>
         ) : (
-          <>
-            <RegistrationForm onLogin={handleLogin} />
-            <LoginForm onLogin={handleLogin} />
-            {/* <Monday /> */}
-          </>
+          <Routes>
+            <Route path="/" element={<LoginForm onLogin={handleLogin} />} />
+            <Route
+              path="/register"
+              element={<RegistrationForm onLogin={handleLogin} />}
+            />
+          </Routes>
         )}
       </StyledApp>
     </Router>
@@ -226,4 +234,4 @@ export function App() {
 export default App;
 
 // test8@t.com
-// RANKING? MORE GAMES 
+// RANKING? MORE GAMES

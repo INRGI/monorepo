@@ -48,9 +48,11 @@ const QuestContainer: React.FC<QuestContainerProps> = ({ heroId }) => {
                 <SubHeading>{quest.quest.name}</SubHeading>
                 <p>Type: {quest.quest.taskType}</p>
                 <p>Reward: {quest.quest.rewardCoins}</p>
-                {(quest.isCompleted && 'Done' && (
+                {quest.isCompleted ? (
                   <CompletedStatus>Completed: Done</CompletedStatus>
-                )) || <NotCompletedStatus>Completed: Nope</NotCompletedStatus>}
+                ) : (
+                  <NotCompletedStatus>Completed: Nope</NotCompletedStatus>
+                )}
               </QuestInfoContainer>
             </QuestCard>
           ))}
