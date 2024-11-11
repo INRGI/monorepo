@@ -11,6 +11,7 @@ import { GuildModule } from './guild/guild.module';
 import { AuctionModule } from './auction/auction.module';
 import { QuestsModule } from './quests/quests.module';
 import { SkillsModule } from './skills/skills.module';
+import { SlotModule } from './slot/slot.module';
 // import { MondayApiModule } from './monday-api/monday-api.module';
 
 @Module({
@@ -33,6 +34,7 @@ import { SkillsModule } from './skills/skills.module';
     QuestsModule,
     SkillsModule,
     ChatModule,
+    SlotModule,
     // MondayApiModule
   ],
   controllers: [AppController,],

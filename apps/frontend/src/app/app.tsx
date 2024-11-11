@@ -27,6 +27,7 @@ import CreateGuildBossForm from './components/CreateGuildBossForm/CreateGuildBos
 import { Slide, ToastContainer } from 'react-toastify';
 import GuessCardContainer from './components/GuessCardContainer/GuessCardContainer';
 import HOLGameContainer from './components/HOLGameContainer/HOLGameContainer';
+import SlotMachine from './components/SlotContainer/SlotContainer';
 // import Monday from './components/Monday/Monday';
 
 Modal.setAppElement('#root');
@@ -169,6 +170,7 @@ export function App() {
                     <DiceGame hero={hero} updateHero={updateHero} />
                     <GuessCardContainer hero={hero} updateHero={updateHero} />
                     <HOLGameContainer hero={hero} updateHero={updateHero} />
+                    <SlotMachine hero={hero} updateHero={updateHero}/>
                   </Container>
                 }
               />
