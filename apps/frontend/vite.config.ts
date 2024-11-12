@@ -1,4 +1,3 @@
-/// <reference types='vitest' />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
@@ -11,6 +10,19 @@ export default defineConfig({
   server: {
     port: 4200,
     host: 'localhost',
+    cors: {
+      origin: '*',
+      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
 
   preview: {
@@ -19,11 +31,6 @@ export default defineConfig({
   },
 
   plugins: [react(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
-
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [ nxViteTsPaths() ],
-  // },
 
   build: {
     outDir: '../../dist/apps/frontend',

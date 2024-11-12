@@ -46,6 +46,8 @@ Thumbs.db
 */gcloud-postmaster
 # *Hero3D
 *PVPContainer
-*monday-api
-*Monday
+# *monday-api
+# *Monday
 *pvp(not-working)
+*google-drive-api
+*Drive.tsx

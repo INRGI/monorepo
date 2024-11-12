@@ -36,7 +36,14 @@ export class EnchantProcessor extends WorkerHost {
       case 'find-all-enchants': {
         return await this.enchantRepository.find();
       }
+      case 'reenchant': {
+        return await this.handleReenchantJob(job.data);
+      }
     }
+  }
+
+  private async handleReenchantJob(data: { item: Item }){
+    
   }
 
   private async handleApplyEnchantmentJob(data: { item: Item }) {

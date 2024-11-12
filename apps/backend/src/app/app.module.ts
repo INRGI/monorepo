@@ -12,7 +12,8 @@ import { AuctionModule } from './auction/auction.module';
 import { QuestsModule } from './quests/quests.module';
 import { SkillsModule } from './skills/skills.module';
 import { SlotModule } from './slot/slot.module';
-// import { MondayApiModule } from './monday-api/monday-api.module';
+import { MondayApiModule } from './monday-api/monday-api.module';
+// import { GoogleDriveModule } from './google-drive-api/google-drive-api.module';
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import { SlotModule } from './slot/slot.module';
     SkillsModule,
     ChatModule,
     SlotModule,
-    // MondayApiModule
+    MondayApiModule,
+    // GoogleDriveModule
   ],
   controllers: [AppController,],
   providers: [AppService],

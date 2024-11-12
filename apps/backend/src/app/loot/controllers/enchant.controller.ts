@@ -1,15 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
-import { EnchantService } from "../services/enchant.service";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { EnchantService } from '../services/enchant.service';
 
-import { Enchant } from "../entities/enchant.entity";
-import { CreateEnchantDto } from "../dtos/CreateEnchant.dto";
-import { UpdateEnchantDto } from "../dtos/UpdateEnchan.dto";
+import { Enchant } from '../entities/enchant.entity';
+import { CreateEnchantDto } from '../dtos/CreateEnchant.dto';
+import { UpdateEnchantDto } from '../dtos/UpdateEnchan.dto';
+import { Item } from '../entities/item.entity';
 
 @Controller('enchant')
 export class EnchantController {
-  constructor(
-    private readonly enchantService: EnchantService,
-  ) {}
+  constructor(private readonly enchantService: EnchantService) {}
 
   @Get()
   async getAllEnchants(): Promise<Enchant[]> {
@@ -24,6 +31,11 @@ export class EnchantController {
   @Post()
   createEnchant(@Body() enchantData: CreateEnchantDto): Promise<Enchant> {
     return this.enchantService.createEnchant(enchantData);
+  }
+
+  @Post('reenchant')
+  reenchantItem(@Body() item: Item): Promise<Item> {
+    return this.enchantService.reenchantItem(item);
   }
 
   @Put(':id')

@@ -23,7 +23,9 @@ async function bootstrap() {
 
   app.register(FastifyCors, {
     origin: '*',
-    methods: ['GET', 'POST', 'DELETE', 'PUT'],
+    methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   });
 
   app.useGlobalPipes(new ValidationPipe());

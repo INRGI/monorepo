@@ -1,5 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 import { Enchant } from '../entities/enchant.entity';
 import { Item } from '../entities/item.entity';
 import { CreateEnchantDto } from '../dtos/CreateEnchant.dto';
@@ -18,6 +17,12 @@ export class EnchantService {
 
   async applyEnchantment(item: Item): Promise<Item> {
    const job = await this.enchantQueue.add('apply-enchantment', {item})
+   const result = await job.waitUntilFinished(this.queueEvents);
+   return result;
+  }
+
+  async reenchantItem(item: Item): Promise<Item>{
+    const job = await this.enchantQueue.add('reenchant', {item})
    const result = await job.waitUntilFinished(this.queueEvents);
    return result;
   }

@@ -28,7 +28,8 @@ import { Slide, ToastContainer } from 'react-toastify';
 import GuessCardContainer from './components/GuessCardContainer/GuessCardContainer';
 import HOLGameContainer from './components/HOLGameContainer/HOLGameContainer';
 import SlotMachine from './components/SlotContainer/SlotContainer';
-// import Monday from './components/Monday/Monday';
+import Monday from './components/Monday/Monday';
+// import GoogleDriveFetcher from './components/Monday/Drive';
 
 Modal.setAppElement('#root');
 
@@ -142,6 +143,8 @@ export function App() {
                       hero={hero}
                       handleFetchHero={handleFetchHero}
                     />
+                    <Monday />
+                    {/* <GoogleDriveFetcher /> */}
                   </Container>
                 }
               />
