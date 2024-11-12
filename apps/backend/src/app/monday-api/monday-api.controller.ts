@@ -10,6 +10,11 @@ export class MondayApiController {
     return await this.mondayService.findProductByName(product);
   }
 
+  @Get('domain/:domainName')
+  async getDomainInfo(@Param('domainName') domainName: string) {
+    return await this.mondayService.findDomainByName(domainName);
+  }
+
   @Get('product-status/:productName')
   async getProductStatus(@Param('productName') product: string) {
     return await this.mondayService.fetchProductStatus(product);

@@ -37,6 +37,17 @@ const Monday: React.FC = () => {
         console.error('Login failed:', error.response.data);
       });
   };
+
+  const handleDomainInfo = (e: React.FormEvent) => {
+    e.preventDefault();
+    axios
+      .get(`http://localhost:3000/monday/domain/${product}`)
+      .then((response) => {
+      })
+      .catch((error) => {
+        console.error('Login failed:', error.response.data);
+      });
+  };
   
 
   return (
@@ -51,6 +62,7 @@ const Monday: React.FC = () => {
       <Button onClick={handleFetchProducts}>Fetch Data</Button>
       <Button onClick={handleFetchStatus}>Fetch Status</Button>
       <Button onClick={handleDomainSending}>Product Sending</Button>
+      <Button onClick={handleDomainInfo}>Domain Info</Button>
     </Form>
   );
 };
