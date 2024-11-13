@@ -5,6 +5,17 @@ import { MondayApiService } from './monday-api.service';
 export class MondayApiController {
   constructor(private readonly mondayService: MondayApiService) {}
 
+  @Get('data/:productName/:domainName')
+  async getData(
+    @Param('productName') productName: string,
+    @Param('domainName') domainName: string
+  ) {
+    return await this.mondayService.fecthDataFromTwoTables(
+      productName,
+      domainName
+    );
+  }
+
   @Get('product/:productName')
   async getProduct(@Param('productName') product: string) {
     return await this.mondayService.findProductByName(product);

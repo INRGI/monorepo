@@ -19,6 +19,35 @@ const query = `
     }
     `;
 
+    const fetchQuery = `
+    query ($productBoardId: ID!, $domainBoardId: ID!, $productName: CompareValue!, $domainName: CompareValue!) {
+      productBoard: boards(ids: [$productBoardId]) {
+        items_page(query_params: {rules: [{column_id: "name", compare_value: $productName, operator: contains_text}]}) {
+          items {
+            id
+            name
+            column_values {
+              id
+              text
+            }
+          }
+        }
+      }
+      domainBoard: boards(ids: [$domainBoardId]) {
+        items_page(query_params: {rules: [{column_id: "name", compare_value: $domainName, operator: contains_text}]}) {
+          items {
+            id
+            name
+            column_values {
+              id
+              text
+            }
+          }
+        }
+      }
+    }
+  `;
+
 @Injectable()
 export class MondayApiService {
   private readonly apiUrl: string;
@@ -103,5 +132,47 @@ export class MondayApiService {
     );
 
     return item.column_values.find((column) => column.id === 'text');
+  }
+
+  // Below is the func to fetch data from to tables at once
+
+  private async getTablesData(
+    productName: string,
+    domainName: string
+  ): Promise<any> {
+
+    const variables = {
+      productBoardId: 803747785,
+      domainBoardId: 472153030,
+      productName,
+      domainName,
+    };
+
+    const response = await axios.post(
+      this.apiUrl,
+      { query: fetchQuery, variables },
+      {
+        headers: {
+          Authorization: `Bearer ${this.mondayToken}`,
+          'Content-Type': 'application/json',
+          'API-Version': '2023-07',
+        },
+      }
+    );
+
+    return response.data;
+  }
+
+  async fecthDataFromTwoTables(productName: string, domainName: string) {
+    const items = await this.getTablesData(productName, domainName);
+    const product = items.data.productBoard[0].items_page.items.find((item) =>
+      item.name.toLowerCase().includes(productName.toLowerCase())
+    );
+    
+    const domain = items.data.domainBoard[0].items_page.items.find((item) =>
+      item.name.toLowerCase().includes(domainName.toLowerCase())
+    );
+    
+    return { product, domain };
   }
 }
