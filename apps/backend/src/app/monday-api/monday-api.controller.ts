@@ -16,6 +16,17 @@ export class MondayApiController {
     );
   }
 
+  @Get('can-send/:productName/:domainName')
+  async canSend(
+    @Param('productName') productName: string,
+    @Param('domainName') domainName: string
+  ) {
+    return await this.mondayService.checkIfDomainCanSendProduct(
+      productName,
+      domainName
+    );
+  }
+
   @Get('product/:productName')
   async getProduct(@Param('productName') product: string) {
     return await this.mondayService.findProductByName(product);
