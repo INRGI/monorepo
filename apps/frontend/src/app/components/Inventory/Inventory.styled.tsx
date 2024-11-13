@@ -35,7 +35,7 @@ export const ModalContainer = styled(Modal)`
   color: #fff;
   width: 80%;
   max-width: 450px;
-  height: 650px;
+  height: 670px;
   font-size: 16px;
   text-align: center;
   align-items: center;

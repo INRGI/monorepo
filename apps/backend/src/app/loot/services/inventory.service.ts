@@ -55,6 +55,12 @@ export class InventoryService {
     return result
   }
 
+  async updateItem(heroId: string, item: Item){
+    const job = await this.inventoryQueue.add('update-item',{heroId, item});
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result
+  }
+
   async getByRarity(
     heroId: string,
     rarity: 'common' | 'rare' | 'epic' | 'legendary'

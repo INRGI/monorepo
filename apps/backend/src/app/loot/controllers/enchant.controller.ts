@@ -13,6 +13,7 @@ import { Enchant } from '../entities/enchant.entity';
 import { CreateEnchantDto } from '../dtos/CreateEnchant.dto';
 import { UpdateEnchantDto } from '../dtos/UpdateEnchan.dto';
 import { Item } from '../entities/item.entity';
+import { ReenchantDto } from '../dtos/Reenchant.dto';
 
 @Controller('enchant')
 export class EnchantController {
@@ -34,8 +35,8 @@ export class EnchantController {
   }
 
   @Post('reenchant')
-  reenchantItem(@Body() item: Item): Promise<Item> {
-    return this.enchantService.reenchantItem(item);
+  reenchantItem(@Body() data: ReenchantDto): Promise<Item> {
+    return this.enchantService.reenchantItem(data);
   }
 
   @Put(':id')

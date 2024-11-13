@@ -2,18 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 
-@Injectable()
-export class MondayApiService {
-  private readonly apiUrl: string;
-  private readonly mondayToken: string;
-
-  constructor(private readonly configService: ConfigService) {
-    this.apiUrl = this.configService.get<string>('MONDAY_URL');
-    this.mondayToken = this.configService.get<string>('MONDAY_API_TOKEN');
-  }
-
-  private async getProductsItems(productName: string): Promise<any> {
-    const query = `
+const query = `
     query ($boardId: ID!, $value: CompareValue!) {
       boards(ids: [$boardId]) {
         items_page(query_params: {rules: [{column_id: "name", compare_value: $value, operator: contains_text}]}) {
@@ -30,6 +19,17 @@ export class MondayApiService {
     }
     `;
 
+@Injectable()
+export class MondayApiService {
+  private readonly apiUrl: string;
+  private readonly mondayToken: string;
+
+  constructor(private readonly configService: ConfigService) {
+    this.apiUrl = this.configService.get<string>('MONDAY_URL');
+    this.mondayToken = this.configService.get<string>('MONDAY_API_TOKEN');
+  }
+
+  private async getProductsItems(productName: string): Promise<any> {
     const variables = {
       boardId: 803747785,
       value: productName,
@@ -50,28 +50,11 @@ export class MondayApiService {
     return response.data;
   }
 
-  private async getDomainInfo(domainName: string): Promise<any>{
-    const query = `
-    query ($boardId: ID!, $value: CompareValue!) {
-      boards(ids: [$boardId]) {
-        items_page(query_params: {rules: [{column_id: "name", compare_value: $value, operator: contains_text}]}) {
-          items {
-            id
-            name
-            column_values {
-              id
-              text
-            }
-          }
-        }
-      }
-    }
-    `;
-
+  private async getDomainInfo(domainName: string): Promise<any> {
     const variables = {
       boardId: 472153030,
       value: domainName,
-    }
+    };
 
     const response = await axios.post(
       this.apiUrl,
@@ -84,11 +67,10 @@ export class MondayApiService {
         },
       }
     );
-      console.log(response.data)
     return response.data;
   }
 
-  async findDomainByName(domainName: string){
+  async findDomainByName(domainName: string) {
     const domainInfo = await this.getDomainInfo(domainName);
 
     const item = domainInfo.data.boards[0].items_page.items.find((item) =>
@@ -114,7 +96,7 @@ export class MondayApiService {
     return item.column_values.find((column) => column.id === 'status7');
   }
 
-  async fetchProductDomainSending(productName: string){
+  async fetchProductDomainSending(productName: string) {
     const items = await this.getProductsItems(productName);
     const item = items.data.boards[0].items_page.items.find((item) =>
       item.name.toLowerCase().includes(productName.toLowerCase())

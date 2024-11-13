@@ -9,7 +9,7 @@ import {
   InventoryContainer,
   ModalContainer,
   ItemTitle,
-  ItemDetails
+  ItemDetails,
 } from './Inventory.styled';
 import { toastCustom } from '../../helpers/toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,7 +20,11 @@ interface Inventory {
   handleFetchHero: () => void;
 }
 
-const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) => {
+const Inventory: React.FC<Inventory> = ({
+  hero,
+  updateHero,
+  handleFetchHero,
+}) => {
   const [inventoryItems, setInventoryItems] = useState<Item[]>([]);
   const [activeItem, setActiveItem] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
@@ -84,7 +88,7 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) =
         uniqueItemId: activeItem.uniqueId,
         price: auctionPrice,
         name: activeItem.name,
-        rarity: activeItem.rarity
+        rarity: activeItem.rarity,
       });
       toastCustom(`✅ Item went to the auction`);
       closeModal();
@@ -99,11 +103,20 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) =
     if (!activeItem) return;
     await axios.post(`http://localhost:3000/inventory/equip`, {
       heroId: hero._id,
-      uniqueId: activeItem.uniqueId
+      uniqueId: activeItem.uniqueId,
     });
     toastCustom(`🛡️ Item equipped`);
     closeModal();
     handleFetchHero();
+    fetchInventory();
+  };
+
+  const handleReenchantItem = async (item: Item) => {
+    await axios.post(`http://localhost:3000/enchant/reenchant`, {
+      heroId: hero._id,
+      item: activeItem,
+      price: 1000,
+    });
     fetchInventory();
   };
 
@@ -148,6 +161,9 @@ const Inventory: React.FC<Inventory> = ({ hero, updateHero, handleFetchHero }) =
             <p>Type: {activeItem.type}</p>
             <p>Rarity: {activeItem.rarity}</p>
             <p>Enchanted: {activeItem.enchanted}</p>
+            <button onClick={() => handleReenchantItem(activeItem)}>
+              Reenchant(1000 coins)
+            </button>
             {(activeItem.stats.attack && (
               <p>Attack: {activeItem.stats.attack}</p>
             )) ||

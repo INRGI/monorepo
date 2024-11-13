@@ -5,6 +5,7 @@ import { CreateEnchantDto } from '../dtos/CreateEnchant.dto';
 import { UpdateEnchantDto } from '../dtos/UpdateEnchan.dto';
 import { Queue, QueueEvents } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
+import { ReenchantDto } from '../dtos/Reenchant.dto';
 
 @Injectable()
 export class EnchantService {
@@ -21,8 +22,8 @@ export class EnchantService {
    return result;
   }
 
-  async reenchantItem(item: Item): Promise<Item>{
-    const job = await this.enchantQueue.add('reenchant', {item})
+  async reenchantItem(data: ReenchantDto): Promise<Item>{
+    const job = await this.enchantQueue.add('reenchant', data)
    const result = await job.waitUntilFinished(this.queueEvents);
    return result;
   }

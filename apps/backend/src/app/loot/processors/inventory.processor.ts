@@ -49,6 +49,9 @@ export class InventoryProcessor extends WorkerHost {
         case 'unequip-item': {
           return await this.handleUnequipJob(job.data);
         }
+        case 'update-item': {
+          return await this.handleUpdateItemJob(job.data);
+        }
       }
     } catch (error) {
       throw error;
@@ -277,6 +280,28 @@ export class InventoryProcessor extends WorkerHost {
       heroId: heroId,
       type: 'Selling',
     });
+    return updatedInventory;
+  }
+
+  private async handleUpdateItemJob(data: { heroId: string; item: Item }) {
+    const { heroId, item } = data;
+
+    const inventory = await this.getInventory(heroId);
+    if (!inventory.inventory) {
+      throw new Error('Inventory not found');
+    }
+
+    const updatedInventory = inventory.inventory.map((itemInv) => {
+      if (itemInv.uniqueId !== item.uniqueId) return;
+
+      return { ...itemInv, item };
+    });
+
+    await this.inventoryRepository.update(
+      { heroId },
+      { inventory: updatedInventory }
+    );
+
     return updatedInventory;
   }
 

@@ -6,12 +6,19 @@ import { Enchant } from '../entities/enchant.entity';
 import { Item } from '../entities/item.entity';
 import { CreateEnchantDto } from '../dtos/CreateEnchant.dto';
 import { UpdateEnchantDto } from '../dtos/UpdateEnchan.dto';
+import { HeroService } from '@org/users';
+import { ReenchantDto } from '../dtos/Reenchant.dto';
+import { Types } from 'mongoose';
+import { Inventory } from '../entities/inventory.entity';
+import { InventoryService } from '../services/inventory.service';
 
 @Processor('enchant')
 export class EnchantProcessor extends WorkerHost {
   constructor(
     @Inject('ENCHANT_REPOSITORY')
-    private enchantRepository: Repository<Enchant>
+    private enchantRepository: Repository<Enchant>,
+    private readonly heroService: HeroService,
+    private readonly inventoryService: InventoryService
   ) {
     super();
   }
@@ -42,10 +49,6 @@ export class EnchantProcessor extends WorkerHost {
     }
   }
 
-  private async handleReenchantJob(data: { item: Item }){
-    
-  }
-
   private async handleApplyEnchantmentJob(data: { item: Item }) {
     const { item } = data;
     const enchantments = await this.enchantRepository
@@ -63,6 +66,20 @@ export class EnchantProcessor extends WorkerHost {
     }
 
     return item;
+  }
+
+  private async handleReenchantJob(data: ReenchantDto) {
+    const { heroId, price, item } = data;
+    await this.heroService.spendCoins(
+      heroId as unknown as Types.ObjectId,
+      price
+    );
+
+    item.enchanted = null;
+    const result = await this.handleApplyEnchantmentJob({ item });
+    await this.inventoryService.updateItem(heroId, result);
+    
+    return result;
   }
 
   private async hanndleCreateEnchantJob(data: {
