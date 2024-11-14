@@ -292,9 +292,9 @@ export class InventoryProcessor extends WorkerHost {
     }
 
     const updatedInventory = inventory.inventory.map((itemInv) => {
-      if (itemInv.uniqueId !== item.uniqueId) return;
+      if (itemInv.uniqueId !== item.uniqueId) return itemInv;
 
-      return { ...itemInv, item };
+      return { ...itemInv, ...item };
     });
 
     await this.inventoryRepository.update(

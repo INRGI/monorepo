@@ -56,12 +56,25 @@ export class EnchantProcessor extends WorkerHost {
       .where('enchant.typeFor = :typeFor', { typeFor: item.type })
       .getMany();
 
+      if (item.enchanted) {
+        const previousEnchant = await this.enchantRepository.findOne({
+          where: { name: item.enchanted },
+        });
+        if (previousEnchant) {
+          item.stats.attack = Math.floor(
+            item.stats.attack / (1 + previousEnchant.percentageIncrease / 100)
+          );
+        }
+    
+        item.enchanted = null;
+      }
+
     if (enchantments.length) {
       const randomEnchant =
         enchantments[Math.floor(Math.random() * enchantments.length)];
       item.enchanted = randomEnchant.name;
       item.stats.attack = Math.floor(
-        item.stats.attack * (1 + randomEnchant.chances / 100)
+        item.stats.attack * (1 + randomEnchant.percentageIncrease / 100)
       );
     }
 
@@ -75,8 +88,7 @@ export class EnchantProcessor extends WorkerHost {
       price
     );
 
-    item.enchanted = null;
-    const result = await this.handleApplyEnchantmentJob({ item });
+    const result = await this.handleApplyEnchantmentJob({item: item});
     await this.inventoryService.updateItem(heroId, result);
     
     return result;

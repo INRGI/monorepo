@@ -112,11 +112,13 @@ const Inventory: React.FC<Inventory> = ({
   };
 
   const handleReenchantItem = async (item: Item) => {
-    await axios.post(`http://localhost:3000/enchant/reenchant`, {
+    const response = await axios.post(`http://localhost:3000/enchant/reenchant`, {
       heroId: hero._id,
       item: activeItem,
       price: 1000,
     });
+
+    setActiveItem(response.data)
     fetchInventory();
   };
 
