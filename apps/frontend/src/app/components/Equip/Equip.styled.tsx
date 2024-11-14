@@ -1,90 +1,94 @@
 import styled from '@emotion/styled';
+import { keyframes } from '@emotion/react';
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  align-content: center;
-  padding: 20px;
-  background-color: #3e3e3e;
-  border-radius: 8px;
   color: white;
-  width: 80%;
-  height: 400px;
+  width: 90%;
+  max-width: 200px;
   margin: 0 auto;
 `;
 
 export const CardContainer = styled.ul`
   display: flex;
-  align-items: center;
-  align-content: center;
+  flex-direction: column;
   flex-wrap: wrap;
-  width: 90%;
-  gap: 20px;
+  gap: 16px;
   padding: 0;
+  justify-content: center;
 `;
 
 export const EquipCard = styled.li`
-  width: 200px;
-  height: 250px;
+  width: 160px;
+  height: 200px;
   background-color: #1f1f1f;
-  border: 2px solid #fff;
-  border-radius: 8px;
-  padding: 15px;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  align-content: center;
+  justify-content: space-between;
+  animation: ${fadeIn} 0.3s ease-in-out;
+
+  img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 8px;
+  }
 `;
 
 export const EquipInfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  img {
-    float: left;
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-  }
+  text-align: center;
+  font-size: 14px;
 `;
 
 export const StyledButton = styled.button`
   background-color: #af4c4c;
   color: white;
   border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
+  padding: 8px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
 
   &:hover {
-    background-color: #a04545;
+    background-color: #ff5c5c;
+    transform: scale(1.1);
+  }
+
+  &:active {
+    background-color: #d94444;
   }
 `;
 
 export const ScrollContainer = styled.div`
-  padding: 0;
-  margin: 0;
-  height: 520px;
+  height: 480px;
   overflow-y: auto;
   width: 100%;
-  display: flex;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
 `;
 
 export const Heading = styled.h2`
-  margin-bottom: 0px;
-  font-size: 24px;
+  font-size: 20px;
+  margin-bottom: 16px;
 `;
 
 export const SubHeading = styled.h3`
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-size: 20px;
+  font-size: 16px;
+  margin: 8px 0;
 `;

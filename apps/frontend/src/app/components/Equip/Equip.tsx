@@ -30,23 +30,23 @@ const EquipContainer: React.FC<EquipContainerProps> = ({ hero, handleFetchHero }
   const fetchEquip = async () => {
     try {
       const response = await axios.get<Equip>(
-        `http://localhost:3000/inventory/equip/${ hero._id}`
+        `http://localhost:3000/inventory/equip/${hero._id}`
       );
       setEquip(response.data);
     } catch (error) {
-      console.error('Error fetching quests:', error);
+      console.error('Error fetching equip:', error);
     }
   };
 
   const handleUnequip = async (type: string) => {
-    const response = await axios.post(`http://localhost:3000/inventory/unequip`, {
+    await axios.post(`http://localhost:3000/inventory/unequip`, {
       heroId: hero._id,
-      itemType: type
-    })
+      itemType: type,
+    });
     fetchEquip();
-    toastCustom(`🛡️ Unequiped ${type}`);
+    toastCustom(`🛡️ Unequipped ${type}`);
     handleFetchHero();
-  }
+  };
 
   return (
     <Container>
@@ -56,28 +56,24 @@ const EquipContainer: React.FC<EquipContainerProps> = ({ hero, handleFetchHero }
           {equip?.armor && (
             <EquipCard>
               <EquipInfoContainer>
-                <img
-                  width={300}
-                  src={equip?.armor.image}
-                  alt={equip?.armor.name}
-                />
+                <img src={equip.armor.image} alt={equip.armor.name} />
                 <SubHeading>{equip.armor.name}</SubHeading>
                 <p>Health: {equip.armor.stats.health}</p>
-                <StyledButton onClick={() => handleUnequip('armor')}>Unequip</StyledButton>
+                <StyledButton onClick={() => handleUnequip('armor')}>
+                  Unequip
+                </StyledButton>
               </EquipInfoContainer>
             </EquipCard>
           )}
           {equip?.weapon && (
             <EquipCard>
               <EquipInfoContainer>
-                <img
-                  width={300}
-                  src={equip?.weapon.image}
-                  alt={equip?.weapon.name}
-                />
-                <SubHeading> {equip.weapon.name}</SubHeading>
+                <img src={equip.weapon.image} alt={equip.weapon.name} />
+                <SubHeading>{equip.weapon.name}</SubHeading>
                 <p>Attack: {equip.weapon.stats.attack}</p>
-                <StyledButton onClick={() => handleUnequip('weapon')}>Unequip</StyledButton>
+                <StyledButton onClick={() => handleUnequip('weapon')}>
+                  Unequip
+                </StyledButton>
               </EquipInfoContainer>
             </EquipCard>
           )}

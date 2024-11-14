@@ -137,13 +137,10 @@ export function App() {
                 element={
                   <Container>
                     {/* <CreateGuildBossForm /> */}
-                    <BattleContainer hero={hero} updateHero={updateHero} />
+                    <BattleContainer hero={hero} updateHero={updateHero} handleFetchHero={handleFetchHero} />
 
-                    <EquipContainer
-                      hero={hero}
-                      handleFetchHero={handleFetchHero}
-                    />
-                    <Monday />
+                    
+                    {/* <Monday /> */}
                     {/* <GoogleDriveFetcher /> */}
                   </Container>
                 }

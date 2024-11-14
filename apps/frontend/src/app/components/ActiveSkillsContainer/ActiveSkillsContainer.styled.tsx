@@ -6,11 +6,8 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   align-content: center;
-  padding: 10px;
-  background-color: #3e3e3e;
-  border-radius: 8px;
   color: white;
-  width: 70%;
+  width: 100%;
   margin: 0 auto;
 `;
 
@@ -25,15 +22,16 @@ export const CardContainer = styled.ul`
   display: flex;
   align-items: center;
   align-content: center;
+  justify-content: center;
   flex-wrap: wrap;
-  width: 90%;
+  width: 100%;
   gap: 20px;
   padding: 0;
 `;
 
 export const SkillCard = styled.li`
-  width: 120px;
-  height: 100px;
+  width: 140px;
+  height: 110px;
   background-color: #1f1f1f;
   border: 2px solid #fff;
   border-radius: 8px;
@@ -71,7 +69,6 @@ export const StyledButton = styled.button`
 export const ScrollContainer = styled.div`
   padding: 0;
   margin: 0;
-  height: 180px;
   width: 100%;
   display: flex;
   align-content: center;

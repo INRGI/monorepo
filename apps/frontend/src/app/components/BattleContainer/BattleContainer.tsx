@@ -2,19 +2,28 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Character, Monster } from '../../types/types';
 import Battle from '../Battle/Battle';
-import { Container, Message } from './BattleContainer.styled';
+import {
+  BattleCont,
+  BattleSection,
+  EquipSection,
+  Message,
+  SkillsSection,
+} from './BattleContainer.styled';
 import ActiveSkillsContainer from '../ActiveSkillsContainer/ActiveSkillsContainer';
 import { toastCustom } from '../../helpers/toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EquipContainer from '../Equip/Equip';
 
 interface BattleContainerProps {
   hero: Character;
   updateHero: (hero: Character) => void;
+  handleFetchHero: () => void;
 }
 
 const BattleContainer: React.FC<BattleContainerProps> = ({
   hero,
   updateHero,
+  handleFetchHero,
 }) => {
   const [monsters, setMonsters] = useState<Monster[]>([]);
   const [currentMonsterIndex, setCurrentMonsterIndex] = useState(0);
@@ -82,7 +91,8 @@ const BattleContainer: React.FC<BattleContainerProps> = ({
 
   const handleCastSkills = (damage: number) => {
     const monster = monsters[currentMonsterIndex];
-    if(hero.hp <= monster.attack) return toastCustom(`❤️‍🩹 Please heal your hero`);
+    if (hero.hp <= monster.attack)
+      return toastCustom(`❤️‍🩹 Please heal your hero`);
     const newHero = { ...hero, attack: damage };
     axios
       .post('http://localhost:3000/battle/attack', {
@@ -132,25 +142,32 @@ const BattleContainer: React.FC<BattleContainerProps> = ({
     monsters && monsters.length > 0 ? monsters[currentMonsterIndex] : null;
 
   return (
-    <Container>
-      {monster ? (
-        <>
-          {isMonsterDefeated && (
-            <Message>You defeated the {monster.name}!</Message>
-          )}
-          <Battle
-            isHit={isHit}
-            isHeroHit={isHeroHit}
-            character={hero}
-            monster={monster}
-            onAttack={handleAttack}
-          />
-          <ActiveSkillsContainer hero={hero} onUse={handleCastSkills} />
-        </>
-      ) : (
-        <Message>Loading...</Message>
-      )}
-    </Container>
+    <BattleCont>
+      <SkillsSection>
+        <ActiveSkillsContainer hero={hero} onUse={handleCastSkills} />
+      </SkillsSection>
+      <BattleSection>
+        {monster ? (
+          <>
+            {isMonsterDefeated && (
+              <Message>You defeated the {monster.name}!</Message>
+            )}
+            <Battle
+              isHit={isHit}
+              isHeroHit={isHeroHit}
+              character={hero}
+              monster={monster}
+              onAttack={handleAttack}
+            />
+          </>
+        ) : (
+          <Message>Loading...</Message>
+        )}
+      </BattleSection>
+      <EquipSection>
+        <EquipContainer hero={hero} handleFetchHero={handleFetchHero} />
+      </EquipSection>
+    </BattleCont>
   );
 };
 

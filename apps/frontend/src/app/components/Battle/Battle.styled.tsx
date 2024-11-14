@@ -4,31 +4,28 @@ export const BattleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  background-color: #1f1f1f;
-  border: 2px solid #fff;
-  border-radius: 15px;
-  width: 800px;
-  margin: 20px auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  padding: 0px;
+  width: 700px;
+  margin: 0px auto;
 `;
 
 export const AttackButton = styled.button`
-  background-color: #ff4c4c;
+  background: linear-gradient(45deg, #ff4c4c, #ff1a1a);
   color: white;
   font-size: 18px;
   padding: 10px 20px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: transform 0.2s, box-shadow 0.2s ease;
   
   &:hover {
-    background-color: #ff1a1a;
+    transform: scale(1.1);
+    box-shadow: 0 8px 15px rgba(255, 0, 0, 0.3);
   }
 
   &:active {
-    background-color: #ff0000;
+    transform: scale(0.9);
   }
 `;
 
