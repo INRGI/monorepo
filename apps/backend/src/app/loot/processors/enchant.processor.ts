@@ -56,6 +56,7 @@ export class EnchantProcessor extends WorkerHost {
       .where('enchant.typeFor = :typeFor', { typeFor: item.type })
       .getMany();
 
+    if (item.type === 'weapon') {
       if (item.enchanted) {
         const previousEnchant = await this.enchantRepository.findOne({
           where: { name: item.enchanted },
@@ -65,20 +66,47 @@ export class EnchantProcessor extends WorkerHost {
             item.stats.attack / (1 + previousEnchant.percentageIncrease / 100)
           );
         }
-    
+
         item.enchanted = null;
       }
 
-    if (enchantments.length) {
-      const randomEnchant =
-        enchantments[Math.floor(Math.random() * enchantments.length)];
-      item.enchanted = randomEnchant.name;
-      item.stats.attack = Math.floor(
-        item.stats.attack * (1 + randomEnchant.percentageIncrease / 100)
-      );
+      if (enchantments.length) {
+        const randomEnchant =
+          enchantments[Math.floor(Math.random() * enchantments.length)];
+        item.enchanted = randomEnchant.name;
+        item.stats.attack = Math.floor(
+          item.stats.attack * (1 + randomEnchant.percentageIncrease / 100)
+        );
+      }
+
+      return item;
     }
 
-    return item;
+    if (item.type === 'armor') {
+      if (item.enchanted) {
+        const previousEnchant = await this.enchantRepository.findOne({
+          where: { name: item.enchanted },
+        });
+        if (previousEnchant) {
+          item.stats.health = Math.floor(
+            item.stats.health / (1 + previousEnchant.percentageIncrease / 100)
+          );
+        }
+
+        item.enchanted = null;
+      }
+
+      if (enchantments.length) {
+        const randomEnchant =
+          enchantments[Math.floor(Math.random() * enchantments.length)];
+        item.enchanted = randomEnchant.name;
+        item.stats.health = Math.floor(
+          item.stats.health * (1 + randomEnchant.percentageIncrease / 100)
+        );
+      }
+
+      return item;
+    }
   }
 
   private async handleReenchantJob(data: ReenchantDto) {
@@ -88,9 +116,9 @@ export class EnchantProcessor extends WorkerHost {
       price
     );
 
-    const result = await this.handleApplyEnchantmentJob({item: item});
+    const result = await this.handleApplyEnchantmentJob({ item: item });
     await this.inventoryService.updateItem(heroId, result);
-    
+
     return result;
   }
 
