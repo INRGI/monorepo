@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   align-content: center;
   padding: 5px;
   background-color: #3e3e3e;
@@ -13,6 +13,8 @@ export const Container = styled.div`
   width: 90%;
   margin: 0 auto;
   height: 80px;
+    
+  overflow-y: auto;
 `;
 
 export const Cooldown = styled.p`
@@ -23,12 +25,14 @@ export const Cooldown = styled.p`
 `;
 
 export const CardContainer = styled.ul`
+height: 80px;
   display: flex;
   align-items: center;
   align-content: center;
+  justify-content: center;
   flex-wrap: wrap;
-  width: 95%;
-  gap: 10px;
+  width: 100%;
+  gap: 5px;
   padding: 0;
   margin: 0;
 `;
@@ -81,9 +85,10 @@ export const StyledButton = styled.button`
 export const ScrollContainer = styled.div`
   padding: 0;
   margin: 0;
-  height: 100px;
   width: 100%;
+  
   display: flex;
+  flex-direction: column;
   align-content: center;
   align-items: center;
   justify-content: center;

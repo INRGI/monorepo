@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container } from '../BattleContainer/BattleContainer.styled';
-import { AuctionCard, AuctionContainer, ModalContainer } from './Auction.styled';
+import { AuctionCard, AuctionContainer, ModalContainer, Container } from './Auction.styled';
 import { Item } from '../../types/types';
 import { toastCustom } from '../../helpers/toastify';
 import 'react-toastify/dist/ReactToastify.css';

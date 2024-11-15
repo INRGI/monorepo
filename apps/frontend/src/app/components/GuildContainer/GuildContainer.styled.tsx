@@ -68,23 +68,29 @@ export const Container = styled.div`
   gap: 20px;
   width: 95%;
   padding: 20px;
-  background-color: #3e3e3e;
+  background-color: #121212;
   border-radius: 8px;
   color: white;
   margin: 0 auto;
 `;
 
 export const GuildInfoContainer = styled.div`
-  background-color: #2e2e2e;
-  border-radius: 8px;
+  background: linear-gradient(145deg, #292929, #1f1f1f);
+  border: 2px solid #444;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5), 0 -2px 6px rgba(0, 0, 0, 0.2) inset;
+  color: white;
+  border-radius: 20px;
   padding: 20px;
   width: 29%;
   height: 600px;
 `;
 
 export const GuildListContainer = styled.div`
-  background-color: #1f1f1f;
-  border-radius: 8px;
+  background: linear-gradient(145deg, #292929, #1f1f1f);
+  border: 2px solid #444;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5), 0 -2px 6px rgba(0, 0, 0, 0.2) inset;
+  color: white;
+  border-radius: 20px;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -94,8 +100,11 @@ export const GuildListContainer = styled.div`
 `;
 
 export const HeroesListContainer = styled.div`
-  background-color: #1f1f1f;
-  border-radius: 8px;
+  background: linear-gradient(145deg, #292929, #1f1f1f);
+  border: 2px solid #444;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5), 0 -2px 6px rgba(0, 0, 0, 0.2) inset;
+  color: white;
+  border-radius: 20px;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -115,9 +124,11 @@ display: flex;
 
 export const HeroesCard = styled.li`
   width: 80%;
-  background-color: #1f1f1f;
-  border: 2px solid #fff;
-  border-radius: 8px;
+  background: linear-gradient(145deg, #292929, #1f1f1f);
+  border: 2px solid #444;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5), 0 -2px 6px rgba(0, 0, 0, 0.2) inset;
+  color: white;
+  border-radius: 20px;
   padding: 15px;
   display: flex;
   flex-direction: column;
@@ -126,9 +137,11 @@ export const HeroesCard = styled.li`
 
 export const ParticipantCard = styled.li`
   width: 80%;
-  background-color: #1f1f1f;
-  border: 2px solid #fff;
-  border-radius: 8px;
+  background: linear-gradient(145deg, #292929, #1f1f1f);
+  border: 2px solid #444;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5), 0 -2px 6px rgba(0, 0, 0, 0.2) inset;
+  color: white;
+  border-radius: 20px;
   padding: 5px;
   display: flex;
   flex-direction: column;
@@ -156,7 +169,6 @@ export const MyGuildContainer = styled.div`
     width: 100px;
     height: 150px;
     object-fit: cover;
-    padding-bottom: 20px;
   }
 `;
 export const ScrollContainer = styled.div`
@@ -193,9 +205,11 @@ export const CardContainer = styled.ul`
 
 export const GuildCard = styled.li`
   width: 100%;
-  background-color: #1f1f1f;
-  border: 2px solid #fff;
-  border-radius: 8px;
+  background: linear-gradient(145deg, #292929, #1f1f1f);
+  border: 2px solid #444;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5), 0 -2px 6px rgba(0, 0, 0, 0.2) inset;
+  color: white;
+  border-radius: 20px;
   padding: 15px;
   display: flex;
   flex-direction: column;
@@ -212,33 +226,45 @@ export const StyledInput = styled.input`
 `;
 
 export const StyledButton = styled.button`
-  width: 80%;
-  padding: 10px 15px;
-  background-color: #4caf50;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  background-color: #e67e22;
+  width: 100%;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 
-  &:hover {
-    background-color: #45a049;
-  }
+    &:hover {
+      background-color: #d35400;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(2px);
+    }
 `;
 
 export const EditButton = styled.button`
-  width: 157px;
-  padding: 10px 15px;
-  background-color: #4caf50;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
+   background-color: #23a93b;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    width: 40%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 
-  &:hover {
-    background-color: #45a049;
-  }
+    &:hover {
+      background-color: #3fd300;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(2px);
+    }
 `;
 
 export const Heading = styled.h2`
