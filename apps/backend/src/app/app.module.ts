@@ -13,7 +13,8 @@ import { QuestsModule } from './quests/quests.module';
 import { SkillsModule } from './skills/skills.module';
 import { SlotModule } from './slot/slot.module';
 import { MondayApiModule } from './monday-api/monday-api.module';
-// import { GoogleDriveModule } from './google-drive-api/google-drive-api.module';
+import { GoogleDriveModule } from './google-drive-api/google-drive-api.module';
+import { PotionModule } from './potion/potion.module';
 
 @Module({
   imports: [
@@ -37,7 +38,8 @@ import { MondayApiModule } from './monday-api/monday-api.module';
     ChatModule,
     SlotModule,
     MondayApiModule,
-    // GoogleDriveModule
+    GoogleDriveModule,
+    PotionModule
   ],
   controllers: [AppController,],
   providers: [AppService],

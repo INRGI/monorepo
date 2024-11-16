@@ -28,7 +28,8 @@ import { Slide, ToastContainer } from 'react-toastify';
 import GuessCardContainer from './components/GuessCardContainer/GuessCardContainer';
 import HOLGameContainer from './components/HOLGameContainer/HOLGameContainer';
 import SlotMachine from './components/SlotContainer/SlotContainer';
-import Monday from './components/Monday/Monday';
+import PotionManager from './components/PotionContainer/PotionManager';
+// import Monday from './components/Monday/Monday';
 // import GoogleDriveFetcher from './components/Monday/Drive';
 
 Modal.setAppElement('#root');
@@ -137,9 +138,12 @@ export function App() {
                 element={
                   <Container>
                     {/* <CreateGuildBossForm /> */}
-                    <BattleContainer hero={hero} updateHero={updateHero} handleFetchHero={handleFetchHero} />
-
-                    
+                    <BattleContainer
+                      hero={hero}
+                      updateHero={updateHero}
+                      handleFetchHero={handleFetchHero}
+                    />
+                    <PotionManager heroId={hero._id} />
                     {/* <Monday /> */}
                     {/* <GoogleDriveFetcher /> */}
                   </Container>
@@ -170,7 +174,7 @@ export function App() {
                     <DiceGame hero={hero} updateHero={updateHero} />
                     <GuessCardContainer hero={hero} updateHero={updateHero} />
                     <HOLGameContainer hero={hero} updateHero={updateHero} />
-                    <SlotMachine hero={hero} updateHero={updateHero}/>
+                    <SlotMachine hero={hero} updateHero={updateHero} />
                   </Container>
                 }
               />
@@ -221,7 +225,15 @@ export function App() {
           </>
         ) : (
           <Routes>
-            <Route path="/" element={<LoginForm onLogin={handleLogin} />} />
+            <Route
+              path="/"
+              element={
+                <>
+                  <LoginForm onLogin={handleLogin} />
+                  {/*                   <GoogleDriveFetcher /> */}
+                </>
+              }
+            />
             <Route
               path="/register"
               element={<RegistrationForm onLogin={handleLogin} />}

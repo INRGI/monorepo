@@ -1,20 +1,22 @@
 import { Module } from '@nestjs/common';
 import { PotionService } from './potion.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { PotionInterceptor } from './potion.interceptor';
+// import { PotionInterceptor } from './potion.interceptor';
 import { DatabaseModule } from '../database/database.module';
 import { potionProviders } from './providers/potion.providers';
 import { PotionController } from './potion.controller';
 import { BullModule } from '@nestjs/bullmq';
+import { PotionProcessor } from './processors/potion.processor';
 
 @Module({
   providers: [
     ...potionProviders,
     PotionService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: PotionInterceptor,
-    },
+    PotionProcessor,
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: PotionInterceptor,
+    // },
   ],
   imports: [DatabaseModule,
     BullModule.forRoot({

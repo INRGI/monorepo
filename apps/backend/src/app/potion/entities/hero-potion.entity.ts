@@ -18,6 +18,6 @@ export class HeroPotion {
   @ManyToOne(() => Potion, (potion) => potion.id)
   potion: Potion;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ nullable: true })
   activatedAt: Date;
 }

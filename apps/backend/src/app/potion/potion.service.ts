@@ -19,7 +19,8 @@ export class PotionService {
   }
 
   async createPotion(createPotionDto: CreatePotionDto) {
-    const job = await this.potionQueue.add('create', {createPotionDto});
+    const job = await this.potionQueue.add('create', createPotionDto);
+    
     const result = await job.waitUntilFinished(this.queueEvents);
     return result;
   }
@@ -31,8 +32,10 @@ export class PotionService {
   }
 
   async activatePotion(activatePotionDto: ActivatePotionDto) {
-    const job = await this.potionQueue.add('activate', {activatePotionDto});
+    const job = await this.potionQueue.add('activate', activatePotionDto);
     const result = await job.waitUntilFinished(this.queueEvents);
+
+    await this.potionQueue.add('delete-after-timeout', { heroPotionId: result.id }, { delay: 60000 });
     return result;
   }
 

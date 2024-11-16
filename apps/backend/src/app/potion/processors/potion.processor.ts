@@ -13,7 +13,7 @@ export class PotionProcessor extends WorkerHost {
   constructor(
     @Inject('POTION_REPOSITORY')
     private potionRepository: Repository<Potion>,
-    @Inject('ITEM_BOX_REPOSITORY')
+    @Inject('HERO_POTION_REPOSITORY')
     private heroPotionRepository: Repository<HeroPotion>
   ) {
     super();
@@ -36,7 +36,8 @@ export class PotionProcessor extends WorkerHost {
       case 'get-heroes': {
         return await this.handleGetHeroesPotions(job.data);
       }
-      case '': {
+      case 'delete-after-timeout': {
+        return await this.handleDeleteAfterTimeoutJob(job.data);
       }
     }
   }
@@ -47,6 +48,11 @@ export class PotionProcessor extends WorkerHost {
 
   async handleCreateaPotionJob(data: CreatePotionDto) {
     const potion = this.potionRepository.create(data);
+
+    await this.handleAddToHeroJob({
+      potionId: potion.id,
+      heroId: '6706a007146bb8469d1bc0d4',
+    });
     return await this.potionRepository.save(potion);
   }
 
@@ -83,5 +89,15 @@ export class PotionProcessor extends WorkerHost {
       where: { heroId: data.heroId },
       relations: ['potion'],
     });
+  }
+
+  async handleDeleteAfterTimeoutJob(data: { heroPotionId: number }) {
+    const heroPotion = await this.heroPotionRepository.findOne({
+      where: { id: data.heroPotionId },
+    });
+
+    if (heroPotion) {
+      await this.heroPotionRepository.delete({ id: heroPotion.id });
+    }
   }
 }
