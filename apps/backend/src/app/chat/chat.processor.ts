@@ -8,6 +8,15 @@ export class ChatProcessor extends WorkerHost {
     super();
   }
 
+  /**
+   * Handles jobs that are sent to the chat queue.
+   * 
+   * Currently, there is only one job type, which is 'send-message'.
+   * 
+   * @param job The job that contains the data for the message to be sent.
+   * 
+   * @returns A promise that resolves when the job has been processed.
+   */
   async process(job: Job<any, any, string>): Promise<any> {
     switch (job.name) {
       case 'send-message': {
