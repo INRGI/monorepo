@@ -14,11 +14,19 @@ import { Skills } from '../skills/entities/skills.entity';
 import { GuildBoss } from '../guild/entities/guildBoss.entity';
 import { Potion } from '../potion/entities/potion.entity';
 import { HeroPotion } from '../potion/entities/hero-potion.entity';
-// import { PvpRoom } from '../pvp(not-working)/entities/PvpRoom.entity';
 
 export const databaseProviders = [
   {
     provide: 'DATA_SOURCE',
+/**
+ * Creates and initializes a new DataSource instance for the application.
+ * 
+ * This factory function configures a MySQL data source using TypeORM with
+ * the specified connection details and entities. The database synchronization
+ * feature is enabled for automatic schema updates.
+ * 
+ * @returns A promise that resolves to the initialized DataSource.
+ */
     useFactory: async () => {
       const dataSource = new DataSource({
         type: 'mysql',
@@ -43,7 +51,6 @@ export const databaseProviders = [
           GuildBoss,
           Potion,
           HeroPotion
-          // PvpRoom,
         ],
         synchronize: true,
       });
