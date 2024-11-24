@@ -49,6 +49,15 @@ export class EnchantProcessor extends WorkerHost {
     }
   }
 
+  /**
+   * Applies an enchantment to the given item. If the item is already enchanted,
+   * it first removes the previous enchantment. Then, it randomly selects one of
+   * the enchantments in the database that is applicable to the item's type and
+   * applies it to the item. The enchantment increases the item's attack or health
+   * stat by the percentage amount specified in the enchantment.
+   * @param data The job data containing the item to enchant.
+   * @returns The modified item.
+   */
   private async handleApplyEnchantmentJob(data: { item: Item }) {
     const { item } = data;
     const enchantments = await this.enchantRepository
@@ -109,6 +118,11 @@ export class EnchantProcessor extends WorkerHost {
     }
   }
 
+  /**
+   * Applies a random enchantment to an item in the inventory.
+   * @param data - The heroId, price, and item to enchant.
+   * @returns The enchanted item.
+   */
   private async handleReenchantJob(data: ReenchantDto) {
     const { heroId, price, item } = data;
     await this.heroService.spendCoins(
@@ -122,6 +136,15 @@ export class EnchantProcessor extends WorkerHost {
     return result;
   }
 
+  /**
+   * Handles the 'create-enchant' job.
+   *
+   * Creates a new enchantment in the database.
+   *
+   * @param data The data to create the enchantment with.
+   *
+   * @returns A promise that resolves to the newly created `Enchant` object.
+   */
   private async hanndleCreateEnchantJob(data: {
     createEnchantDto: CreateEnchantDto;
   }): Promise<any> {
@@ -130,6 +153,15 @@ export class EnchantProcessor extends WorkerHost {
     return await this.enchantRepository.save(enchant);
   }
 
+  /**
+   * Handles the 'update-enchant' job.
+   *
+   * Updates an enchantment by its ID.
+   *
+   * @param data The data to update the enchantment with.
+   *
+   * @returns A promise that resolves to the updated `Enchant` object.
+   */
   private async handleUpdateEnchantJob(data: {
     id: number;
     updateEnchantDto: UpdateEnchantDto;
@@ -139,12 +171,22 @@ export class EnchantProcessor extends WorkerHost {
     return await this.enchantRepository.findOne({ where: { id } });
   }
 
+/**
+ * Deletes an enchantment by its ID.
+ * @param data An object containing the ID of the enchantment to be deleted.
+ * @returns A promise that resolves to a string indicating successful deletion.
+ */
   private async handleDeleteEnchantJob(data: { id: number }): Promise<any> {
     const { id } = data;
     await this.enchantRepository.delete(id);
     return 'Enchant deleted successfully';
   }
 
+  /**
+   * Gets an enchantment by its ID.
+   * @param data The object containing the ID of the enchantment to get.
+   * @returns A promise that resolves to the `Enchant` object with the given ID.
+   */
   private async handleGetEnchantJob(data: { id: number }): Promise<any> {
     const { id } = data;
     return await this.enchantRepository.findOne({ where: { id } });
