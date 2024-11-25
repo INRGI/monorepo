@@ -41,3 +41,11 @@ export const toastError = (text: string) => {
     transition: Bounce,
   });
 };
+
+export const updateToast = (toastId: string | number, message: string) => {
+  toast.update(toastId, {
+    render: message,
+    autoClose: false,
+    closeButton: false,
+  });
+};

@@ -6,6 +6,7 @@ import { Types } from 'mongoose';
 import { ItemBoxService } from '../../loot/services/itemBox.service';
 import { InventoryService } from '../../loot/services/inventory.service';
 import { DeleteItemDto } from '../../loot/dtos/DeleteItem.dto';
+import { PotionService } from '../../potion/potion.service';
 
 @Processor('shop')
 export class ShopProcessor extends WorkerHost {
@@ -13,6 +14,7 @@ export class ShopProcessor extends WorkerHost {
     private readonly heroService: HeroService,
     private readonly itemBoxService: ItemBoxService,
     private readonly inventoryService: InventoryService,
+    private readonly potionService: PotionService,
     @InjectQueue('quests') private readonly questsQueue: Queue,
     @InjectQueue('skills') private readonly skillsQueue: Queue
   ) {
@@ -32,7 +34,24 @@ export class ShopProcessor extends WorkerHost {
       case 'buy-health': {
         return await this.handleBuyHealthJob(job.data);
       }
+      case 'buy-potion': {
+        return await this.handleBuyPotionJob(job.data);
+      }
     }
+  }
+
+  private async handleBuyPotionJob(data: {potionId: number, heroId: string, price: number}){
+    const { heroId, potionId, price } = data;
+
+    await this.heroService.spendCoins(heroId as unknown as Types.ObjectId, price);
+
+    const potion = await this.potionService.addPotionToHero(potionId, heroId);
+
+    if (!potion) {
+      throw new HttpException('Something went wrong', 303);
+    }
+
+    return potion;
   }
 
   private async handleBuyHealthJob(data: {

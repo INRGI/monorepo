@@ -48,13 +48,11 @@ export class PotionProcessor extends WorkerHost {
 
   async handleCreateaPotionJob(data: CreatePotionDto) {
     const potion = this.potionRepository.create(data);
+    const savedPotion = await this.potionRepository.save(potion);
 
-    await this.handleAddToHeroJob({
-      potionId: potion.id,
-      heroId: '6706a007146bb8469d1bc0d4',
-    });
-    return await this.potionRepository.save(potion);
+    return savedPotion;
   }
+  
 
   async handleAddToHeroJob(data: { potionId: number; heroId: string }) {
     const potion = await this.potionRepository.findOne({
@@ -73,7 +71,7 @@ export class PotionProcessor extends WorkerHost {
     const heroPotion = await this.heroPotionRepository.findOne({
       where: {
         heroId: data.heroId,
-        potion: { id: parseInt(data.potionId) },
+        id: data.potionId ,
       },
       relations: ['potion'],
     });
@@ -94,10 +92,11 @@ export class PotionProcessor extends WorkerHost {
   async handleDeleteAfterTimeoutJob(data: { heroPotionId: number }) {
     const heroPotion = await this.heroPotionRepository.findOne({
       where: { id: data.heroPotionId },
+      relations: ['potion'],
     });
-
-    if (heroPotion) {
-      await this.heroPotionRepository.delete({ id: heroPotion.id });
-    }
+  
+    if (!heroPotion) return;
+  
+    await this.heroPotionRepository.delete({ id: heroPotion.id });
   }
 }

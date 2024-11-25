@@ -58,4 +58,14 @@ export class ShopService {
     const result = await job.waitUntilFinished(this.queueEvents);
     return result;
   }
+
+  async buyPotion(heroId: string, potionId: number, price: number) {
+    const job = await this.shopQueue.add('buy-potion', {
+      heroId,
+      potionId,
+      price,
+    });
+    const result = await job.waitUntilFinished(this.queueEvents);
+    return result; 
+  }
 }

@@ -29,6 +29,8 @@ import GuessCardContainer from './components/GuessCardContainer/GuessCardContain
 import HOLGameContainer from './components/HOLGameContainer/HOLGameContainer';
 import SlotMachine from './components/SlotContainer/SlotContainer';
 import PotionManager from './components/PotionContainer/PotionManager';
+import PotionShopContainer from './components/PotionShopContainer/PotionShopContainer';
+import PotionInventory from './components/PotionInventory/PotionInventory';
 // import Monday from './components/Monday/Monday';
 // import GoogleDriveFetcher from './components/Monday/Drive';
 
@@ -185,6 +187,7 @@ export function App() {
                     <Shop hero={hero} updateHero={updateHero} />
                     <ItemByRarity hero={hero} updateHero={updateHero} />
                     <BoxContainer hero={hero} updateHero={updateHero} />
+                    <PotionShopContainer hero={hero} updateHero={updateHero} />
                   </Container>
                 }
               />
@@ -197,6 +200,7 @@ export function App() {
                       updateHero={updateHero}
                       handleFetchHero={handleFetchHero}
                     />
+                    <PotionInventory hero={hero} />
                   </Container>
                 }
               />

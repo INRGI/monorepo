@@ -19,6 +19,8 @@ import { GuessCardController } from './controllers/guessCard.controller';
 import { HOLGameProcessor } from './processors/holGame.processor';
 import { HOLGameService } from './services/holGame.service';
 import { HOLGameController } from './controllers/holGame.controller';
+import { PotionModule } from '../potion/potion.module';
+import { PotionService } from '../potion/potion.service';
 
 @Module({
   controllers: [
@@ -39,12 +41,14 @@ import { HOLGameController } from './controllers/holGame.controller';
     GuessCardService,
     GuessTheCardProcessor,
     HOLGameProcessor,
-    HOLGameService
+    HOLGameService,
+    PotionService
   ],
   imports: [
     MonstersModule,
     UsersModule,
     ItemModule,
+    PotionModule,
     BullModule.forRoot({
       connection: {
         host: 'localhost',
@@ -102,6 +106,13 @@ import { HOLGameController } from './controllers/holGame.controller';
     }),
     BullModule.registerQueue({
       name: 'hol',
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
+    BullModule.registerQueue({
+      name: 'potion',
       connection: {
         host: 'localhost',
         port: 6379,

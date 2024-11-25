@@ -42,4 +42,13 @@ export class ShopController {
   ) {
     return await this.shopService.buyRandomItemByRarity(hero, price, rarity);
   }
+
+  @Post('buy-potion')
+  async buyPotion(
+    @Body('heroId') heroId: string,
+    @Body('potionId') potionId: number,
+    @Body('price') price: number
+  ) {
+    return await this.shopService.buyPotion(heroId, potionId, price);
+  }
 }
