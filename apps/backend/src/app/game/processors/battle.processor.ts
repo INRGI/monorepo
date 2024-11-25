@@ -53,7 +53,6 @@ export class BattleProcessor extends WorkerHost {
       const potions = await this.potionService.getHeroesPotions(
         character._id as unknown as string
       );
-      console.log(potions);
       const doubleXPPotion = potions.find((heroPotion) => {
         const activatedDate = new Date(heroPotion.activatedAt);
         const now = new Date();
@@ -62,7 +61,6 @@ export class BattleProcessor extends WorkerHost {
           heroPotion.potion.duration * 60 * 1000;
           return heroPotion.potion.effect === 'double_xp' && isActive;
       });
-      console.log(doubleXPPotion);
       if (doubleXPPotion) {
         await this.heroService.addXp(character._id, monster.xp * 2);
       } else {
