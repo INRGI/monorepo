@@ -145,7 +145,7 @@ export function App() {
                       updateHero={updateHero}
                       handleFetchHero={handleFetchHero}
                     />
-                    <PotionManager heroId={hero._id} />
+                    {/* <PotionManager heroId={hero._id} /> */}
                     {/* <Monday /> */}
                     {/* <GoogleDriveFetcher /> */}
                   </Container>
