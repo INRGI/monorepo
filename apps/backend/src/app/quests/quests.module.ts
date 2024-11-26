@@ -6,11 +6,13 @@ import { DatabaseModule } from "../database/database.module";
 import { BullModule } from "@nestjs/bullmq";
 import { QuestsProcessor } from "./processors/quests.processor";
 import { UsersModule } from "@org/users";
+import { CacheModule } from "@nestjs/cache-manager";
 
 @Module({
     providers: [...questsProviders, QuestsService, QuestsProcessor],
     controllers: [QuestsController],
     imports: [
+        CacheModule.register(),
         UsersModule,
         DatabaseModule,
         BullModule.forRoot({

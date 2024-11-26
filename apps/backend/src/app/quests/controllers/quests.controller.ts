@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from "@nestjs/common";
 import { QuestsService } from "../services/quests.service";
 import { CreateQuestDto } from "../dtos/CreateQuest.dto";
 import { UpdateQuestDto } from "../dtos/UpdateQuest.dto";
 import { StatusUpdateDto } from "../dtos/StatusUpdate.dto";
 import { Quests } from "../entities/quests.entity";
 import { HeroQuest } from "../entities/heroQuest.entity";
+import { CacheInterceptor } from "@nestjs/cache-manager";
 
 @Controller('quests')
+@UseInterceptors(CacheInterceptor)
 export class QuestsController {
     constructor(private readonly questsService: QuestsService){}
 

@@ -7,11 +7,13 @@ import { AuctionController } from './controllers/auction.controller';
 import { AuctionService } from './services/auction.service';
 import { UsersModule } from '@org/users';
 import { ItemModule } from '../loot/loot.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   providers: [...auctionProviders, AuctionProcessor, AuctionService],
   controllers: [AuctionController],
   imports: [
+    CacheModule.register(),
     DatabaseModule,
     UsersModule,
     ItemModule,

@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, UseInterceptors } from "@nestjs/common";
 import { AuctionService } from "../services/auction.service";
 import { OpenToSellDto } from "../dtos/OpenToSell.dto";
 import { CloseItemDto } from "../dtos/CloseItem.dto";
 import { BuyItemDto } from "../dtos/BuyItem.dto";
+import { CacheInterceptor } from "@nestjs/cache-manager";
 
 @Controller('auction')
+@UseInterceptors(CacheInterceptor)
 export class AuctionController {
     constructor(private readonly auctionService: AuctionService){}
 

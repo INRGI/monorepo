@@ -15,9 +15,12 @@ import { SlotModule } from './slot/slot.module';
 import { MondayApiModule } from './monday-api/monday-api.module';
 import { GoogleDriveModule } from './google-drive-api/google-drive-api.module';
 import { PotionModule } from './potion/potion.module';
+import { CacheModule, CacheInterceptor } from '@nestjs/cache-manager';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
+    CacheModule.register(),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -42,6 +45,6 @@ import { PotionModule } from './potion/potion.module';
     PotionModule
   ],
   controllers: [AppController,],
-  providers: [AppService],
+  providers: [AppService,],
 })
 export class AppModule {}
