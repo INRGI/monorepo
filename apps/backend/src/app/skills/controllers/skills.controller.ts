@@ -4,8 +4,10 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
+  ValidationPipe,
 } from '@nestjs/common';
 import { SkillsService } from '../services/skills.service';
 import { CreateSkillDto } from '../dtos/CreateSkill.dto';
@@ -20,17 +22,17 @@ export class SkillsController {
   constructor(private readonly skillsService: SkillsService) {}
 
   @Post()
-  async createSkill(@Body() createSkillDto: CreateSkillDto): Promise<Skills> {
+  async createSkill(@Body(ValidationPipe) createSkillDto: CreateSkillDto): Promise<Skills> {
     return await this.skillsService.createSkill(createSkillDto);
   }
 
   @Put()
-  async updateSkill(@Body() updateSkillDto: UpdateSkillDto): Promise<Skills> {
+  async updateSkill(@Body(ValidationPipe) updateSkillDto: UpdateSkillDto): Promise<Skills> {
     return await this.skillsService.updateSkill(updateSkillDto);
   }
 
   @Delete(':id')
-  async deleteSkill(@Param('id') skillId: number): Promise<string> {
+  async deleteSkill(@Param('id', ParseIntPipe) skillId: number): Promise<string> {
     return await this.skillsService.deleteSkill(skillId);
   }
 
@@ -46,13 +48,13 @@ export class SkillsController {
 
   @Put('levelUp')
   async levelUpSkill(
-    @Body() levelUpSkillDto: LevelUpSkillDto
+    @Body(ValidationPipe) levelUpSkillDto: LevelUpSkillDto
   ): Promise<HeroSkill> {
     return await this.skillsService.levelUpSkill(levelUpSkillDto);
   }
 
   @Put('cast')
-  async castSkill (@Body() castSkillDto: CastSkillDto): Promise<HeroSkill>{
+  async castSkill (@Body(ValidationPipe) castSkillDto: CastSkillDto): Promise<HeroSkill>{
     return await this.skillsService.castSkill(castSkillDto);
   }
 }

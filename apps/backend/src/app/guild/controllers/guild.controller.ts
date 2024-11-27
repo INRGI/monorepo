@@ -4,8 +4,10 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
+  ValidationPipe,
 } from '@nestjs/common';
 import { GuildService } from '../services/guild.service';
 import { Guild } from '../entities/guild.entity';
@@ -24,7 +26,7 @@ export class GuildController {
   }
 
   @Get(':id')
-  async getGuild(@Param('id') id: number): Promise<Guild> {
+  async getGuild(@Param('id', ParseIntPipe) id: number): Promise<Guild> {
     return await this.guildService.getGuildById(id);
   }
 
@@ -39,29 +41,29 @@ export class GuildController {
   }
 
   @Post()
-  async createGuild(@Body() guildData: CreateGuildDto): Promise<Guild> {
+  async createGuild(@Body(ValidationPipe) guildData: CreateGuildDto): Promise<Guild> {
     return await this.guildService.createGuild(guildData);
   }
 
   @Put('update')
-  async updateGuild(@Body() guildData: UpdateGuildDto): Promise<Guild> {
+  async updateGuild(@Body(ValidationPipe) guildData: UpdateGuildDto): Promise<Guild> {
     return await this.guildService.updateGuild(guildData);
   }
 
   @Post('invite')
-  async inviteToGuild(@Body() inviteData: InviteToGuildDto): Promise<Guild> {
+  async inviteToGuild(@Body(ValidationPipe) inviteData: InviteToGuildDto): Promise<Guild> {
     return await this.guildService.inviteToGuild(inviteData);
   }
 
   @Post('remove')
   async removeFromGuild(
-    @Body() removeData: RemoveFromGuildDto
+    @Body(ValidationPipe) removeData: RemoveFromGuildDto
   ): Promise<Guild> {
     return await this.guildService.removeFromGuild(removeData);
   }
 
   @Delete(':id')
-  async deleteGuild(@Param('id') id: number): Promise<string> {
+  async deleteGuild(@Param('id', ParseIntPipe) id: number): Promise<string> {
     return this.guildService.deleteGuild(id);
   }
 }

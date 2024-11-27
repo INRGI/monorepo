@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, ValidationPipe } from '@nestjs/common';
 import { PotionService } from './potion.service';
 import { CreatePotionDto } from './dtos/createPotion.dto';
 import { ActivatePotionDto } from './dtos/activatePotion.dto';
@@ -13,12 +13,12 @@ export class PotionController {
   }
 
   @Post('create')
-  async createPotion(@Body() createPotionDto: CreatePotionDto) {
+  async createPotion(@Body(ValidationPipe) createPotionDto: CreatePotionDto) {
     return await this.potionService.createPotion(createPotionDto);
   }
 
   @Put('activate')
-  async activatePotion(@Body() activatePotionDto: ActivatePotionDto) {
+  async activatePotion(@Body(ValidationPipe) activatePotionDto: ActivatePotionDto) {
     return await this.potionService.activatePotion(activatePotionDto);
   }
 

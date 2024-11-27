@@ -4,8 +4,10 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
+  ValidationPipe,
 } from '@nestjs/common';
 import { EnchantService } from '../services/enchant.service';
 
@@ -25,30 +27,30 @@ export class EnchantController {
   }
 
   @Get(':id')
-  async getEnchantById(@Param('id') id: number): Promise<Enchant> {
+  async getEnchantById(@Param('id', ParseIntPipe) id: number): Promise<Enchant> {
     return await this.enchantService.getEnchantById(id);
   }
 
   @Post()
-  createEnchant(@Body() enchantData: CreateEnchantDto): Promise<Enchant> {
+  createEnchant(@Body(ValidationPipe) enchantData: CreateEnchantDto): Promise<Enchant> {
     return this.enchantService.createEnchant(enchantData);
   }
 
   @Post('reenchant')
-  reenchantItem(@Body() data: ReenchantDto): Promise<Item> {
+  reenchantItem(@Body(ValidationPipe) data: ReenchantDto): Promise<Item> {
     return this.enchantService.reenchantItem(data);
   }
 
   @Put(':id')
   updateEnchant(
-    @Param('id') id: number,
-    @Body() enchantData: UpdateEnchantDto
+    @Param('id', ParseIntPipe) id: number,
+    @Body(ValidationPipe) enchantData: UpdateEnchantDto
   ): Promise<Enchant> {
     return this.enchantService.updateEnchant(id, enchantData);
   }
 
   @Delete(':id')
-  deleteEnchant(@Param('id') id: number): Promise<string> {
+  deleteEnchant(@Param('id', ParseIntPipe) id: number): Promise<string> {
     return this.enchantService.deleteEnchant(id);
   }
 }

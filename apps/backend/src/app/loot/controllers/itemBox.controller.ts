@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ItemBoxService } from '../services/itemBox.service';
 import { CreateItemBoxDto } from '../dtos/CreateItemBox.dto';
@@ -33,18 +34,18 @@ export class ItemBoxController {
   }
 
   @Post()
-  async createItemBox(@Body() itemBox: CreateItemBoxDto): Promise<ItemBox> {
+  async createItemBox(@Body(ValidationPipe) itemBox: CreateItemBoxDto): Promise<ItemBox> {
     return await this.itemBoxService.create(itemBox);
   }
 
   @Delete(':id')
-  async deleteItemBox(@Param() itemBoxId: DeleteItemBoxDto): Promise<string> {
+  async deleteItemBox(@Param('id') itemBoxId: DeleteItemBoxDto): Promise<string> {
     return await this.itemBoxService.delete(itemBoxId);
   }
 
   @Put()
   async updateItemBox(
-    @Body() itemBoxData: UpdateItemBoxDto
+    @Body(ValidationPipe) itemBoxData: UpdateItemBoxDto
   ): Promise<Partial<ItemBox>> {
     return await this.itemBoxService.update(itemBoxData);
   }

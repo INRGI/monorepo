@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -32,7 +33,7 @@ export class GuildBossController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') guildBossId: number): Promise<string> {
+  async delete(@Param('id', ParseIntPipe) guildBossId: number): Promise<string> {
     return await this.guildBossService.delete(guildBossId);
   }
 
@@ -42,7 +43,7 @@ export class GuildBossController {
   }
 
   @Get(':id')
-  async getActive(@Param('id') guildId: number): Promise<GuildBoss> {
+  async getActive(@Param('id', ParseIntPipe) guildId: number): Promise<GuildBoss> {
     return await this.guildBossService.getActive(guildId);
   }
 

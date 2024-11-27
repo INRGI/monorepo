@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseInterceptors, ValidationPipe } from "@nestjs/common";
 import { QuestsService } from "../services/quests.service";
 import { CreateQuestDto } from "../dtos/CreateQuest.dto";
 import { UpdateQuestDto } from "../dtos/UpdateQuest.dto";
@@ -13,17 +13,17 @@ export class QuestsController {
     constructor(private readonly questsService: QuestsService){}
 
     @Post()
-    async createQuest(@Body() createQuestDto: CreateQuestDto):Promise<Quests> {
+    async createQuest(@Body(ValidationPipe) createQuestDto: CreateQuestDto):Promise<Quests> {
         return await this.questsService.createQuest(createQuestDto);
     }
 
     @Put()
-    async updateQuest(@Body() updateQuestDto: UpdateQuestDto):Promise<Quests> {
+    async updateQuest(@Body(ValidationPipe) updateQuestDto: UpdateQuestDto):Promise<Quests> {
         return await this.questsService.updateQuest(updateQuestDto);
     }
 
     @Delete(':id')
-    async deleteQuest(@Param('id') id: number): Promise<string> {
+    async deleteQuest(@Param('id', ParseIntPipe) id: number): Promise<string> {
         return await this.questsService.deleteQuest(id);
     }
 
@@ -33,7 +33,7 @@ export class QuestsController {
     }
 
     @Put('status')
-    async updateStatus(@Body() updateStatusDto: StatusUpdateDto):Promise<HeroQuest> {
+    async updateStatus(@Body(ValidationPipe) updateStatusDto: StatusUpdateDto):Promise<HeroQuest> {
         return await this.questsService.updateStatus(updateStatusDto);
     }
 }

@@ -1,5 +1,4 @@
 import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq';
-import { HttpException } from '@nestjs/common';
 import { Hero, HeroDocument, HeroService } from '@org/users';
 import { Job, Queue } from 'bullmq';
 import { Types } from 'mongoose';
@@ -7,6 +6,7 @@ import { ItemBoxService } from '../../loot/services/itemBox.service';
 import { InventoryService } from '../../loot/services/inventory.service';
 import { DeleteItemDto } from '../../loot/dtos/DeleteItem.dto';
 import { PotionService } from '../../potion/potion.service';
+import { ShopException} from '../filters/ShopException';
 
 @Processor('shop')
 export class ShopProcessor extends WorkerHost {
@@ -48,7 +48,7 @@ export class ShopProcessor extends WorkerHost {
     const potion = await this.potionService.addPotionToHero(potionId, heroId);
 
     if (!potion) {
-      throw new HttpException('Something went wrong', 303);
+      throw new ShopException('Potion could not be added to the hero', 500);
     }
 
     return potion;
@@ -66,7 +66,7 @@ export class ShopProcessor extends WorkerHost {
     const hero = await this.heroService.addHP(heroId as unknown as Types.ObjectId, hp);
 
     if (!hero) {
-      throw new HttpException('Something went wrong', 303);
+      throw new ShopException('Something went wrong', 303);
     }
 
     return hero;
@@ -83,7 +83,7 @@ export class ShopProcessor extends WorkerHost {
       price
     );
     if (!result) {
-      throw new HttpException('Something went wrong', 303);
+      throw new ShopException('Something went wrong', 303);
     }
     await this.skillsQueue.add('reset-skills', { heroId });
     return 'Done';
@@ -96,7 +96,7 @@ export class ShopProcessor extends WorkerHost {
   }): Promise<any> {
     const { hero, price, itemBoxId } = data;
     if (!hero._id) {
-      throw new HttpException('Hero not Found', 303);
+      throw new ShopException('Hero not Found', 303);
     }
 
     const heroId: Types.ObjectId = hero._id as Types.ObjectId;
@@ -104,7 +104,7 @@ export class ShopProcessor extends WorkerHost {
     const result = await this.heroService.spendCoins(heroId, price);
 
     if (!result) {
-      throw new HttpException('Something went wrong', 303);
+      throw new ShopException('Something went wrong', 303);
     }
 
     const item = await this.itemBoxService.randomItemInABox(itemBoxId);
@@ -126,7 +126,7 @@ export class ShopProcessor extends WorkerHost {
   }) {
     const { hero, price, rarity } = data;
     if (!hero._id) {
-      throw new HttpException('Hero not Found', 303);
+      throw new ShopException('Hero not Found', 303);
     }
 
     const heroId: Types.ObjectId = hero._id as Types.ObjectId;
@@ -134,7 +134,7 @@ export class ShopProcessor extends WorkerHost {
     const result = await this.heroService.spendCoins(heroId, price);
 
     if (!result) {
-      throw new HttpException('Something went wrong', 303);
+      throw new ShopException('Something went wrong', 303);
     }
 
     const item = await this.itemBoxService.randomItemByRarity(rarity);

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, ValidationPipe } from "@nestjs/common";
 import { ItemService } from "../services/item.service";
 import { CreateItemDto } from "../dtos/CreateItem.dto";
 import { Item } from "../entities/item.entity";
@@ -16,17 +16,17 @@ export class ItemController {
     }
 
     @Post()
-    create(@Body() item: CreateItemDto): Promise<Partial<Item>> {
+    create(@Body(ValidationPipe) item: CreateItemDto): Promise<Partial<Item>> {
       return this.itemService.create(item);
     }
 
     @Delete(':id')
-    deleteItem(@Param() itemId:  DeleteItemDto): Promise<string> {
+    deleteItem(@Param(ValidationPipe) itemId:  DeleteItemDto): Promise<string> {
       return this.itemService.delete(itemId);
     }
 
     @Put()
-    updateItem(@Body() itemData: UpdateItemDto): Promise<Partial<Item>> {
+    updateItem(@Body(ValidationPipe) itemData: UpdateItemDto): Promise<Partial<Item>> {
       return this.itemService.update(itemData);
     }
 }
