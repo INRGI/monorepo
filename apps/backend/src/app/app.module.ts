@@ -15,8 +15,7 @@ import { SlotModule } from './slot/slot.module';
 import { MondayApiModule } from './monday-api/monday-api.module';
 import { GoogleDriveModule } from './google-drive-api/google-drive-api.module';
 import { PotionModule } from './potion/potion.module';
-import { CacheModule, CacheInterceptor } from '@nestjs/cache-manager';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -42,7 +41,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     SlotModule,
     MondayApiModule,
     GoogleDriveModule,
-    PotionModule
+    PotionModule,
   ],
   controllers: [AppController,],
   providers: [AppService,],
