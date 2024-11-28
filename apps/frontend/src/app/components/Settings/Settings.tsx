@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
@@ -14,77 +13,125 @@ interface UpdateHeroSettingDto {
   hero3DModel: string;
 }
 
-const Container = styled.div`
+const SettingsButton = styled.button`
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  background-color: #212529;
+  color: #ffffff;
+  padding: 28px, 30px;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s;
+
+  &:hover {
+    background-color: #343a40;
+    transform: scale(1.1);
+  }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 2rem;
-  background-color: #f5f5f5;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+`;
+
+const ModalContainer = styled.div`
+  position: relative;
+  background: #2c2f33;
+  border-radius: 12px;
+  width: 90%;
   max-width: 400px;
-  margin: 2rem auto;
+  padding: 2rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #868e96;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #ffffff;
+  }
 `;
 
 const Title = styled.h2`
-  font-size: 1.5rem;
-  color: #333;
   margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+  color: #ffffff;
 `;
 
 const Select = styled.select`
-  padding: 0.8rem;
-  font-size: 1rem;
-  color: #333;
-  border: 1px solid #ddd;
-  border-radius: 8px;
   width: 100%;
-  margin-bottom: 1rem;
-  cursor: pointer;
-
-  &:hover {
-    border-color: #aaa;
-  }
+  padding: 0.8rem;
+  border: 1px solid #495057;
+  background-color: #343a40;
+  color: #ffffff;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
 
   &:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: #0d6efd;
   }
 `;
 
-const Button = styled.button`
-  padding: 0.8rem 1.2rem;
+const SaveButton = styled.button`
+  width: 100%;
+  padding: 0.8rem;
   font-size: 1rem;
-  color: #fff;
-  background-color: #007bff;
+  color: #ffffff;
+  background-color: #0d6efd;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: #0056b3;
   }
 
   &:disabled {
-    background-color: #aaa;
+    background-color: #6c757d;
     cursor: not-allowed;
   }
 `;
 
-const Message = styled.p`
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: ${(props: { success: boolean }) => (props.success ? "green" : "red")};
-`;
-
-interface HeroSettingsMenuProps {
-    heroId: string
-  }
-
-const HeroSettingsMenu: React.FC<HeroSettingsMenuProps> = ({heroId}) => {
+const HeroSettingsMenu: React.FC<{ heroId: string }> = ({ heroId }) => {
   const [heroSetting, setHeroSetting] = useState<HeroSetting | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>("");
-  const [message, setMessage] = useState<{ text: string; success: boolean } | null>(null);
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchHeroSetting = async () => {
@@ -98,7 +145,7 @@ const HeroSettingsMenu: React.FC<HeroSettingsMenuProps> = ({heroId}) => {
     };
 
     fetchHeroSetting();
-  }, []);
+  }, [heroId]);
 
   const handleUpdateModel = async () => {
     if (!heroSetting) return;
@@ -110,37 +157,46 @@ const HeroSettingsMenu: React.FC<HeroSettingsMenuProps> = ({heroId}) => {
       };
 
       await axios.put("http://localhost:3000/heroSetting", updateData);
-      setMessage({ text: "Hero model updated successfully!", success: true });
+      alert("Hero model updated successfully!");
+      setModalOpen(false); 
     } catch (error) {
       console.error("Error updating hero model:", error);
-      setMessage({ text: "Failed to update hero model.", success: false });
+      alert("Failed to update hero model.");
     }
   };
 
   return (
-    <Container>
-      <Title>Hero Settings</Title>
-      {heroSetting ? (
-        <>
-          <Select
-            value={selectedModel}
-            onChange={(e) => setSelectedModel(e.target.value)}
-          >
-            {heroSetting.models.map((model) => (
-              <option key={model} value={model}>
-                {model}
-              </option>
-            ))}
-          </Select>
-          <Button onClick={handleUpdateModel} disabled={selectedModel === heroSetting.hero3DModel}>
-            Save Changes
-          </Button>
-          {message && <Message success={message.success}>{message.text}</Message>}
-        </>
-      ) : (
-        <p>Loading hero settings...</p>
+    <>
+      <SettingsButton onClick={() => setModalOpen(true)}>⚙️</SettingsButton>
+
+      {isModalOpen && (
+        <ModalOverlay onClick={() => setModalOpen(false)}>
+          <ModalContainer onClick={(e) => e.stopPropagation()}>
+            <CloseButton onClick={() => setModalOpen(false)}>&times;</CloseButton>
+            <Title>Hero Settings</Title>
+            {heroSetting ? (
+              <>
+                <Select
+                  value={selectedModel}
+                  onChange={(e) => setSelectedModel(e.target.value)}
+                >
+                  {heroSetting.models.map((model) => (
+                    <option key={model} value={model}>
+                      {model}
+                    </option>
+                  ))}
+                </Select>
+                <SaveButton onClick={handleUpdateModel} disabled={selectedModel === heroSetting.hero3DModel}>
+                  Save Changes
+                </SaveButton>
+              </>
+            ) : (
+              <p style={{ color: "#adb5bd" }}>Loading settings...</p>
+            )}
+          </ModalContainer>
+        </ModalOverlay>
       )}
-    </Container>
+    </>
   );
 };
 

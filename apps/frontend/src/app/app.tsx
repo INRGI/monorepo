@@ -121,6 +121,7 @@ export function App() {
         {isAuthenticated && hero ? (
           <>
             <Chat roomId="1" senderId={hero.name} />
+            <HeroSettingsMenu heroId={hero._id} />
             <Navbar />
             <ToastContainer
               position="top-right"
@@ -149,7 +150,6 @@ export function App() {
                     {/* <PotionManager heroId={hero._id} /> */}
                     {/* <Monday /> */}
                     {/* <GoogleDriveFetcher /> */}
-                    <HeroSettingsMenu heroId={hero._id} />
                   </Container>
                 }
               />
