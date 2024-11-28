@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
+import { toastCustom } from "../../helpers/toastify";
 
 interface HeroSetting {
   heroId: string;
@@ -157,11 +158,11 @@ const HeroSettingsMenu: React.FC<{ heroId: string }> = ({ heroId }) => {
       };
 
       await axios.put("http://localhost:3000/heroSetting", updateData);
-      alert("Hero model updated successfully!");
+      toastCustom("Hero model updated successfully!");
       setModalOpen(false); 
+      window.location.reload();
     } catch (error) {
-      console.error("Error updating hero model:", error);
-      alert("Failed to update hero model.");
+      toastCustom("Failed to update hero model.");
     }
   };
 
