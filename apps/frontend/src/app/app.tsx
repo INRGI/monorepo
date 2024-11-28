@@ -31,6 +31,7 @@ import SlotMachine from './components/SlotContainer/SlotContainer';
 import PotionManager from './components/PotionContainer/PotionManager';
 import PotionShopContainer from './components/PotionShopContainer/PotionShopContainer';
 import PotionInventory from './components/PotionInventory/PotionInventory';
+import HeroSettingsMenu from './components/Settings/Settings';
 // import Monday from './components/Monday/Monday';
 // import GoogleDriveFetcher from './components/Monday/Drive';
 
@@ -148,6 +149,7 @@ export function App() {
                     {/* <PotionManager heroId={hero._id} /> */}
                     {/* <Monday /> */}
                     {/* <GoogleDriveFetcher /> */}
+                    <HeroSettingsMenu heroId={hero._id} />
                   </Container>
                 }
               />

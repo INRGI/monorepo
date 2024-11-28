@@ -14,6 +14,7 @@ import { Skills } from '../skills/entities/skills.entity';
 import { GuildBoss } from '../guild/entities/guildBoss.entity';
 import { Potion } from '../potion/entities/potion.entity';
 import { HeroPotion } from '../potion/entities/hero-potion.entity';
+import { HeroSetting } from '../settings/entities/heroSetting.entity';
 
 export const databaseProviders = [
   {
@@ -50,7 +51,8 @@ export const databaseProviders = [
           Skills,
           GuildBoss,
           Potion,
-          HeroPotion
+          HeroPotion,
+          HeroSetting
         ],
         synchronize: true,
       });

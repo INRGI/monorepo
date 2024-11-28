@@ -1,13 +1,36 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Container } from './Hero3D.styled';
+import axios from 'axios';
 
-const Hero3D: React.FC = () => {
+interface Hero3DProps {
+  heroId: string
+}
+
+
+const Hero3D: React.FC<Hero3DProps> = ({heroId}) => {
   const mountRef = useRef<HTMLDivElement | null>(null);
+  const [modelPath, setModelPath] = useState<string | null>(null);
+
 
   useEffect(() => {
+    const fetchHeroSettings = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/heroSetting/${heroId}`);
+        const { hero3DModel } = response.data;
+        setModelPath(`/${hero3DModel}.glb`);
+      } catch (error) {
+        console.error('Error fetching hero settings:', error);
+      }
+    };
+
+    fetchHeroSettings();
+  }, []);
+
+  useEffect(() => {
+    if(!modelPath) return;
     const scene = new THREE.Scene();
     
     const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 2000);
@@ -28,12 +51,13 @@ const Hero3D: React.FC = () => {
 
     const loader = new GLTFLoader();
     loader.load(
-      '/hero-model.glb',
+      modelPath,
       (gltf) => {
         const model = gltf.scene;
-        
-        model.scale.set(0.8, 0.8, 0.8);
-        model.position.set(0, -1.3, 0);
+        const scale = modelPath.endsWith('woman.glb') ? [0.8, 0.8, 0.8]: modelPath.endsWith('man.glb') ?[0.4, 0.4, 0.4] : [0.1, 0.1, 0.1];
+        const position = modelPath.endsWith('woman.glb') ? [0, -1.3, 0]: modelPath.endsWith('man.glb') ? [0, 0, 0]: [0, -0.2, 0];
+        model.scale.set(scale[0], scale[1], scale[2]);
+        model.position.set(position[0], position[1], position[2]);
         
         scene.add(model);
       },
@@ -70,7 +94,7 @@ const Hero3D: React.FC = () => {
       renderer.dispose();
       controls.dispose();
     };
-  }, []);
+  }, [modelPath]);
 
   return (
     <Container>

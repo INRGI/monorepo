@@ -16,6 +16,7 @@ import { MondayApiModule } from './monday-api/monday-api.module';
 import { GoogleDriveModule } from './google-drive-api/google-drive-api.module';
 import { PotionModule } from './potion/potion.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     MondayApiModule,
     GoogleDriveModule,
     PotionModule,
+    SettingsModule
   ],
   controllers: [AppController,],
   providers: [AppService,],
