@@ -9,7 +9,6 @@ import { AppModule } from './app/app.module';
 import { config } from 'dotenv';
 import FastifyCors from '@fastify/cors';
 import { ValidationPipe } from '@nestjs/common';
-import multipart from '@fastify/multipart';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -32,9 +31,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   app.useWebSocketAdapter(new IoAdapter(app));
-
-  const fastifyInstance = app.getHttpAdapter().getInstance();
-  await fastifyInstance.register(multipart);
 
   await app.listen(port, host, () => {
     console.log(`[ ready ] http://${host}:${port}`);
