@@ -58,6 +58,12 @@ export class InventoryProcessor extends WorkerHost {
     }
   }
 
+/**
+ * Retrieves the equipped items for a hero.
+ * @param data - An object containing the heroId.
+ * @returns The equipped items of the hero.
+ * @throws An error if the inventory is not found for the given heroId.
+ */
   private async handleGetEquipJob(data: { heroId: string }) {
     const { heroId } = data;
 
@@ -74,6 +80,12 @@ export class InventoryProcessor extends WorkerHost {
     return inventory.equip;
   }
 
+  /**
+   * Equips an item for a hero.
+   * @param data - An object containing the heroId and the uniqueId of the item to equip.
+   * @returns The updated inventory of the hero.
+   * @throws An error if the inventory is not found or the item is not found in the inventory.
+   */
   private async handleEquipJob(data: { heroId: string; uniqueId: string }) {
     const { heroId, uniqueId } = data;
 
@@ -132,6 +144,21 @@ export class InventoryProcessor extends WorkerHost {
     return inventory.inventory;
   }
 
+/**
+ * Handles the unequip job for a hero's item.
+ *
+ * This function unequips an item (either weapon or armor) from the hero's 
+ * equipped inventory, updates the hero's stats by reducing the corresponding 
+ * attribute (attack or health), and then adds the unequipped item back to the 
+ * hero's main inventory.
+ *
+ * @param data - An object containing the heroId and the itemType ('weapon' or 'armor')
+ *               to be unequipped.
+ * 
+ * @throws Will throw an error if the inventory or equip record is not found.
+ * 
+ * @returns The updated inventory of the hero after unequipping the item.
+ */
   private async handleUnequipJob(data: {
     heroId: string;
     itemType: 'weapon' | 'armor';
@@ -192,6 +219,16 @@ export class InventoryProcessor extends WorkerHost {
     return inventory.inventory;
   }
 
+/**
+ * Retrieves or initializes the inventory for a given hero.
+ * 
+ * This function attempts to find an existing inventory associated with the provided
+ * heroId. If no inventory is found, it creates a new inventory entry for the hero.
+ * The inventory is then saved and returned.
+ * 
+ * @param heroId - The unique identifier of the hero for whom the inventory is to be fetched or created.
+ * @returns A promise that resolves to the inventory of the hero.
+ */
   private async getInventory(heroId: string): Promise<Inventory> {
     let inventory = await this.inventoryRepository.findOne({
       where: { heroId },
@@ -206,6 +243,13 @@ export class InventoryProcessor extends WorkerHost {
     return await this.inventoryRepository.save(inventory);
   }
 
+/**
+ * Finds a specific item in the hero's inventory based on the unique ID.
+ * 
+ * @param data - An object containing the heroId and the uniqueId of the item to be found.
+ * @returns A promise that resolves to the found item.
+ * @throws An error if the inventory is not found or the item is not found in the inventory.
+ */
   private async findOneItem(data: {
     heroId: string;
     uniqueId: string;
@@ -226,6 +270,13 @@ export class InventoryProcessor extends WorkerHost {
     return item[0];
   }
 
+  /**
+   * Adds an item to a hero's inventory.
+   * 
+   * @param data - An object containing the heroId and the item to be added.
+   * @returns A promise that resolves to the updated inventory of the hero.
+   * @throws An error if the inventory is not found.
+   */
   private async handleAddJob(data: {
     heroId: string;
     item: Item;
@@ -242,6 +293,13 @@ export class InventoryProcessor extends WorkerHost {
     return await this.inventoryRepository.save(inventory);
   }
 
+  /**
+   * Sells an item in the hero's inventory based on the unique ID.
+   * 
+   * @param data - An object containing the heroId, the uniqueId of the item to be sold, and optionally the price to sell the item for.
+   * @returns A promise that resolves to the updated inventory of the hero.
+   * @throws An error if the inventory is not found or the item is not found in the inventory.
+   */
   private async handleSellItemJob(data: {
     heroId: string;
     uniqueId: string;
@@ -283,6 +341,12 @@ export class InventoryProcessor extends WorkerHost {
     return updatedInventory;
   }
 
+  /**
+   * Updates an item in the hero's inventory.
+   * @param data - An object containing the heroId and the item to be updated.
+   * @returns The updated inventory of the hero.
+   * @throws An error if the inventory is not found.
+   */
   private async handleUpdateItemJob(data: { heroId: string; item: Item }) {
     const { heroId, item } = data;
 
@@ -305,6 +369,12 @@ export class InventoryProcessor extends WorkerHost {
     return updatedInventory;
   }
 
+  /**
+   * Filters items in the hero's inventory by the given rarity.
+   * @param data - An object containing the heroId and the rarity to filter by.
+   * @returns An array of items in the hero's inventory that match the given rarity.
+   * @throws An error if the inventory is not found.
+   */
   private async handleItemByRarity(data: {
     heroId: string;
     rarity: 'common' | 'rare' | 'epic' | 'legendary';
@@ -320,6 +390,11 @@ export class InventoryProcessor extends WorkerHost {
     return filteredItems;
   }
 
+  /**
+   * Gets the value of an item based on its rarity.
+   * @param rarity - The rarity of the item.
+   * @returns The value of the item.
+   */
   private getValueOfItem(
     rarity: 'common' | 'rare' | 'epic' | 'legendary'
   ): number {
