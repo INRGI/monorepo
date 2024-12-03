@@ -48,6 +48,11 @@ export class ItemBoxProcessor extends WorkerHost {
     }
   }
 
+  /**
+   * Finds a single itemBox by id and includes all its items.
+   * @param itemBoxId - The id of the itemBox to find.
+   * @returns The itemBox and its items.
+   */
   private async getOneBox(itemBoxId: DeleteItemBoxDto): Promise<ItemBox> {
     const result = await this.itemBoxRepository
       .createQueryBuilder('ItemBox')
@@ -57,6 +62,11 @@ export class ItemBoxProcessor extends WorkerHost {
     return result;
   }
 
+  /**
+   * Generates a random rarity from the given chances object.
+   * @param chances The object specifying the chances of each rarity.
+   * @returns The generated rarity.
+   */
   private getRandomRarity(
     chances: Chances
   ): 'common' | 'rare' | 'epic' | 'legendary' {
@@ -68,6 +78,10 @@ export class ItemBoxProcessor extends WorkerHost {
     return 'legendary';
   }
 
+  /**
+   * Finds all itemBoxes that contain all 4 types of items.
+   * @returns An array of itemBoxes, sorted by name in ascending order.
+   */
   private async handleFindAllJob(): Promise<any> {
     const itemboxes = await this.itemBoxRepository
       .createQueryBuilder('itemBox')
@@ -79,6 +93,10 @@ export class ItemBoxProcessor extends WorkerHost {
     return itemboxes;
   }
 
+  /**
+   * Finds the 3 most expensive itemBoxes that contain all 4 types of items.
+   * @returns An array of 3 itemBoxes, sorted by cost in descending order.
+   */
   private async handleFindTheMostExpJob(): Promise<any> {
     const itemboxes = await this.itemBoxRepository
       .createQueryBuilder('itemBox')
@@ -91,6 +109,12 @@ export class ItemBoxProcessor extends WorkerHost {
     return itemboxes;
   }
 
+/**
+ * Creates a new itemBox in the repository with the provided data.
+ * @param data.itemBoxData - An object containing the itemBox data to be created.
+ * @returns The newly created and saved itemBox.
+ * @throws An error if an itemBox with the same name already exists.
+ */
   private async handleCreateJob(data: {
     itemBoxData: CreateItemBoxDto;
   }): Promise<any> {
@@ -106,6 +130,12 @@ export class ItemBoxProcessor extends WorkerHost {
     return await this.itemBoxRepository.save(result);
   }
 
+  /**
+   * Updates an itemBox with the given id.
+   * @param data.itemBoxData - An object containing the updated itemBox data.
+   * @returns The updated itemBox.
+   * @throws An error if no itemBox with the given id is found.
+   */
   private async handleUpdateJob(data: {
     itemBoxData: UpdateItemBoxDto;
   }): Promise<any> {
@@ -124,6 +154,12 @@ export class ItemBoxProcessor extends WorkerHost {
     return itemBox;
   }
 
+  /**
+   * Deletes an itemBox with the given id.
+   * @param data.itemBoxId - An object containing the id of the itemBox to delete.
+   * @returns A message indicating that the itemBox was deleted.
+   * @throws An error if no itemBox with the given id is found.
+   */
   private async handleDeleteJob(data: {
     itemBoxId: DeleteItemBoxDto;
   }): Promise<any> {
@@ -138,6 +174,12 @@ export class ItemBoxProcessor extends WorkerHost {
     return 'Deleted!';
   }
 
+  /**
+   * Given a rarity, select a random item of that rarity, apply enchantments, and return the item.
+   * @param data - An object containing the rarity to select by.
+   * @returns A randomly selected item of the given rarity.
+   * @throws An error if no items of the given rarity are found.
+   */
   private async handleRandomItemByRarity(data: {
     rarity: 'common' | 'rare' | 'epic' | 'legendary';
   }): Promise<any> {
@@ -161,6 +203,13 @@ export class ItemBoxProcessor extends WorkerHost {
     return selectedItem;
   }
 
+  /**
+   * Randomly selects an item from the given box based on the rarity chances.
+   * @param data.itemBoxId id of the itemBox
+   * @returns the randomly selected item
+   * @throws Error if no items of the rarity are found
+   * @throws Error if the itemBox is not found
+   */
   private async handleRandomItemInABoxJob(data: {
     itemBoxId: DeleteItemBoxDto;
   }): Promise<any> {
