@@ -38,6 +38,10 @@ export class ItemProcessor extends WorkerHost {
     }
   }
 
+  /**
+   * Finds all items, including their itemBox.
+   * @returns An array of items, each containing their itemBox.
+   */
   private async handleFindAllJob(): Promise<any> {
     const itemboxes = await this.itemRepository
       .createQueryBuilder('item')
@@ -54,6 +58,12 @@ export class ItemProcessor extends WorkerHost {
     return item;
   }
 
+  /**
+   * Creates a new item in the repository with the provided data.
+   * @param data.itemData - An object containing the item data to be created.
+   * @returns The newly created and saved item.
+   * @throws An error if an itemBox with the same name is not found.
+   */
   private async handleCreateJob(data: {
     itemData: CreateItemDto;
   }): Promise<any> {
@@ -74,6 +84,12 @@ export class ItemProcessor extends WorkerHost {
     return await this.itemRepository.save(newItem);
   }
 
+  /**
+   * Updates an item with the given id.
+   * @param data.itemData - An object containing the updated item data.
+   * @returns The updated item.
+   * @throws An error if no item with the given id is found.
+   */
   private async handleUpdateJob(data: {
     itemData: UpdateItemDto;
   }): Promise<any> {
@@ -92,6 +108,12 @@ export class ItemProcessor extends WorkerHost {
     return item;
   }
 
+  /**
+   * Deletes an item with the given id.
+   * @param data.itemBoxId - An object containing the id of the item to delete.
+   * @returns A message indicating that the item was deleted.
+   * @throws An error if no item with the given id is found.
+   */
   private async handleDeleteJob(data: {
     itemBoxId: DeleteItemDto;
   }): Promise<any> {
