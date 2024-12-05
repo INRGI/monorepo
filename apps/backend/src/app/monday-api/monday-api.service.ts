@@ -58,6 +58,11 @@ export class MondayApiService {
     this.mondayToken = this.configService.get<string>('MONDAY_API_TOKEN');
   }
 
+  /**
+   * Retrieves all items in the "Products" board that match the given `productName`.
+   * @param productName The name of the product to search for.
+   * @returns The response data from the Monday API.
+   */
   private async getProductsItems(productName: string): Promise<any> {
     const variables = {
       boardId: 803747785,
@@ -79,6 +84,11 @@ export class MondayApiService {
     return response.data;
   }
 
+  /**
+   * Fetches domain information from the specified board on the Monday platform using the given domain name.
+   * @param domainName The name of the domain to search for.
+   * @returns The response data from the Monday API containing domain details.
+   */
   private async getDomainInfo(domainName: string): Promise<any> {
     const variables = {
       boardId: 472153030,
@@ -99,6 +109,12 @@ export class MondayApiService {
     return response.data;
   }
 
+  /**
+   * Searches for a domain in the specified board on the Monday platform by name.
+   * @param domainName The name of the domain to search for.
+   * @returns The response data from the Monday API containing domain details if found,
+   * or undefined if no matching domain is found.
+   */
   async findDomainByName(domainName: string) {
     const domainInfo = await this.getDomainInfo(domainName);
 
@@ -108,6 +124,12 @@ export class MondayApiService {
     return item;
   }
 
+  /**
+   * Searches for a product in the specified board on the Monday platform by name.
+   * @param productName The name of the product to search for.
+   * @returns The response data from the Monday API containing product details if found,
+   * or undefined if no matching product is found.
+   */
   async findProductByName(productName: string) {
     const items = await this.getProductsItems(productName);
     const item = items.data.boards[0].items_page.items.find((item) =>
@@ -116,6 +138,11 @@ export class MondayApiService {
     return item;
   }
 
+  /**
+   * Searches for a product in the specified board on the Monday platform by name and retrieves its status.
+   * @param productName The name of the product to search for.
+   * @returns The product's status as a column value object if found, or undefined if no matching product is found.
+   */
   async fetchProductStatus(productName: string) {
     const items = await this.getProductsItems(productName);
     const item = items.data.boards[0].items_page.items.find((item) =>
@@ -125,6 +152,12 @@ export class MondayApiService {
     return item.column_values.find((column) => column.id === 'status7');
   }
 
+  /**
+   * Retrieves the domain sending information for a specified product by name.
+   * @param productName The name of the product to search for.
+   * @returns The product's domain sending information as a column value object
+   * if found, or undefined if no matching product is found.
+   */
   async fetchProductDomainSending(productName: string) {
     const items = await this.getProductsItems(productName);
     const item = items.data.boards[0].items_page.items.find((item) =>
@@ -162,6 +195,13 @@ export class MondayApiService {
     return response.data;
   }
 
+  /**
+   * Fetches data from the specified product and domain boards on the Monday platform
+   * and returns the found items as an object with 'product' and 'domain' properties.
+   * @param productName The name of the product to search for.
+   * @param domainName The name of the domain to search for.
+   * @returns An object containing the product and domain items found.
+   */
   async fecthDataFromTwoTables(productName: string, domainName: string) {
     const items = await this.getTablesData(productName, domainName);
     const product = items.data.productBoard[0].items_page.items.find((item) =>
