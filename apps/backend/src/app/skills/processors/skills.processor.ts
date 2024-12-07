@@ -52,6 +52,11 @@ export class SkillsProcessor extends WorkerHost {
     }
   }
 
+  /**
+   * Resets all skills for a hero to level 0.
+   * @param {{heroId: string}} data
+   * @returns {Promise<HeroSkill[]>} A list of skills that were reset.
+   */
   private async handleResetSkillJob(data: {
     heroId: string;
   }): Promise<HeroSkill[]> {
@@ -69,6 +74,11 @@ export class SkillsProcessor extends WorkerHost {
     return await this.heroSkillRepository.save(updatedSkills);
   }
 
+  /**
+   * Reduces the cooldown of each skill for a hero by 1 turn, if the skill is not already off cooldown.
+   * @param {{heroId: string}} data
+   * @returns {Promise<HeroSkill[]>} A list of skills with their cooldowns reduced by 1 turn.
+   */
   private async handleReduceCooldownJob(data: {
     heroId: string;
   }): Promise<HeroSkill[]> {
@@ -89,6 +99,12 @@ export class SkillsProcessor extends WorkerHost {
     return await this.heroSkillRepository.save(updatedSkills);
   }
 
+  /**
+   * Sets the cooldown of a skill to the skill's cooldown amount.
+   * If the skill is already on cooldown, does nothing.
+   * @param {{castSkillDto: CastSkillDto}} data
+   * @returns {Promise<HeroSkill>}
+   */
   private async handleCastSkillJob(data: {
     castSkillDto: CastSkillDto;
   }): Promise<HeroSkill> {
@@ -103,6 +119,11 @@ export class SkillsProcessor extends WorkerHost {
     return await this.heroSkillRepository.save(skill);
   }
 
+  /**
+   * Creates a new skill with the given data.
+   * @param {{createSkillDto: CreateSkillDto}} data
+   * @returns {Promise<Skills>} The newly created skill
+   */
   private async handleCreateSkillJob(data: {
     createSkillDto: CreateSkillDto;
   }): Promise<Skills> {
@@ -114,6 +135,11 @@ export class SkillsProcessor extends WorkerHost {
     return result;
   }
 
+  /**
+   * Updates a skill by its id
+   * @param {{updateSkillDto: UpdateSkillDto}} data
+   * @returns {Promise<Skills>} The updated skill
+   */
   private async handleUpdateSkillJob(data: {
     updateSkillDto: UpdateSkillDto;
   }): Promise<Skills> {
@@ -133,6 +159,11 @@ export class SkillsProcessor extends WorkerHost {
     return skill;
   }
 
+  /**
+   * Deletes a skill by its id
+   * @param {{skillId: number}} data
+   * @returns {Promise<string>} A success message
+   */
   private async handleDeleteSkillJob(data: {
     skillId: number;
   }): Promise<string> {
@@ -148,6 +179,11 @@ export class SkillsProcessor extends WorkerHost {
     return 'Skill deleted successfully';
   }
 
+  /**
+   * Gets all skills for a hero, if a skill is not already learned by the hero, it will be added to the hero's skills.
+   * @param {{heroId: string}} data
+   * @returns {Promise<HeroSkill[]>} A list of hero skills
+   */
   private async handleGetAllSkillsJob(data: {
     heroId: string;
   }): Promise<HeroSkill[]> {
@@ -184,6 +220,11 @@ export class SkillsProcessor extends WorkerHost {
     });
   }
 
+  /**
+   * Get all skills of a hero, with the level greater than 0
+   * @param {{heroId: string}} data
+   * @returns {Promise<HeroSkill[]>} A list of hero skills
+   */
   private async handleGetMySkillsJob(data: {
     heroId: string;
   }): Promise<HeroSkill[]> {
@@ -197,6 +238,11 @@ export class SkillsProcessor extends WorkerHost {
     return heroSkills;
   }
 
+  /**
+   * Increases the level of the hero's skill by 1
+   * @param {{levelUpSkillDto: LevelUpSkillDto}} data
+   * @returns {Promise<HeroSkill>}
+   */
   private async handleLevelUpSkillJob(data: {
     levelUpSkillDto: LevelUpSkillDto;
   }): Promise<HeroSkill> {
