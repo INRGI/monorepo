@@ -15,6 +15,13 @@ export class SlotService {
 
   constructor(private readonly heroService: HeroService) {}
 
+  /**
+   * Plays a round of the slot machine.
+   *
+   * @param bet The amount to bet.
+   * @param heroId The ID of the hero to play with.
+   * @returns An object with the result of the round and the amount won.
+   */
   async play(
     bet: number,
     heroId: string
@@ -39,6 +46,14 @@ export class SlotService {
     }
   }
 
+  /**
+   * Calculates the winnings based on the slot machine result and bet amount.
+   *
+   * @param result An array of symbols representing the outcome of the slot machine spin.
+   * @param bet The amount of coins bet in the slot machine round.
+   * @returns The amount won. If all symbols in the result are the same, the bet is multiplied
+   *          by the symbol's multiplier. Otherwise, returns 0.
+   */
   private calculateWin(result: string[], bet: number): number {
     if (new Set(result).size === 1) {
       const symbol = result[0];
