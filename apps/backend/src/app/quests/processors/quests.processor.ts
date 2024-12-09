@@ -45,6 +45,12 @@ export class QuestsProcessor extends WorkerHost {
     }
   }
 
+/**
+ * Marks quests of a specific type as completed for a given hero and awards coins.
+ * @param data - An object containing the hero's ID and the quest type.
+ *    - heroId: The ID of the hero whose quests are to be completed.
+ *    - type: The type of quest to be marked as completed.
+ */
   private async handleCompleteQuestJob(data: { heroId: string, type: string }) {
     const { heroId, type } = data;
 
@@ -65,6 +71,11 @@ export class QuestsProcessor extends WorkerHost {
     }
   }
 
+/**
+ * Handles the creation of a new quest.
+ * @param data - An object containing the CreateQuestDto with the details of the quest to be created.
+ * @returns A promise that resolves to the newly created Quest entity.
+ */
   private async handleCreateQuest(data: {
     createQuestDto: CreateQuestDto;
   }): Promise<Quests> {
@@ -76,6 +87,11 @@ export class QuestsProcessor extends WorkerHost {
     return savedQuest;
   }
 
+  /**
+   * Handles updating a quest.
+   * @param data object with key 'updateQuestDto' containing the UpdateQuestDto
+   * @returns the updated Quests
+   */
   private async handleUpdateQuest(data: {
     updateQuestDto: UpdateQuestDto;
   }): Promise<Quests> {
@@ -95,6 +111,11 @@ export class QuestsProcessor extends WorkerHost {
     return quest;
   }
 
+  /**
+   * Deletes a quest with the given id.
+   * @param data id of the quest to be deleted
+   * @returns a string indicating that the quest was deleted successfully
+   */
   private async handleDeleteQuest(data: { id: number }): Promise<string> {
     const { id } = data;
 
@@ -108,6 +129,12 @@ export class QuestsProcessor extends WorkerHost {
     return 'Quest deleted successfully';
   }
 
+  /**
+   * Retrieves all quests for the hero with the given id.
+   * If the hero does not have a particular quest, it is created.
+   * @param {string} heroId - id of the hero
+   * @returns {Promise<HeroQuest[]>} - all quests for the hero
+   */
   private async handleGetAllQuests(data: {
     heroId: string;
   }): Promise<HeroQuest[]> {
@@ -144,6 +171,11 @@ export class QuestsProcessor extends WorkerHost {
     });
   }
 
+  /**
+   * Handles updating the status of a hero's quest.
+   * @param data object with key 'updateStatusDto' containing the StatusUpdateDto
+   * @returns the updated HeroQuest
+   */
   private async handleUpdateStatus(data: {
     updateStatusDto: StatusUpdateDto;
   }): Promise<HeroQuest> {
