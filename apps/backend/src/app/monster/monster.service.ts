@@ -20,14 +20,28 @@ export class MonstersService {
     { id: 6, name: 'Dragon', health: 500, attack: 10, imageUrl: 'https://img.freepik.com/premium-vector/pixel-art-character-enemy-acient-dragon-rpg-8bit_865365-23.jpg', xp: 500 },
   ];
 
+  /**
+   * Returns the list of all monsters
+   * @returns {Monster[]} The list of all monsters
+   */
   getMonsters(): Monster[] {
     return this.monsters;
   }
 
+  /**
+   * Finds a monster by id
+   * @param id The id of the monster
+   * @returns The monster with the given id if found, undefined otherwise
+   */
   getMonsterById(id: number): Monster {
     return this.monsters.find(monster => monster.id === id);
   }
 
+  /**
+   * Generates a list of monsters with randomized health, attack, and xp
+   * @param monsters The number of monsters to generate
+   * @returns A list of monsters with randomized values
+   */
   async getRandomMonsters(monsters: number): Promise<Monster[]>{
     const randomMonsters: Monster[] = [];
     const uniqueIds = new Set<number>();
