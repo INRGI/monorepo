@@ -22,6 +22,10 @@ export class EnchantController {
   constructor(private readonly enchantService: EnchantService) {}
 
   @Get()
+  /**
+   * Retrieves all enchantments.
+   * @returns A promise that resolves to an array of `Enchant` objects.
+   */
   async getAllEnchants(): Promise<Enchant[]> {
     return await this.enchantService.findAllEnchants();
   }
@@ -32,16 +36,33 @@ export class EnchantController {
   }
 
   @Post()
+/**
+ * Creates a new enchantment.
+ * @param enchantData The data for the enchantment to be created.
+ * @returns A promise that resolves to the newly created `Enchant` object.
+ */
+
   createEnchant(@Body(ValidationPipe) enchantData: CreateEnchantDto): Promise<Enchant> {
     return this.enchantService.createEnchant(enchantData);
   }
 
   @Post('reenchant')
+  /**
+   * Reenchants an item.
+   * @param data The data to reenchant the item with.
+   * @returns The reenchanted item.
+   */
   reenchantItem(@Body(ValidationPipe) data: ReenchantDto): Promise<Item> {
     return this.enchantService.reenchantItem(data);
   }
 
   @Put(':id')
+  /**
+   * Updates an enchantment by its ID.
+   * @param id The ID of the enchantment to update.
+   * @param enchantData The data to update the enchantment with.
+   * @returns A promise that resolves to the updated `Enchant` object.
+   */
   updateEnchant(
     @Param('id', ParseIntPipe) id: number,
     @Body(ValidationPipe) enchantData: UpdateEnchantDto
@@ -50,6 +71,12 @@ export class EnchantController {
   }
 
   @Delete(':id')
+/**
+ * Deletes an enchantment by its ID.
+ * @param id The ID of the enchantment to delete.
+ * @returns A promise that resolves to a string indicating the success of the deletion.
+ */
+
   deleteEnchant(@Param('id', ParseIntPipe) id: number): Promise<string> {
     return this.enchantService.deleteEnchant(id);
   }
